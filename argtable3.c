@@ -668,10 +668,7 @@ void* arg_hashtable_search(arg_hashtable_t* h, const void* k) {
 }
 
 void arg_hashtable_remove(arg_hashtable_t* h, const void* k) {
-    /*
-     * TODO: consider compacting the table when the load factor drops enough,
-     *       or provide a 'compact' method.
-     */
+
 
     struct arg_hashtable_entry* e;
     struct arg_hashtable_entry** pE;
