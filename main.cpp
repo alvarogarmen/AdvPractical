@@ -65,7 +65,6 @@ int main(int argc, char* argv[]) {
         newPoints = newPointsArg->ival[0];
     }
     // Call out functions
-    processInput(sourceNode, targetNode, graph, numLandmarks, newLandmarks, newPoints, numPoints);
 
     arg_freetable(argtable, sizeof(argtable) / sizeof(argtable[0]));
 
