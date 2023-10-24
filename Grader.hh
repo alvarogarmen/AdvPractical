@@ -4,7 +4,6 @@
 
 #ifndef ADVPRACTICAL_GRADER_H
 #define ADVPRACTICAL_GRADER_H
-//TODO: Implement a grader for the crossings for a given graph
 
 #include <vector>
 #include "Edge.hh"
