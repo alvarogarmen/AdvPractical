@@ -1,0 +1,16 @@
+# ninja log v5
+7	884	7198604183432623	CMakeFiles/advpractical.dir/main.cpp.obj	3f986a115a2ed7
+0	4322	7198604217786831	CMakeFiles/advpractical.dir/argtable3.c.obj	3a72c7b9146a6f0d
+4323	4507	7198604219605962	advpractical.exe	edf82a6747c2ad11
+4	671	7198604865486934	CMakeFiles/advpractical.dir/main.cpp.obj	3f986a115a2ed7
+672	806	7198604866748150	advpractical.exe	edf82a6747c2ad11
+3	702	7198605203108032	CMakeFiles/advpractical.dir/main.cpp.obj	3f986a115a2ed7
+703	875	7198605204769329	advpractical.exe	edf82a6747c2ad11
+5	711	7198605443095947	CMakeFiles/advpractical.dir/main.cpp.obj	3f986a115a2ed7
+712	838	7198605444274405	advpractical.exe	edf82a6747c2ad11
+3	807	7198605816368096	CMakeFiles/advpractical.dir/main.cpp.obj	3f986a115a2ed7
+808	986	7198605818043720	advpractical.exe	edf82a6747c2ad11
+4	765	7198606911610300	CMakeFiles/advpractical.dir/main.cpp.obj	3f986a115a2ed7
+766	963	7198606913524367	advpractical.exe	edf82a6747c2ad11
+4	703	7198607271033677	CMakeFiles/advpractical.dir/main.cpp.obj	3f986a115a2ed7
+704	836	7198607272277014	advpractical.exe	edf82a6747c2ad11

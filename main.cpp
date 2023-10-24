@@ -4,34 +4,51 @@
 
 #include <string>
 #include "argtable3.h"
+#include "Graph.hh"
+#include "Grader.hh"
 #include <chrono>
 
 #include <iostream>
 
+void testFunction(){
+    Graph myGraph = Graph(0, 0, 0);
 
+    Node node1 = Node(1, 2);
+    Node node2 = Node(2, 1);
+    Node node3 = Node(3, 1);
+    Node node4 = Node(4, 1);
+
+    myGraph.insertLeftNode(node1);
+    myGraph.insertLeftNode(node2);
+    myGraph.insertLeftNode(node3);
+    myGraph.insertLeftNode(node4);
+
+    myGraph.insertEdge(1, 1);
+    myGraph.insertEdge(1, 2);
+    myGraph.insertEdge(2, 2);
+    myGraph.insertEdge(3, 1);
+    myGraph.insertEdge(4, 3);
+
+    std::cout<<crossGrader(myGraph)<<std::endl;
+
+
+}
 
 int main(int argc, char* argv[]) {
     //Argtable 3
-    double sourceNode;
-    double targetNode;
-    int numLandmarks;
-    int newLandmarks;
-    int newPoints;
-    int numPoints;
-    std::string graph;
+    int leftSize;
+    int rightSize;
+    int edgeSize;
 
-    struct arg_dbl* sourceArg = arg_dbl0(NULL, "source", "<double>", "source node");
-    struct arg_dbl* targetArg = arg_dbl0(NULL, "target", "<double>", "target node");
-    struct arg_int* landmarkArg = arg_int0(NULL, "landmarks", "<integer>", "number of landmarks");
-    struct arg_int* newLandmarkArg = arg_int0(NULL, "newLandmarks?", "<integer>", "0 for old landmarks");
-    struct arg_str* graphArg = arg_str0(NULL, "graph", "<string>", "file with the graph, keep the .graph!");
-    struct arg_int* newPointsArg = arg_int0(NULL, "newPoints?", "<integer>", "generate new Points?");
-    struct arg_int* numPointsArg = arg_int0(NULL, "numNewPoints?", "<integer>", "how many new Points?");
+
+    struct arg_int* leftSizeArg = arg_int0(NULL, "leftSize", "<integer>", "number of nodes on left Graph");
+    struct arg_int* rightSizeArg = arg_int0(NULL, "rightSize", "<integer>", "number of nodes on right Graph");
+    struct arg_int* edgeSizeArg = arg_int0(NULL, "edgeSize", "<integer>", "number of edges");
 
 
     struct arg_end* end = arg_end(20); // Define the end marker for the argtable array
 
-    void* argtable[] = { sourceArg, targetArg, landmarkArg, newLandmarkArg, graphArg, newPointsArg, numPointsArg, end };
+    void* argtable[] = { leftSizeArg, rightSizeArg, edgeSizeArg, end };
 
     const char* progname = "myprogram";
     int nerrors = arg_parse(argc, argv, argtable);
@@ -42,30 +59,20 @@ int main(int argc, char* argv[]) {
         return 1; // Handle parsing errors
     }
 
-    if (sourceArg->count > 0) {
-        sourceNode = sourceArg->dval[0];
+    if (leftSizeArg->count > 0) {
+        leftSize = leftSizeArg->ival[0];
     }
 
-    if (targetArg->count > 0) {
-        targetNode = targetArg->dval[0];
+    if (rightSizeArg->count > 0) {
+        rightSize = rightSizeArg->ival[0];
     }
-    if (landmarkArg->count > 0){
-        numLandmarks = landmarkArg->ival[0];
+    if (edgeSizeArg->count > 0){
+        edgeSize = edgeSizeArg->ival[0];
     }
-    if(newLandmarkArg->count >0){
-        newLandmarks = newLandmarkArg->ival[0];
-    }
-    if (graphArg->count > 0) {
-        graph = graphArg->sval[0];
-    }
-    if (numPointsArg->count > 0) {
-        numPoints = numPointsArg->ival[0];
-    }
-    if (newPointsArg->count > 0) {
-        newPoints = newPointsArg->ival[0];
-    }
+
     // Call out functions
 
+    testFunction();
     arg_freetable(argtable, sizeof(argtable) / sizeof(argtable[0]));
 
     return 0;
