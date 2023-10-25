@@ -1,0 +1,21 @@
+# ninja log v5
+1	216	7199497358604976	build.ninja	b191a24cfc5660f5
+16	140	7199479018882551	CMakeFiles/advpractical.dir/Node.cc.obj	5ebbcf8bb4a0500f
+4	656	7199495918996684	CMakeFiles/advpractical.dir/main.cpp.obj	3f986a115a2ed7
+4	108	7199484648404751	CMakeFiles/advpractical.dir/Edge.cc.obj	e61d11c81ebd5b5e
+11	411	7199479947205937	CMakeFiles/advpractical.dir/Grader.cc.obj	57d845015c79b142
+6	1270	7199485081995126	CMakeFiles/advpractical.dir/Graph.cc.obj	71122fc1bef69c45
+23	1742	7199485086709971	CMakeFiles/advpractical.dir/InputGraphManually.cc.obj	f63737761cf63a1b
+23	2678	7199479044288387	CMakeFiles/advpractical.dir/argtable3.c.obj	3a72c7b9146a6f0d
+4	137	7199490800753885	CMakeFiles/advpractical.dir/Edge.cpp.obj	ae042474a50d6b35
+47	191	7199490801283207	CMakeFiles/advpractical.dir/Node.cpp.obj	65a4c1078259c486
+4	427	7199494111603181	CMakeFiles/advpractical.dir/Grader.cpp.obj	2b55447157a11852
+10	815	7199494115478753	CMakeFiles/advpractical.dir/Graph.cpp.obj	54b695029297ffc9
+3	685	7199494578285753	CMakeFiles/advpractical.dir/InputGraphManually.cpp.obj	df74eebccd02a65a
+657	794	7199495920313283	advpractical.exe	add84d798fdce026
+1	256	7199497358604976	build.ninja	b191a24cfc5660f5
+5	1067	7199497370333235	CMakeFiles/advpractical.dir/Graph.cpp.obj	54b695029297ffc9
+1067	1232	7199497371919700	advpractical.exe	add84d798fdce026
+24	706	7199497872480877	CMakeFiles/advpractical.dir/main.cpp.obj	3f986a115a2ed7
+16	939	7199497874816047	CMakeFiles/advpractical.dir/Graph.cpp.obj	54b695029297ffc9
+939	1109	7199497876394376	advpractical.exe	add84d798fdce026
