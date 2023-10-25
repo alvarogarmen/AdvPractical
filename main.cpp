@@ -6,6 +6,7 @@
 #include "argtable3.h"
 #include "Graph.hh"
 #include "Grader.hh"
+#include "InputGraphManually.hh"
 #include <chrono>
 
 #include <iostream>
@@ -73,6 +74,8 @@ int main(int argc, char* argv[]) {
     // Call out functions
 
     testFunction();
+    Graph myGraph = inputGraphManually();
+    std::cout<<"Crossings: "<< crossGrader(myGraph)<<std::endl;
     arg_freetable(argtable, sizeof(argtable) / sizeof(argtable[0]));
 
     return 0;
