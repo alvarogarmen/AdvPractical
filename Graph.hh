@@ -5,15 +5,18 @@
 #ifndef ADVPRACTICAL_GRAPH_H
 #define ADVPRACTICAL_GRAPH_H
 #include <vector>
+#include <unordered_map>
 #include "Node.hh"
 #include "Edge.hh"
-
+//TODO: end implementing the edgeHash for the switching
 struct Graph{
     Graph();
     Graph(int leftSize, int rightSize, int edgeSize);
     std::vector<int> left;
     std::vector<int> right;
     std::vector<Edge> edges;         //Not sure if actually needed
+    std::unordered_map<int, std::vector<int>> edgeHash ;  //nodeIDs are used as handles. The first entry in the array is the
+                                                          //position of the nodeID in the left graph
     std::vector<int> getLeftNodes();
     std::vector<int> getRightNodes();
     std::vector<Edge> getEdges();
@@ -22,7 +25,11 @@ struct Graph{
     void insertRightNode(Node node);
     void insertEdgeAtIndex(int& sourceID, int& targetID, int index);
     void insertEdge(int sourceID, int targetID);        //nodeID represents the target of the edge. The index in combination with the left
-};                                                        //vector gives the source of the edge.
+                                                        //vector gives the source of the edge.
+
+    void switchNodes(int firstNodeID, int secondNodeID);
+};
+
 
 Graph::Graph() {
     this->left=std::vector<int>(0);
@@ -60,4 +67,5 @@ void Graph::insertEdgeAtIndex(int &sourceID, int &targetID, int index) {
 void Graph::insertEdge(int sourceID, int targetID) {
     this->edges.push_back(Edge(sourceID, targetID));
 }
+
 #endif //ADVPRACTICAL_GRAPH_H
