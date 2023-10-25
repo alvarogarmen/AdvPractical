@@ -3,11 +3,12 @@
 //
 
 
-#include "Graph.h"
+#include "Graph.hpp"
 #include <iostream>
 
-Graph inputGraphManually(){
-    Graph myGraph = Graph();
+template<typename SizeType>
+Graph<SizeType> inputGraphManually(){
+    Graph myGraph = Graph<SizeType>();
     int source;
     int target;
     int degree;

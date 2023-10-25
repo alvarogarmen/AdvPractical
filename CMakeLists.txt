@@ -9,11 +9,11 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -O3")
 set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -O3")
 
 set(SOURCES
-        Edge.cpp Edge.h
-        Grader.cpp Grader.h
-        Graph.cpp Graph.h
-        InputGraphManually.cpp InputGraphManually.h
-        Node.cpp Node.h
+        Edge.hpp
+        Grader.hpp
+        Graph.hpp
+        InputGraphManually.hpp
+        Node.hpp
         )
 add_executable(advpractical ${SOURCES} main.cpp argtable3.c)
 

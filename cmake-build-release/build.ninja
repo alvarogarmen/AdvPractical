@@ -49,36 +49,6 @@ cmake_ninja_workdir = C$:/Users/alvar/CLionProjects/AdvPractical/cmake-build-rel
 
 build cmake_object_order_depends_target_advpractical: phony || CMakeFiles/advpractical.dir
 
-build CMakeFiles/advpractical.dir/Edge.cpp.obj: CXX_COMPILER__advpractical_Release C$:/Users/alvar/CLionProjects/AdvPractical/Edge.cpp || cmake_object_order_depends_target_advpractical
-  DEP_FILE = CMakeFiles\advpractical.dir\Edge.cpp.obj.d
-  FLAGS = -O3 -O3 -DNDEBUG -fdiagnostics-color=always
-  OBJECT_DIR = CMakeFiles\advpractical.dir
-  OBJECT_FILE_DIR = CMakeFiles\advpractical.dir
-
-build CMakeFiles/advpractical.dir/Grader.cpp.obj: CXX_COMPILER__advpractical_Release C$:/Users/alvar/CLionProjects/AdvPractical/Grader.cpp || cmake_object_order_depends_target_advpractical
-  DEP_FILE = CMakeFiles\advpractical.dir\Grader.cpp.obj.d
-  FLAGS = -O3 -O3 -DNDEBUG -fdiagnostics-color=always
-  OBJECT_DIR = CMakeFiles\advpractical.dir
-  OBJECT_FILE_DIR = CMakeFiles\advpractical.dir
-
-build CMakeFiles/advpractical.dir/Graph.cpp.obj: CXX_COMPILER__advpractical_Release C$:/Users/alvar/CLionProjects/AdvPractical/Graph.cpp || cmake_object_order_depends_target_advpractical
-  DEP_FILE = CMakeFiles\advpractical.dir\Graph.cpp.obj.d
-  FLAGS = -O3 -O3 -DNDEBUG -fdiagnostics-color=always
-  OBJECT_DIR = CMakeFiles\advpractical.dir
-  OBJECT_FILE_DIR = CMakeFiles\advpractical.dir
-
-build CMakeFiles/advpractical.dir/InputGraphManually.cpp.obj: CXX_COMPILER__advpractical_Release C$:/Users/alvar/CLionProjects/AdvPractical/InputGraphManually.cpp || cmake_object_order_depends_target_advpractical
-  DEP_FILE = CMakeFiles\advpractical.dir\InputGraphManually.cpp.obj.d
-  FLAGS = -O3 -O3 -DNDEBUG -fdiagnostics-color=always
-  OBJECT_DIR = CMakeFiles\advpractical.dir
-  OBJECT_FILE_DIR = CMakeFiles\advpractical.dir
-
-build CMakeFiles/advpractical.dir/Node.cpp.obj: CXX_COMPILER__advpractical_Release C$:/Users/alvar/CLionProjects/AdvPractical/Node.cpp || cmake_object_order_depends_target_advpractical
-  DEP_FILE = CMakeFiles\advpractical.dir\Node.cpp.obj.d
-  FLAGS = -O3 -O3 -DNDEBUG -fdiagnostics-color=always
-  OBJECT_DIR = CMakeFiles\advpractical.dir
-  OBJECT_FILE_DIR = CMakeFiles\advpractical.dir
-
 build CMakeFiles/advpractical.dir/main.cpp.obj: CXX_COMPILER__advpractical_Release C$:/Users/alvar/CLionProjects/AdvPractical/main.cpp || cmake_object_order_depends_target_advpractical
   DEP_FILE = CMakeFiles\advpractical.dir\main.cpp.obj.d
   FLAGS = -O3 -O3 -DNDEBUG -fdiagnostics-color=always
@@ -99,7 +69,7 @@ build CMakeFiles/advpractical.dir/argtable3.c.obj: C_COMPILER__advpractical_Rele
 #############################################
 # Link the executable advpractical.exe
 
-build advpractical.exe: CXX_EXECUTABLE_LINKER__advpractical_Release CMakeFiles/advpractical.dir/Edge.cpp.obj CMakeFiles/advpractical.dir/Grader.cpp.obj CMakeFiles/advpractical.dir/Graph.cpp.obj CMakeFiles/advpractical.dir/InputGraphManually.cpp.obj CMakeFiles/advpractical.dir/Node.cpp.obj CMakeFiles/advpractical.dir/main.cpp.obj CMakeFiles/advpractical.dir/argtable3.c.obj
+build advpractical.exe: CXX_EXECUTABLE_LINKER__advpractical_Release CMakeFiles/advpractical.dir/main.cpp.obj CMakeFiles/advpractical.dir/argtable3.c.obj
   FLAGS = -O3 -O3 -DNDEBUG
   LINK_FLAGS = -mconsole   -mconsole
   LINK_LIBRARIES = -lkernel32 -luser32 -lgdi32 -lwinspool -lshell32 -lole32 -loleaut32 -luuid -lcomdlg32 -ladvapi32
