@@ -1,11 +1,9 @@
 //
 // Created by alvar on 25/10/2023.
 //
-#ifndef GRADER_H
-#define GRADER_H
+#pragma once
 
-#include "../ds/edge.h"
-#include "../ds/graph.h"
+#include "ds/bipartite_graph.h"
 
 template <typename SizeType>
 bool edgeCross(Edge<SizeType>& edge1, Edge<SizeType>& edge2) {
@@ -27,7 +25,5 @@ int crossGrader(Graph<SizeType>& myGraph) {
   }
   return crossings;
 }
-//Add the bools instead of conditional addition ->std::accumulate or transform reduce
-//Henrik does not like for loops, use algorithm lib for c++
-
-#endif
+// Add the bools instead of conditional addition ->std::accumulate or transform reduce
+// Henrik does not like for loops, use algorithm lib for c++

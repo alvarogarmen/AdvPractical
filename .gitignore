@@ -1,2 +1,2 @@
-advpractical.exe
-cmake-build-release
+bazel-*
+genhtml

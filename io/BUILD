@@ -1,8 +1,12 @@
+load("@rules_cc//cc:defs.bzl", "cc_library")
+
 cc_library(
     name = "io",
     hdrs = [
-        "input_graph_manually_h"
+        "input_graph_manually.h",
     ],
     visibility = ["//visibility:public"],
-
+    deps = [
+        "//ds:bipartite_graph",
+    ],
 )
