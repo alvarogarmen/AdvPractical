@@ -22,9 +22,9 @@ NodeType FptNode<NodeType>::getNodeID() {
 }
 
 template <typename NodeType>
-class YNode : public FptNode<NodeType> {
+class NonFixedNode : public FptNode<NodeType> {
  public:
-  YNode(NodeType nodeID, std::vector<NodeType> neighbours, NodeType position)
+  NonFixedNode(NodeType nodeID, std::vector<NodeType> neighbours, NodeType position)
       : FptNode<NodeType>(nodeID), neighbours(neighbours), position(position) {
     dxScannedIndex = 0;
   }
@@ -40,21 +40,21 @@ class YNode : public FptNode<NodeType> {
 };
 
 template <typename NodeType>
-NodeType YNode<NodeType>::getDxScannedIndex() {
+NodeType NonFixedNode<NodeType>::getDxScannedIndex() {
   return dxScannedIndex;
 }
 
 template <typename NodeType>
-void YNode<NodeType>::setDxScannedIndex(NodeType newVal) {
+void NonFixedNode<NodeType>::setDxScannedIndex(NodeType newVal) {
   dxScannedIndex = newVal;
 }
 
 template <typename NodeType>
-class XNode : public FptNode<NodeType> {
+class FixedNode : public FptNode<NodeType> {
  public:
-  XNode(NodeType nodeID, std::vector<YNode<NodeType>> neighbours)
+  FixedNode(NodeType nodeID, std::vector<NonFixedNode<NodeType>> neighbours)
       : FptNode<NodeType>(nodeID), neighbours(neighbours) {}
-  std::vector<YNode<NodeType>> neighbours;
+  std::vector<NonFixedNode<NodeType>> neighbours;
   // saves the node ids of y nodes thet x is positioned between there smallest and largest
   // neighbours
   std::vector<NodeType> yx;
