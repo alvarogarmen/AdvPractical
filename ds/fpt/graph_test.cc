@@ -6,32 +6,27 @@
 #include "gtest/gtest.h"
 
 TEST(GraphTest, SimpleTest) {
-  FptGraph myGraph = FptGraph<int>(3);
-  std::vector<int> neighboursY0 = {0, 1};
-  std::vector<int> neighboursY1 = {0, 2};  //{0}
-  std::vector<int> neighboursY2 = {0, 1, 2};
-  YNode y0 = YNode(0, neighboursY0, 0);
-  YNode y1 = YNode(1, neighboursY1, 1);
-  YNode y2 = YNode(2, neighboursY2, 2);
-  std::vector<YNode<int>> neighboursX0 = {y0, y1, y2};
-  std::vector<YNode<int>> neighboursX1 = {y0, y2};
-  std::vector<YNode<int>> neighboursX2 = {y1, y2};  //{y2}
-  XNode<int> x0 = XNode(0, neighboursX0);
-  XNode<int> x1 = XNode(1, neighboursX1);
-  XNode<int> x2 = XNode(1, neighboursX2);
-  myGraph.insertXNode(x0);
-  myGraph.insertXNode(x1);
-  myGraph.insertXNode(x2);
-  myGraph.insertYNode(y0);
-  myGraph.insertYNode(y1);
-  myGraph.insertYNode(y2);
+  std::vector<std::vector<int>> freeNodes = {{0, 1}, {0}, {0, 1, 2}};
+  std::vector<std::vector<int>> fixedNodes = {{0, 1, 2}, {0, 2}, {2}};
+  FptGraph myGraph = FptGraph<int>(freeNodes, fixedNodes);
 
-  EXPECT_EQ(myGraph.getXNodesSize(), 3);
+  EXPECT_EQ(myGraph.freeNodes.size(), 3);
+  EXPECT_EQ(myGraph.fixedNodes.size(), 3);
+  EXPECT_EQ(myGraph.freeNodes[0].size(), 2);
+  EXPECT_EQ(myGraph.freeNodes[0][1], 1);
+
   myGraph.buildYx();
-  myGraph.initCrossingMatrix();
-  EXPECT_EQ(myGraph.getCrossing(0, 1), 0);
+  // EXPECT_EQ(myGraph.yx[0].size(), 0);
+  // EXPECT_EQ(myGraph.yx[1].size(), 1);
+  // EXPECT_EQ(myGraph.yx[2].size(), 0);
   myGraph.fillCrossingMatrix();
   EXPECT_EQ(myGraph.getCrossing(0, 1), 1);
+  EXPECT_EQ(myGraph.getCrossing(0, 2), 1);
+  EXPECT_EQ(myGraph.getCrossing(1, 2), 0);
+  EXPECT_EQ(myGraph.getCrossing(2, 0), 3);
+  EXPECT_EQ(myGraph.getCrossing(2, 1), 2);
+  EXPECT_EQ(myGraph.getCrossing(1, 0), 0);
+  EXPECT_EQ(myGraph.getCrossing(2, 0), 3);
 
   // EXPECT_EQ((myGraph.getXNode(0)).yx.size(), 0);
   // EXPECT_EQ((myGraph.getXNode(1)).yx.size(), 1);
