@@ -70,6 +70,6 @@ absl::StatusOr<std::unique_ptr<BipartiteGraph>> readGraph(const std::string& fil
       bipartiteGraph->addEdge(source, target);  // adds an edge going from Source to Target
     }
   }
-
-  return absl::OkStatus();
+  bipartiteGraph->finish();
+  return bipartiteGraph;
 }
