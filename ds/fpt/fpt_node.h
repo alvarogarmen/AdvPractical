@@ -8,7 +8,6 @@ class FptNode {
   FptNode(NodeType nodeID);
   NodeType getNodeID();
 
- private:
   NodeType nodeID;
 };
 template <typename NodeType>
@@ -22,17 +21,16 @@ NodeType FptNode<NodeType>::getNodeID() {
 }
 
 template <typename NodeType>
-class YNode : public FptNode<NodeType> {
+class FreeNode : public FptNode<NodeType> {
  public:
-  YNode(NodeType nodeID, std::vector<NodeType> neighbours, NodeType position)
+  FreeNode(NodeType nodeID, std::vector<NodeType> neighbours, NodeType position)
       : FptNode<NodeType>(nodeID), neighbours(neighbours), position(position) {
-    dxScannedIndex = 0;
+    this->dxScannedIndex = 0;
   }
   std::vector<NodeType> neighbours;
   NodeType getDxScannedIndex();
   void setDxScannedIndex(NodeType newVal);
 
- private:
   NodeType position;
   // dxScannedIndex is the index of the last scanned x
   // used to count amount of the node neighbours smaller than x
@@ -40,21 +38,24 @@ class YNode : public FptNode<NodeType> {
 };
 
 template <typename NodeType>
-NodeType YNode<NodeType>::getDxScannedIndex() {
+NodeType FreeNode<NodeType>::getDxScannedIndex() {
   return dxScannedIndex;
 }
 
 template <typename NodeType>
-void YNode<NodeType>::setDxScannedIndex(NodeType newVal) {
+void FreeNode<NodeType>::setDxScannedIndex(NodeType newVal) {
   dxScannedIndex = newVal;
 }
 
 template <typename NodeType>
-class XNode : public FptNode<NodeType> {
+class FixedNode : public FptNode<NodeType> {
  public:
-  XNode(NodeType nodeID, std::vector<YNode<NodeType>> neighbours)
-      : FptNode<NodeType>(nodeID), neighbours(neighbours) {}
-  std::vector<YNode<NodeType>> neighbours;
+  FixedNode(NodeType nodeID, std::vector<FreeNode<NodeType>> neighbours) {
+    this->nodeID = nodeID;
+    this->neighbours = neighbours;
+  }
+  std::vector<FreeNode<NodeType>> neighbours;  // why put the whole FreeNode here? A FixedNode would
+                                               // have its neighbours and its neighbours neighbours
   // saves the node ids of y nodes thet x is positioned between there smallest and largest
   // neighbours
   std::vector<NodeType> yx;

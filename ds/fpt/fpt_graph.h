@@ -10,23 +10,24 @@ template <typename NodeType>
 class FptGraph {
  public:
   FptGraph(std::vector<std::vector<NodeType>> freeNodes,
-           std::vector<std::vector<NodeType>> fixedNodes)
-      : freeNodes(freeNodes), fixedNodes(fixedNodes) {
+           std::vector<std::vector<NodeType>> fixedNodes) {
     crossingMatrix = std::vector<std::vector<NodeType>>(freeNodes.size(),
                                                         std::vector<NodeType>(freeNodes.size()));
+    this->freeNodes = freeNodes;
+    this->fixedNodes = fixedNodes;
     yx = std::vector<std::vector<NodeType>>(freeNodes.size(), std::vector<NodeType>(0));
     dxScannedIndex = std::vector<NodeType>(freeNodes.size());
     ;
   }
-  FptGraph(NodeType yNodesSize) {
+  FptGraph(NodeType freeNodesSize) {
     crossingMatrix =
-        std::vector<std::vector<NodeType>>(yNodesSize, std::vector<NodeType>(yNodesSize));
+        std::vector<std::vector<NodeType>>(freeNodesSize, std::vector<NodeType>(freeNodesSize));
   }
 
   void adjustCrossingMatrix(NodeType uIndex, NodeType vIndex, NodeType sumOfCrossing);
   NodeType getCrossing(NodeType uIndex, NodeType vIndex);
 
-  void buildYx() {
+  void buildYx() {  // Naming!
     for (NodeType freeNodeI = 0; freeNodeI < freeNodes.size(); ++freeNodeI) {
       for (NodeType neighbourI = 1; neighbourI < freeNodes[freeNodeI].size() - 0; ++neighbourI) {
         yx[freeNodes[freeNodeI][neighbourI]].push_back(freeNodeI);
@@ -35,9 +36,12 @@ class FptGraph {
   }
 
   void fillCrossingMatrix() {
-    for (NodeType fixedNodeI = 0; fixedNodeI < fixedNodes.size(); ++fixedNodeI) {
-      for (NodeType neighbourI = 0; neighbourI < fixedNodes[fixedNodeI].size(); ++neighbourI) {
-        for (NodeType yxI = 0; yxI < yx[fixedNodeI].size(); ++yxI) {
+    for (NodeType fixedNodeI = 0; fixedNodeI < fixedNodes.size();
+         ++fixedNodeI) {  // O(|fixedNodes|)
+      for (NodeType neighbourI = 0; neighbourI < fixedNodes[fixedNodeI].size();
+           ++neighbourI) {  // O(|fixedNodes|*maxDegree)
+        for (NodeType yxI = 0; yxI < yx[fixedNodeI].size();
+             ++yxI) {  // O(|fixedNodes|*maxDegree*|max(yx)|)?
           for (dxScannedIndex[yx[fixedNodeI][yxI]];
                dxScannedIndex[yx[fixedNodeI][yxI]] < fixedNodeI;
                ++dxScannedIndex[yx[fixedNodeI][yxI]]) {
@@ -52,7 +56,8 @@ class FptGraph {
           }
         }
         if (freeNodes[neighbourI][freeNodes[neighbourI].size() - 1] == fixedNodeI) {
-          for (NodeType neighbour = 0; neighbour < fixedNodes[fixedNodeI].size(); ++neighbour) {
+          for (NodeType neighbour = 0; neighbour < fixedNodes[fixedNodeI].size();
+               ++neighbour) {  // O(|fixedNodes|^2*maxDegree)
             // if it is the most left then do if its the most right (d(u)−d≤x(u)) would be 0
             if (freeNodes[fixedNodes[fixedNodeI][neighbour]][0] == fixedNodeI) {
               NodeType u = fixedNodes[fixedNodeI][neighbour];
@@ -66,15 +71,15 @@ class FptGraph {
   }
 
   void initCrossingMatrix();
-  std::vector<std::vector<NodeType>> yx;
+  std::vector<std::vector<NodeType>> yx;  // Naming!
   std::vector<std::vector<NodeType>> freeNodes;
   std::vector<std::vector<NodeType>> fixedNodes;
 
  private:
   std::vector<std::vector<NodeType>> crossingMatrix;
   // dxScannedIndex is the index of the last scanned x
-  // used to count amount of the node neighbours smaller than x
-  std::vector<NodeType> dxScannedIndex;
+  // used to count amount of node neighbours smaller than x
+  std::vector<NodeType> dxScannedIndex;  // why not lastScannedXIndex?
 };
 
 template <typename NodeType>
