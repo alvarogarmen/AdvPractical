@@ -23,7 +23,7 @@ NodeType FptNode<NodeType>::getNodeID() {
 template <typename NodeType>
 class FreeNode : public FptNode<NodeType> {
  public:
-  FreeNode(NodeType nodeID, std::vector<NodeType> neighbours, NodeType position)
+  FreeNode(NodeType nodeID, std::vector<NodeType>& neighbours, NodeType position)
       : FptNode<NodeType>(nodeID), neighbours(neighbours), position(position) {
     this->dxScannedIndex = 0;
   }
@@ -50,7 +50,7 @@ void FreeNode<NodeType>::setDxScannedIndex(NodeType newVal) {
 template <typename NodeType>
 class FixedNode : public FptNode<NodeType> {
  public:
-  FixedNode(NodeType nodeID, std::vector<FreeNode<NodeType>> neighbours) {
+  FixedNode(NodeType nodeID, std::vector<FreeNode<NodeType>>& neighbours) {
     this->nodeID = nodeID;
     this->neighbours = neighbours;
   }

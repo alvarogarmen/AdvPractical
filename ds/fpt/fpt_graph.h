@@ -11,8 +11,9 @@ class FptGraph {
  public:
   FptGraph(std::vector<std::vector<NodeType>> freeNodes,
            std::vector<std::vector<NodeType>> fixedNodes) {
-    crossingMatrix = std::vector<std::vector<NodeType>>(freeNodes.size(),
-                                                        std::vector<NodeType>(freeNodes.size()));
+    crossingMatrix = std::vector<std::vector<NodeType>>(
+        freeNodes.size(),
+        std::vector<NodeType>(freeNodes.size()));  // change to 0s?
     this->freeNodes = freeNodes;
     this->fixedNodes = fixedNodes;
     yx = std::vector<std::vector<NodeType>>(freeNodes.size(), std::vector<NodeType>(0));
@@ -25,7 +26,7 @@ class FptGraph {
   }
 
   void adjustCrossingMatrix(NodeType uIndex, NodeType vIndex, NodeType sumOfCrossing);
-  NodeType getCrossing(NodeType uIndex, NodeType vIndex);
+  inline NodeType getCrossing(NodeType uIndex, NodeType vIndex) const;
 
   void buildYx() {  // Naming!
     for (NodeType freeNodeI = 0; freeNodeI < freeNodes.size(); ++freeNodeI) {
@@ -89,7 +90,7 @@ void FptGraph<NodeType>::adjustCrossingMatrix(NodeType uIndex, NodeType vIndex,
 }
 
 template <typename NodeType>
-NodeType FptGraph<NodeType>::getCrossing(NodeType uIndex, NodeType vIndex) {
+inline NodeType FptGraph<NodeType>::getCrossing(NodeType uIndex, NodeType vIndex) const {
   return crossingMatrix[uIndex][vIndex];
 }
 
