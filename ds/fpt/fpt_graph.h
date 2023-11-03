@@ -34,7 +34,7 @@ class FptGraph {
 
   void buildYx() {
     for (NodeType freeNodeI = 0; freeNodeI < freeNodes.size(); ++freeNodeI) {
-      for (NodeType neighbourI = 1; neighbourI < freeNodes[freeNodeI].size() - 0; ++neighbourI) {
+      for (NodeType neighbourI = 1; neighbourI < freeNodes[freeNodeI].size(); ++neighbourI) {
         yx[freeNodes[freeNodeI][neighbourI]].push_back(freeNodeI);
       }
     }
@@ -44,8 +44,7 @@ class FptGraph {
     for (NodeType fixedNodeI = 0; fixedNodeI < fixedNodes.size(); ++fixedNodeI) {
       for (NodeType neighbourI = 0; neighbourI < fixedNodes[fixedNodeI].size(); ++neighbourI) {
         for (NodeType yxI = 0; yxI < yx[fixedNodeI].size(); ++yxI) {
-          for (dxScannedIndex[yx[fixedNodeI][yxI]];
-               dxScannedIndex[yx[fixedNodeI][yxI]] < fixedNodeI;
+          for (; freeNodes[yx[fixedNodeI][yxI]][dxScannedIndex[yx[fixedNodeI][yxI]]] < fixedNodeI;
                ++dxScannedIndex[yx[fixedNodeI][yxI]]) {
           }
           crossingMatrix[fixedNodes[fixedNodeI][neighbourI]][yx[fixedNodeI][yxI]] +=
