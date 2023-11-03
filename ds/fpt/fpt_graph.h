@@ -4,8 +4,6 @@
 #include <iostream>
 #include <vector>
 
-#include "fpt_node.h"
-
 template <typename NodeType>
 class FptGraph {
  public:

@@ -1,7 +1,6 @@
 #include <vector>
 
 #include "fpt_graph.h"
-#include "fpt_node.h"
 #include "gmock/gmock-matchers.h"
 #include "gtest/gtest.h"
 
