@@ -9,10 +9,10 @@ TEST(GraphTest, SimpleTest) {
   std::vector<std::vector<int>> fixedNodes = {{0, 1, 2}, {0, 2}, {2}};
   FptGraph myGraph = FptGraph<int>(freeNodes, fixedNodes);
 
-  EXPECT_EQ(myGraph.freeNodes.size(), 3);
-  EXPECT_EQ(myGraph.fixedNodes.size(), 3);
-  EXPECT_EQ(myGraph.freeNodes[0].size(), 2);
-  EXPECT_EQ(myGraph.freeNodes[0][1], 1);
+  EXPECT_EQ(myGraph.getFreeNodesSize(), 3);
+  EXPECT_EQ(myGraph.getFixedNodesSize(), 3);
+  EXPECT_EQ(myGraph.getFreeNodeNeighboursSize(0), 2);
+  EXPECT_EQ(myGraph.getFreeNodeNeighbour(0, 1), 1);
 
   myGraph.buildYx();
   // EXPECT_EQ(myGraph.yx[0].size(), 0);
@@ -26,6 +26,10 @@ TEST(GraphTest, SimpleTest) {
   EXPECT_EQ(myGraph.getCrossing(2, 1), 2);
   EXPECT_EQ(myGraph.getCrossing(1, 0), 0);
   EXPECT_EQ(myGraph.getCrossing(2, 0), 3);
+  myGraph.addEdge(0, 2);
+  EXPECT_EQ(myGraph.getFreeNodeNeighboursSize(0), 3);
+  EXPECT_EQ(myGraph.getFreeNodeNeighbour(0, 2), 2);
+  EXPECT_EQ(myGraph.getFixedNodeNeighbour(2, 1), 0);
 
   // EXPECT_EQ((myGraph.getXNode(0)).yx.size(), 0);
   // EXPECT_EQ((myGraph.getXNode(1)).yx.size(), 1);

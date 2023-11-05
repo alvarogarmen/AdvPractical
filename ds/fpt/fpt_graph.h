@@ -16,20 +16,33 @@ class FptGraph {
     dxScannedIndex = std::vector<NodeType>(freeNodes.size());
     ;
   }
-  FptGraph(NodeType yNodesSize) {
-    crossingMatrix =
-        std::vector<std::vector<NodeType>>(yNodesSize, std::vector<NodeType>(yNodesSize));
-  }
-
-  std::vector<std::vector<NodeType>> yx;
-  std::vector<std::vector<NodeType>> freeNodes;
-  std::vector<std::vector<NodeType>> fixedNodes;
 
   void adjustCrossingMatrix(NodeType uIndex, NodeType vIndex, NodeType sumOfCrossing) {
     crossingMatrix[uIndex][vIndex] = sumOfCrossing;
   }
   NodeType const getCrossing(NodeType uIndex, NodeType vIndex) {
     return crossingMatrix[uIndex][vIndex];
+  }
+
+  NodeType const getFixedNodesSize() { return fixedNodes.size(); }
+
+  NodeType const getFixedNodeNeighboursSize(NodeType nodeID) { return fixedNodes[nodeID].size(); }
+
+  NodeType const getFixedNodeNeighbour(NodeType fixedNodeID, NodeType neighbourI) {
+    return fixedNodes[fixedNodeID][neighbourI];
+  }
+
+  NodeType const getFreeNodesSize() { return freeNodes.size(); }
+
+  NodeType const getFreeNodeNeighboursSize(NodeType nodeID) { return freeNodes[nodeID].size(); }
+
+  NodeType const getFreeNodeNeighbour(NodeType freeNodeID, NodeType neighbourI) {
+    return fixedNodes[freeNodeID][neighbourI];
+  }
+
+  void addEdge(NodeType freeNode, NodeType fixedNode) {
+    freeNodes[freeNode].push_back(fixedNode);
+    fixedNodes[fixedNode].push_back(freeNode);
   }
 
   void buildYx() {
@@ -43,24 +56,23 @@ class FptGraph {
   void fillCrossingMatrix() {
     for (NodeType fixedNodeI = 0; fixedNodeI < fixedNodes.size(); ++fixedNodeI) {
       for (NodeType neighbourI = 0; neighbourI < fixedNodes[fixedNodeI].size(); ++neighbourI) {
-        for (NodeType yxI = 0; yxI < yx[fixedNodeI].size(); ++yxI) {
-          for (; freeNodes[yx[fixedNodeI][yxI]][dxScannedIndex[yx[fixedNodeI][yxI]]] < fixedNodeI;
-               ++dxScannedIndex[yx[fixedNodeI][yxI]]) {
+        for (const auto freeNodeInYx : yx[fixedNodeI]) {
+          for (; freeNodes[freeNodeInYx][dxScannedIndex[freeNodeInYx]] < fixedNodeI;
+               ++dxScannedIndex[freeNodeInYx]) {
           }
-          crossingMatrix[fixedNodes[fixedNodeI][neighbourI]][yx[fixedNodeI][yxI]] +=
-              dxScannedIndex[yx[fixedNodeI][yxI]];
+          crossingMatrix[fixedNodes[fixedNodeI][neighbourI]][freeNodeInYx] +=
+              dxScannedIndex[freeNodeInYx];
           if (freeNodes[neighbourI][freeNodes[neighbourI].size() - 1] == fixedNodeI) {
-            NodeType u = yx[fixedNodeI][yxI];
+            NodeType u = freeNodeInYx;
             NodeType v = fixedNodes[fixedNodeI][neighbourI];
             crossingMatrix[u][v] +=
                 freeNodes[v].size() * (freeNodes[u].size() - (dxScannedIndex[u] + 1));
           }
         }
         if (freeNodes[neighbourI][freeNodes[neighbourI].size() - 1] == fixedNodeI) {
-          for (NodeType neighbour = 0; neighbour < fixedNodes[fixedNodeI].size(); ++neighbour) {
+          for (const auto u : fixedNodes[fixedNodeI]) {
             // if it is the most left then do if its the most right (d(u)−d≤x(u)) would be 0
-            if (freeNodes[fixedNodes[fixedNodeI][neighbour]][0] == fixedNodeI) {
-              NodeType u = fixedNodes[fixedNodeI][neighbour];
+            if (freeNodes[u][0] == fixedNodeI) {
               NodeType v = fixedNodes[fixedNodeI][neighbourI];
               crossingMatrix[u][v] += freeNodes[v].size() * (freeNodes[u].size() - 1);
             }
@@ -72,6 +84,14 @@ class FptGraph {
 
  private:
   std::vector<std::vector<NodeType>> crossingMatrix;
+  // save for each fixed node x all the free nodes that that x is between there most left neighbour
+  // and most right neighbour
+  std::vector<std::vector<NodeType>> yx;
+  // save for each free node  all its neighbours
+  std::vector<std::vector<NodeType>> freeNodes;
+  // save for each fixed node  all its neighbours
+  std::vector<std::vector<NodeType>> fixedNodes;
+
   // dxScannedIndex is the index of the last scanned x
   // used to count amount of the node neighbours smaller than x
   std::vector<NodeType> dxScannedIndex;
