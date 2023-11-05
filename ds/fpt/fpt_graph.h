@@ -17,6 +17,15 @@ class FptGraph {
     ;
   }
 
+  FptGraph(NodeType numFreeNodes, NodeType numFixedNodes) {
+    freeNodes = std::vector<std::vector<NodeType>>(numFreeNodes, std::vector<NodeType>(0));
+    fixedNodes = std::vector<std::vector<NodeType>>(numFixedNodes, std::vector<NodeType>(0));
+    crossingMatrix =
+        std::vector<std::vector<NodeType>>(numFreeNodes, std::vector<NodeType>(numFreeNodes, 0));
+    yx = std::vector<std::vector<NodeType>>(numFreeNodes, std::vector<NodeType>(0));
+    dxScannedIndex = std::vector<NodeType>(numFreeNodes);
+  }
+
   void adjustCrossingMatrix(NodeType uIndex, NodeType vIndex, NodeType sumOfCrossing) {
     crossingMatrix[uIndex][vIndex] = sumOfCrossing;
   }
