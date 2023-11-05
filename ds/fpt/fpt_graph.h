@@ -83,13 +83,15 @@ class FptGraph {
   }
 
  private:
+  // save the crossing number that accur between two free nodes
+  // (y1, y2) saves the crossing number of y1 and y2 assuming y1 is placed before y2
   std::vector<std::vector<NodeType>> crossingMatrix;
-  // save for each fixed node x all the free nodes that that x is between there most left neighbour
-  // and most right neighbour
+  // for each fixed node x, save all the free nodes y, such that x is between their most left and
+  // right neighbours
   std::vector<std::vector<NodeType>> yx;
-  // save for each free node  all its neighbours
+  // for each free node holds its neighbours
   std::vector<std::vector<NodeType>> freeNodes;
-  // save for each fixed node  all its neighbours
+  // for each fixed node holds its neighbours
   std::vector<std::vector<NodeType>> fixedNodes;
 
   // dxScannedIndex is the index of the last scanned x
