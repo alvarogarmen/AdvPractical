@@ -11,3 +11,13 @@ cc_library(
         "//ds:bipartite_graph",
     ],
 )
+cc_test(
+    name = "io_test",
+    srcs = ["readGraph_test.cc"],
+    deps = [
+        ":oscm",
+        ":readGraph",
+        "//ds/fpt:fpt_graph"
+        "@com_google_googletest//:gtest_main",
+    ],
+)
