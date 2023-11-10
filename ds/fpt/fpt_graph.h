@@ -29,7 +29,9 @@ class FptGraph {
   void adjustCrossingMatrix(NodeType uIndex, NodeType vIndex, NodeType sumOfCrossing) {
     crossingMatrix[uIndex][vIndex] = sumOfCrossing;
   }
-  NodeType const getCrossing(NodeType uIndex, NodeType vIndex) {
+
+  // return the number of crossings created by the edges from two free nodes (u, v)
+  NodeType const getCrossing(NodeType const uIndex, NodeType const vIndex) {
     return crossingMatrix[uIndex][vIndex];
   }
 
