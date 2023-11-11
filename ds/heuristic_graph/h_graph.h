@@ -56,6 +56,7 @@ class HGraph {
   }
 
   // copmute the number of crossings created by the edges from two free nodes (u, v)
+  // when u is to the left of v
   NodeType const computeUVcrossing(NodeType u, NodeType v) {
     NodeType crossingSum = 0;
     for (const auto uNeighbour : freeNodes[u]) {
@@ -69,6 +70,7 @@ class HGraph {
   }
 
   // for two free nodes u, v switch there positions and update left and right crossings
+  // assume u is the left neighbour of v
   void switchNeighbours(NodeType u, NodeType v) {
     // the number of crossings created by the edges from (u, v)
     NodeType uvSum = computeUVcrossing(u, v);
