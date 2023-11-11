@@ -22,4 +22,12 @@ TEST(GraphTest, SimpleTest) {
   EXPECT_EQ(myGraph.getRightCrossings(1), 0);
   EXPECT_EQ(myGraph.getLeftCrossings(2), 1);
   EXPECT_EQ(myGraph.getRightCrossings(2), 0);
+  myGraph.switchNeighbours(0, 1);
+  EXPECT_EQ(myGraph.getLeftCrossings(1), 0);
+  EXPECT_EQ(myGraph.getRightCrossings(1), 0);
+  myGraph.switchNeighbours(0, 2);
+  EXPECT_EQ(myGraph.getLeftCrossings(0), 3);
+  EXPECT_EQ(myGraph.getRightCrossings(0), 0);
+  EXPECT_EQ(myGraph.getLeftCrossings(2), 0);
+  EXPECT_EQ(myGraph.getRightCrossings(2), 3);
 }

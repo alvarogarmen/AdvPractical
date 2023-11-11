@@ -68,6 +68,20 @@ class HGraph {
     return crossingSum;
   }
 
+  // for two free nodes u, v switch there positions and update left and right crossings
+  void switchNeighbours(NodeType u, NodeType v) {
+    // the number of crossings created by the edges from (u, v)
+    NodeType uvSum = computeUVcrossing(u, v);
+    // the number of crossings created by the edges from (v, u)
+    NodeType vuSum = computeUVcrossing(v, u);
+    rightCrossingSum[u] -= uvSum;
+    rightCrossingSum[v] += vuSum;
+    leftCrossingSum[u] += vuSum;
+    leftCrossingSum[v] -= uvSum;
+    ++freeNodesPosition[u];
+    --freeNodesPosition[v];
+  }
+
   // copmute for each free node u the number of crossings created by the edges from nodes to the
   // left of u  and to its right
   void computeCrossingSums() {
