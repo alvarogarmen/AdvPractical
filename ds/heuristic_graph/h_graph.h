@@ -10,6 +10,9 @@ class HGraph {
   HGraph(const std::vector<std::vector<NodeType>>& freeNodes,
          const std::vector<std::vector<NodeType>>& fixedNodes)
       : freeNodes(freeNodes), fixedNodes(fixedNodes) {
+    rightCrossingSum = std::vector<NodeType>(freeNodes.size(), 0);
+    leftCrossingSum = std::vector<NodeType>(freeNodes.size(), 0);
+
     freeNodesPosition = std::vector<NodeType>(freeNodes.size());
     for (NodeType i = 0; i < freeNodes.size(); ++i) {
       freeNodesPosition[i] = i;
@@ -19,6 +22,8 @@ class HGraph {
   HGraph(NodeType numFreeNodes, NodeType numFixedNodes) {
     freeNodes = std::vector<std::vector<NodeType>>(numFreeNodes, std::vector<NodeType>(0));
     fixedNodes = std::vector<std::vector<NodeType>>(numFixedNodes, std::vector<NodeType>(0));
+    rightCrossingSum = std::vector<NodeType>(freeNodes.size(), 0);
+    leftCrossingSum = std::vector<NodeType>(freeNodes.size(), 0);
     freeNodesPosition = std::vector<NodeType>(freeNodes.size());
     for (NodeType i = 0; i < freeNodes.size(); ++i) {
       freeNodesPosition[i] = i;
@@ -40,6 +45,10 @@ class HGraph {
   NodeType const getFreeNodeNeighbour(NodeType freeNodeID, NodeType neighbourI) {
     return fixedNodes[freeNodeID][neighbourI];
   }
+
+  NodeType const getLeftCrossings(NodeType freeNodeID) { return leftCrossingSum[freeNodeID]; }
+
+  NodeType const getRightCrossings(NodeType freeNodeID) { return rightCrossingSum[freeNodeID]; }
 
   void addEdge(NodeType freeNode, NodeType fixedNode) {
     freeNodes[freeNode].push_back(fixedNode);
@@ -83,5 +92,5 @@ class HGraph {
   // for each free node u, hold the crossing sum with free node positioned to the left of u
   std::vector<NodeType> leftCrossingSum;
   // for each free node u, hold the crossing sum with free node positioned to the right of u
-  std::vector<NodeType> leftCrossingSum;
+  std::vector<NodeType> rightCrossingSum;
 };
