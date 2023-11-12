@@ -2,53 +2,60 @@
 
 #include <algorithm>
 #include <iostream>
+#include <numeric>
 #include <vector>
 
-template <typename NodeType>
+template <typename NodeType, typename CrossingCountType>
 class HGraph {
+  // for each free node holds its neighbours
+  std::vector<std::vector<NodeType>> freeNodes;
+  // for each fixed node holds its neighbours
+  std::vector<std::vector<NodeType>> fixedNodes;
+  // free nodes current position in the permutation
+  std::vector<NodeType> freeNodesPosition;
+  // for each free node u, the first place hold the crossing sum with free node positioned to the
+  // left of u and the second hold the sum to its right
+  std::vector<std::array<CrossingCountType, 2>> leftRightCrossingSum;
+
  public:
   HGraph(const std::vector<std::vector<NodeType>>& freeNodes,
          const std::vector<std::vector<NodeType>>& fixedNodes)
-      : freeNodes(freeNodes), fixedNodes(fixedNodes) {
-    rightCrossingSum = std::vector<NodeType>(freeNodes.size(), 0);
-    leftCrossingSum = std::vector<NodeType>(freeNodes.size(), 0);
-
-    freeNodesPosition = std::vector<NodeType>(freeNodes.size());
-    for (NodeType i = 0; i < freeNodes.size(); ++i) {
-      freeNodesPosition[i] = i;
-    }
+      : freeNodes(freeNodes),
+        fixedNodes(fixedNodes),
+        freeNodesPosition(std::vector<NodeType>(freeNodes.size())),
+        leftRightCrossingSum(std::vector<std::array<CrossingCountType, 2>>(freeNodes.size())) {
+    std::iota(freeNodesPosition.begin(), freeNodesPosition.end(), 0);
+    computeCrossingSums();
   }
 
-  HGraph(NodeType numFreeNodes, NodeType numFixedNodes) {
-    freeNodes = std::vector<std::vector<NodeType>>(numFreeNodes, std::vector<NodeType>(0));
-    fixedNodes = std::vector<std::vector<NodeType>>(numFixedNodes, std::vector<NodeType>(0));
-    rightCrossingSum = std::vector<NodeType>(freeNodes.size(), 0);
-    leftCrossingSum = std::vector<NodeType>(freeNodes.size(), 0);
-    freeNodesPosition = std::vector<NodeType>(freeNodes.size());
-    for (NodeType i = 0; i < freeNodes.size(); ++i) {
-      freeNodesPosition[i] = i;
-    }
+  HGraph(NodeType numFreeNodes, NodeType numFixedNodes)
+      : freeNodes(std::vector<std::vector<NodeType>>(numFreeNodes, std::vector<NodeType>(0))),
+        fixedNodes(std::vector<std::vector<NodeType>>(numFreeNodes, std::vector<NodeType>(0))),
+        freeNodesPosition(std::vector<NodeType>(freeNodes.size())),
+        leftRightCrossingSum(std::vector<std::array<CrossingCountType, 2>>(freeNodes.size())) {
+    std::iota(freeNodesPosition.begin(), freeNodesPosition.end(), 0);
+    computeCrossingSums();
   }
 
   NodeType const getFixedNodesSize() { return fixedNodes.size(); }
 
   NodeType const getFixedNodeNeighboursSize(NodeType nodeID) { return fixedNodes[nodeID].size(); }
 
-  NodeType const getFixedNodeNeighbour(NodeType fixedNodeID, NodeType neighbourI) {
-    return fixedNodes[fixedNodeID][neighbourI];
-  }
+  auto const getFixedNodeNeighbours(NodeType fixedNodeID) { return fixedNodes[fixedNodeID]; }
 
   NodeType const getFreeNodesSize() { return freeNodes.size(); }
 
   NodeType const getFreeNodeNeighboursSize(NodeType nodeID) { return freeNodes[nodeID].size(); }
 
-  NodeType const getFreeNodeNeighbour(NodeType freeNodeID, NodeType neighbourI) {
-    return fixedNodes[freeNodeID][neighbourI];
+  auto const getFreeNodeNeighbours(NodeType freeNodeID) { return fixedNodes[freeNodeID]; }
+
+  CrossingCountType const getLeftCrossings(NodeType freeNodeID) {
+    return leftRightCrossingSum[freeNodeID][0];
   }
 
-  NodeType const getLeftCrossings(NodeType freeNodeID) { return leftCrossingSum[freeNodeID]; }
-
-  NodeType const getRightCrossings(NodeType freeNodeID) { return rightCrossingSum[freeNodeID]; }
+  CrossingCountType const getRightCrossings(NodeType freeNodeID) {
+    return leftRightCrossingSum[freeNodeID][1];
+  }
 
   void addEdge(NodeType freeNode, NodeType fixedNode) {
     freeNodes[freeNode].push_back(fixedNode);
@@ -57,13 +64,11 @@ class HGraph {
 
   // copmute the number of crossings created by the edges from two free nodes (u, v)
   // when u is to the left of v
-  NodeType const computeUVcrossing(NodeType u, NodeType v) {
+  CrossingCountType const computeUVcrossing(NodeType u, NodeType v) {
     NodeType crossingSum = 0;
     for (const auto uNeighbour : freeNodes[u]) {
       for (const auto vNeighbour : freeNodes[v]) {
-        if (vNeighbour < uNeighbour) {
-          ++crossingSum;
-        }
+        crossingSum += vNeighbour < uNeighbour;
       }
     }
     return crossingSum;
@@ -76,10 +81,10 @@ class HGraph {
     NodeType uvSum = computeUVcrossing(u, v);
     // the number of crossings created by the edges from (v, u)
     NodeType vuSum = computeUVcrossing(v, u);
-    rightCrossingSum[u] -= uvSum;
-    rightCrossingSum[v] += vuSum;
-    leftCrossingSum[u] += vuSum;
-    leftCrossingSum[v] -= uvSum;
+    leftRightCrossingSum[u][1] -= uvSum;
+    leftRightCrossingSum[v][1] += vuSum;
+    leftRightCrossingSum[u][0] += vuSum;
+    leftRightCrossingSum[v][0] -= uvSum;
     ++freeNodesPosition[u];
     --freeNodesPosition[v];
   }
@@ -88,25 +93,17 @@ class HGraph {
   // left of u  and to its right
   void computeCrossingSums() {
     for (NodeType i = 0; i < freeNodes.size(); ++i) {
-      for (NodeType j = 0; j < freeNodes.size(); ++j) {
+      for (NodeType j = i + 1; j < freeNodes.size(); ++j) {
         if (freeNodesPosition[i] > freeNodesPosition[j]) {
-          leftCrossingSum[i] += computeUVcrossing(j, i);
-        } else if (freeNodesPosition[i] < freeNodesPosition[j]) {
-          rightCrossingSum[i] += computeUVcrossing(i, j);
+          CrossingCountType crossing = computeUVcrossing(j, i);
+          leftRightCrossingSum[i][0] += crossing;
+          leftRightCrossingSum[j][1] += crossing;
+        } else {
+          CrossingCountType crossing = computeUVcrossing(i, j);
+          leftRightCrossingSum[i][1] += crossing;
+          leftRightCrossingSum[j][0] += crossing;
         }
       }
     }
   }
-
- private:
-  // for each free node holds its neighbours
-  std::vector<std::vector<NodeType>> freeNodes;
-  // for each fixed node holds its neighbours
-  std::vector<std::vector<NodeType>> fixedNodes;
-  // free nodes current position in the permutation
-  std::vector<NodeType> freeNodesPosition;
-  // for each free node u, hold the crossing sum with free node positioned to the left of u
-  std::vector<NodeType> leftCrossingSum;
-  // for each free node u, hold the crossing sum with free node positioned to the right of u
-  std::vector<NodeType> rightCrossingSum;
 };
