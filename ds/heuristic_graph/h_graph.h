@@ -41,7 +41,7 @@ class HGraph {
 
   NodeType const getFixedNodeNeighboursSize(NodeType nodeID) { return fixedNodes[nodeID].size(); }
 
-  auto const getFixedNodeNeighbours(NodeType fixedNodeID) { return fixedNodes[fixedNodeID]; }
+  auto& getFixedNodeNeighbours(NodeType fixedNodeID) { return fixedNodes[fixedNodeID]; }
 
   NodeType const getFreeNodesSize() { return freeNodes.size(); }
 
