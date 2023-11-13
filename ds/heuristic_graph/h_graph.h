@@ -47,13 +47,13 @@ class HGraph {
 
   NodeType getFixedNodeNeighboursSize(NodeType nodeID) const { return fixedNodes[nodeID].size(); }
 
-  auto& getFixedNodeNeighbours(NodeType fixedNodeID) const { return fixedNodes[fixedNodeID]; }
+  const auto& getFixedNodeNeighbours(NodeType fixedNodeID) const { return fixedNodes[fixedNodeID]; }
 
   NodeType getFreeNodesSize() const { return freeNodes.size(); }
 
   NodeType getFreeNodeNeighboursSize(NodeType nodeID) const { return freeNodes[nodeID].size(); }
 
-  auto& getFreeNodeNeighbours(NodeType freeNodeID) const { return fixedNodes[freeNodeID]; }
+  const auto& getFreeNodeNeighbours(NodeType freeNodeID) const { return fixedNodes[freeNodeID]; }
 
   CrossingCountType getLeftCrossings(NodeType freeNodeID) const {
     return leftRightCrossingSum[freeNodeID][0];
@@ -63,7 +63,7 @@ class HGraph {
     return leftRightCrossingSum[freeNodeID][1];
   }
 
-  auto& getPermutation() const { return permutation; }
+  const auto& getPermutation() const { return permutation; }
 
   void addEdge(NodeType freeNode, NodeType fixedNode) {
     freeNodes[freeNode].push_back(fixedNode);
