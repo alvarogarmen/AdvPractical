@@ -17,7 +17,7 @@ cc_test(
     deps = [
         ":oscm",
         ":readGraph",
-        "//ds/fpt:fpt_graph"
+        "//ds/fpt:fpt_graph",
         "@com_google_googletest//:gtest_main",
     ],
 )
