@@ -37,3 +37,14 @@ TEST(GraphTest, SimpleTest) {
   // EXPECT_EQ((myGraph.getXNode(1)).yx[0], 2);
   //  EXPECT_EQ(myGraph.getCrossing(0, 1), 1);
 }
+
+TEST(GraphTest, FreeNodeTest) {
+  std::vector<std::vector<int>> freeNodeData = {{0, 1}, {0}, {0, 1, 2}};
+  std::vector<FreeNode<int>> freeNodes;
+  for (auto i = 0; i < freeNodeData.size(); i++) {
+    FreeNode free = FreeNode(i, freeNodeData[i], i);
+    freeNodes.push_back(free);
+    EXPECT_EQ(freeNodes[i].neighbours.size(), freeNodeData[i].size());
+    EXPECT_EQ(freeNodes[i].neighbours, freeNodeData[i]);
+  }
+}
