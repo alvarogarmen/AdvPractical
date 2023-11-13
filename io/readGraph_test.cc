@@ -28,6 +28,7 @@ TEST(ReadGraphTest, ValidGraph) {
   ASSERT_EQ(graph->getNumNodes0(), 3);
   ASSERT_EQ(graph->getNumNodes1(), 4);
   ASSERT_EQ(graph->getNumEdges(), 5);
+  std::remove(testFileName.c_str());
 }
 
 // Test case to check if the function handles errors correctly.
