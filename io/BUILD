@@ -1,4 +1,4 @@
-load("@rules_cc//cc:defs.bzl", "cc_library")
+load("@rules_cc//cc:defs.bzl", "cc_library", "cc_test")
 
 cc_library(
     name = "io",
@@ -11,6 +11,7 @@ cc_library(
         "//ds:bipartite_graph",
     ],
 )
+
 cc_test(
     name = "io_test",
     srcs = ["readGraph_test.cc"],
