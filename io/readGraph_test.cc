@@ -3,28 +3,24 @@
 #include <gtest/gtest.h>
 
 #include "ds/fpt/fpt_graph.h"
-
-// Test case to check if the function reads a valid graph from a file.
 TEST(ReadGraphTest, ValidGraph) {
-  const std::string testFileName = "test_valid_graph.txt";
-  // Create a test graph in file "test_valid_graph.txt"
+  std::stringstream testData;
+  // Create a test graph with stringsteam
   // Edges are not sorted here. If the actual inputs are sorted, then we have to change this but we
   // don´t know yer
-  std::ofstream testFile(testFileName);
-  testFile << "c this is a comment and should not be read" << std::endl;
-  testFile << "p ocr 3 4 5" << std::endl;
-  testFile << "1 4" << std::endl;
-  testFile << "2 3" << std::endl;
-  testFile << "2 4" << std::endl;
-  testFile << "3 3" << std::endl;
-  testFile << "1 2" << std::endl;
-  testFile.close();
+  testData << "c this is a comment and should not be read" << std::endl;
+  testData << "p ocr 3 4 5" << std::endl;
+  testData << "1 4" << std::endl;
+  testData << "2 3" << std::endl;
+  testData << "2 4" << std::endl;
+  testData << "3 3" << std::endl;
+  testData << "1 2" << std::endl;
 
-  auto result = readGraph<BipartiteGraph>(testFileName);
+  auto result = readGraph<BipartiteGraph>(testData);
   ASSERT_TRUE(result.ok());
   auto graph = std::move(result.value());
 
-  // Check n0, n1 and m
+  // Check n0, n1, and m
   ASSERT_EQ(graph->getNumNodes0(), 3);
   ASSERT_EQ(graph->getNumNodes1(), 4);
   ASSERT_EQ(graph->getNumEdges(), 5);
