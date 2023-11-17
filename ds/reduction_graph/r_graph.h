@@ -1,0 +1,129 @@
+#pragma once
+
+#include <algorithm>
+#include <iostream>
+#include <map>
+#include <numeric>
+#include <set>
+#include <vector>
+
+template <typename NodeType, typename CrossingCountType>
+class RGraph {
+  // for each free node holds its neighbours
+  std::vector<std::vector<NodeType>> freeNodes;
+  // for each fixed node holds its neighbours
+  std::vector<std::vector<NodeType>> fixedNodes;
+  // holds the end position of free nodes
+  std::vector<NodeType> fixedPosition;
+  // for each free node u, the first place hold free node that are knowned to be positioned to the
+  // left of u
+  // and the second hold the free nodes that are knowned to be positioned to its right
+  std::vector<std::array<std::set<NodeType>, 2>> leftRightSet;
+  // save the crossing number that accur between two free nodes (u, v) ,that do not have < order
+  // yet.
+  // saves the crossing number of u and v assuming u is placed before v
+  std::vector<std::map<NodeType, CrossingCountType>> crossings;
+  // for each new branch save all the changes in order to do back tracking
+  std::vector<NodeType> backTrack;
+
+ public:
+  RGraph(const std::vector<std::vector<NodeType>>& freeNodes,
+         const std::vector<std::vector<NodeType>>& fixedNodes)
+      : freeNodes(freeNodes),
+        fixedNodes(fixedNodes),
+        fixedPosition(std::vector<NodeType>(freeNodes.size())),
+        leftRightSet(std::vector<std::array<std::set<NodeType>, 2>>(freeNodes.size())),
+        crossings(std::vector<std::map<NodeType, CrossingCountType>>(freeNodes.size())) {
+    computeCrossingSums();
+  }
+
+  RGraph(NodeType numFreeNodes, NodeType numFixedNodes)
+      : freeNodes(std::vector<std::vector<NodeType>>(numFreeNodes, std::vector<NodeType>(0))),
+        fixedNodes(std::vector<std::vector<NodeType>>(numFreeNodes, std::vector<NodeType>(0))),
+        fixedPosition(std::vector<NodeType>(freeNodes.size())),
+        leftRightSet(std::vector<std::array<std::set<NodeType>, 2>>(freeNodes.size())),
+        crossings(std::vector<std::map<NodeType, CrossingCountType>>(freeNodes.size())) {
+    computeCrossingSums();
+  }
+
+  NodeType getFixedNodesSize() const { return fixedNodes.size(); }
+
+  NodeType getFixedNodeNeighboursSize(NodeType nodeID) const { return fixedNodes[nodeID].size(); }
+
+  const auto& getFixedNodeNeighbours(NodeType fixedNodeID) const { return fixedNodes[fixedNodeID]; }
+
+  NodeType getFreeNodesSize() const { return freeNodes.size(); }
+
+  NodeType getFreeNodeNeighboursSize(NodeType nodeID) const { return freeNodes[nodeID].size(); }
+
+  const auto& getFreeNodeNeighbours(NodeType freeNodeID) const { return fixedNodes[freeNodeID]; }
+
+  const auto& getNodeCrossing(NodeType u) const { return crossings[u]; }
+
+  const auto& getCrossing(NodeType u, NodeType v) const { return crossings[u].at(v); }
+
+  const auto& getLeftNodes(NodeType u) const { return leftRightSet[u][0]; }
+
+  const auto& getRightNodes(NodeType u) const { return leftRightSet[u][1]; }
+
+  void setLeftNodes(NodeType u, std::set<NodeType> leftNodes) { leftRightSet[u][0] = leftNodes; }
+
+  void setRightNodes(NodeType u, std::set<NodeType> rightNodes) { leftRightSet[u][1] = rightNodes; }
+
+  void parameterAccounting(NodeType u, NodeType v) {
+    if (u != v) {
+      if (leftRightSet[u][1].find(v) == leftRightSet[u][1].end()) {
+        leftRightSet[u][1].insert(v);
+        leftRightSet[v][0].insert(u);
+        for (const auto& smallerThanU : leftRightSet[u][0]) {
+          parameterAccounting(smallerThanU, v);
+          for (const auto& biggerThanV : leftRightSet[v][1]) {
+            parameterAccounting(smallerThanU, biggerThanV);
+            parameterAccounting(u, biggerThanV);
+          }
+        }
+      }
+    }
+  }
+
+  void addEdge(NodeType freeNode, NodeType fixedNode) {
+    freeNodes[freeNode].push_back(fixedNode);
+    fixedNodes[fixedNode].push_back(freeNode);
+  }
+
+  // copmute the number of crossings created by the edges from two free nodes (u, v)
+  // when u is to the left of v
+  CrossingCountType const computeUVcrossing(NodeType u, NodeType v) {
+    NodeType crossingSum = 0;
+    for (const auto uNeighbour : freeNodes[u]) {
+      for (const auto vNeighbour : freeNodes[v]) {
+        crossingSum += vNeighbour < uNeighbour;
+      }
+    }
+    return crossingSum;
+  }
+
+  // copmute for each free node u the number of crossings created by the edges from nodes to the
+  // left of u  and to its right
+
+  void computeCrossingSums() {
+    for (NodeType u = 0; u < freeNodes.size(); ++u) {
+      for (NodeType v = u + 1; v < freeNodes.size(); ++v) {
+        CrossingCountType crossingUV = computeUVcrossing(u, v);
+        // reduction RR1: For each pair of vertices {u, v} ⊆ free nodes that forms a 0/j pattern
+        // with j > 0, commit u < v
+        if (crossingUV == 0) {
+          parameterAccounting(u, v);
+        } else {
+          CrossingCountType crossingVU = computeUVcrossing(v, u);
+          if (crossingVU == 0) {
+            parameterAccounting(v, u);
+          } else {
+            crossings[u][v] = crossingUV;
+            crossings[v][u] = crossingVU;
+          }
+        }
+      }
+    }
+  }
+};
