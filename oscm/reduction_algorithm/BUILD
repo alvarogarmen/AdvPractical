@@ -1,20 +1,21 @@
 load("@rules_cc//cc:defs.bzl", "cc_library", "cc_test")
 
 cc_library(
-    name = "reduction_graph",
+    name = "reduction_algorithm",
     hdrs = [
-        "r_graph.h",
+        "r_algorithm.h",
     ],
     visibility = ["//visibility:public"],
     deps = [
+        "//ds/reduction_graph",
     ],
 )
 
 cc_test(
-    name = "r_graph_test",
-    srcs = ["r_graph_test.cc"],
+    name = "r_algorithm_test",
+    srcs = ["r_algorithm_test.cc"],
     deps = [
-        ":r_graph",
+        ":reduction_algorithm",
         "@com_google_googletest//:gtest_main",
     ],
 )

@@ -30,6 +30,16 @@ TEST(GraphTest, SimpleTest) {
   EXPECT_EQ(*(myGraph.getRightNodes(1).find(0)), 0);
   EXPECT_EQ(*(myGraph.getRightNodes(1).find(2)), 2);
 
+  EXPECT_EQ(myGraph.getNodeCrossing(0).size(), 1);
+  EXPECT_EQ(myGraph.getNodeCrossing(1).size(), 0);
+  EXPECT_EQ(myGraph.getNodeCrossing(2).size(), 1);
+
+  EXPECT_EQ(myGraph.getCurrentSolution(), 0);
+  myGraph.parameterAccounting(2, 0);
+  EXPECT_EQ(myGraph.getCurrentSolution(), 3);
+  EXPECT_EQ(myGraph.getNodeCrossing(0).size(), 0);
+  EXPECT_EQ(myGraph.getNodeCrossing(2).size(), 0);
+
   std::vector<std::vector<int>> freeNodes1 = {{0, 1}, {0}, {0, 1, 2}, {0}};
   std::vector<std::vector<int>> fixedNodes1 = {{0, 1, 2, 3}, {0, 2}, {2}};
   RGraph myGraph1 = RGraph<int, int>(freeNodes1, fixedNodes1);
@@ -59,21 +69,25 @@ TEST(GraphTest, SimpleTest) {
   EXPECT_EQ(*(myGraph1.getRightNodes(2).find(0)), 0);
   EXPECT_EQ(*(myGraph1.getLeftNodes(3).find(1)), 1);
   myGraph1.parameterAccounting(0, 1);
+
   EXPECT_EQ(myGraph1.getLeftNodes(0).size(), 1);
   EXPECT_EQ(myGraph1.getRightNodes(0).size(), 2);
   EXPECT_EQ(*(myGraph1.getLeftNodes(0).find(2)), 2);
   EXPECT_EQ(*(myGraph1.getRightNodes(0).find(1)), 1);
   EXPECT_EQ(*(myGraph1.getRightNodes(0).find(3)), 3);
+
   EXPECT_EQ(myGraph1.getLeftNodes(1).size(), 2);
   EXPECT_EQ(myGraph1.getRightNodes(1).size(), 1);
   EXPECT_EQ(*(myGraph1.getLeftNodes(1).find(2)), 2);
   EXPECT_EQ(*(myGraph1.getLeftNodes(1).find(0)), 0);
   EXPECT_EQ(*(myGraph1.getRightNodes(1).find(3)), 3);
+
   EXPECT_EQ(myGraph1.getLeftNodes(2).size(), 0);
   EXPECT_EQ(myGraph1.getRightNodes(2).size(), 3);
   EXPECT_EQ(*(myGraph1.getRightNodes(2).find(0)), 0);
   EXPECT_EQ(*(myGraph1.getRightNodes(2).find(1)), 1);
   EXPECT_EQ(*(myGraph1.getRightNodes(2).find(3)), 3);
+
   EXPECT_EQ(myGraph1.getLeftNodes(3).size(), 3);
   EXPECT_EQ(myGraph1.getRightNodes(3).size(), 0);
 

@@ -24,7 +24,11 @@ class RGraph {
   // saves the crossing number of u and v assuming u is placed before v
   std::vector<std::map<NodeType, CrossingCountType>> crossings;
   // for each new branch save all the changes in order to do back tracking
-  std::vector<NodeType> backTrack;
+  std::vector<NodeType> undo;
+  // holds the crossing number of the solution so far
+  CrossingCountType bestSolution;
+  // holds the crossing number of the current selution
+  CrossingCountType currentSolution;
 
  public:
   RGraph(const std::vector<std::vector<NodeType>>& freeNodes,
@@ -34,6 +38,7 @@ class RGraph {
         fixedPosition(std::vector<NodeType>(freeNodes.size())),
         leftRightSet(std::vector<std::array<std::set<NodeType>, 2>>(freeNodes.size())),
         crossings(std::vector<std::map<NodeType, CrossingCountType>>(freeNodes.size())) {
+    currentSolution = 0;
     computeCrossingSums();
   }
 
@@ -43,6 +48,7 @@ class RGraph {
         fixedPosition(std::vector<NodeType>(freeNodes.size())),
         leftRightSet(std::vector<std::array<std::set<NodeType>, 2>>(freeNodes.size())),
         crossings(std::vector<std::map<NodeType, CrossingCountType>>(freeNodes.size())) {
+    currentSolution = 0;
     computeCrossingSums();
   }
 
@@ -70,11 +76,38 @@ class RGraph {
 
   void setRightNodes(NodeType u, std::set<NodeType> rightNodes) { leftRightSet[u][1] = rightNodes; }
 
+  const auto& getFixedPosition() const { return fixedPosition; }
+
+  void setFixedPosition(NodeType u, NodeType index) { fixedPosition[index] = u; }
+
+  const auto& getCurrentSolution() const { return currentSolution; }
+
+  void setCurrentSolution(CrossingCountType newCurrent) { currentSolution = newCurrent; }
+
+  const auto& getBestSolution() const { return bestSolution; }
+
+  void setBestSolution(CrossingCountType newBest) { bestSolution = newBest; }
+
+  void setCrossings(std::vector<std::map<NodeType, CrossingCountType>> m) { crossings = m; }
+
+  void setFreeNodes(std::vector<std::vector<NodeType>> newfreeNodes) { freeNodes = newfreeNodes; }
+
+  void clearLeftRightSet() {
+    for (NodeType u = 0; u < freeNodes.size(); ++u) {
+      leftRightSet[u][0].clear();
+      leftRightSet[u][1].clear();
+    }
+  }
+
   void parameterAccounting(NodeType u, NodeType v) {
     if (u != v) {
       if (leftRightSet[u][1].find(v) == leftRightSet[u][1].end()) {
         leftRightSet[u][1].insert(v);
         leftRightSet[v][0].insert(u);
+        currentSolution += crossings[u][v];
+        crossings[u].erase(v);
+        crossings[v].erase(u);
+        // TODO add undo
         for (const auto& smallerThanU : leftRightSet[u][0]) {
           parameterAccounting(smallerThanU, v);
           for (const auto& biggerThanV : leftRightSet[v][1]) {
