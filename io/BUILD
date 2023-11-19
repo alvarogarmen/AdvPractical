@@ -16,9 +16,7 @@ cc_test(
     name = "io_test",
     srcs = ["readGraph_test.cc"],
     deps = [
-        ":oscm",
-        ":readGraph",
-        "//ds/fpt:fpt_graph",
+        ":io",
         "@com_google_googletest//:gtest_main",
     ],
 )
