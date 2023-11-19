@@ -3,6 +3,7 @@
 #include <gtest/gtest.h>
 
 #include "ds/fpt/fpt_graph.h"
+
 TEST(ReadGraphTest, ValidGraph) {
   std::stringstream testData;
   // Create a test graph with stringsteam
@@ -16,7 +17,7 @@ TEST(ReadGraphTest, ValidGraph) {
   testData << "3 3" << std::endl;
   testData << "1 2" << std::endl;
 
-  auto result = readGraph<BipartiteGraph>(testData);
+  auto result = readGraph<FptGraph>(testData);
   ASSERT_TRUE(result.ok());
   auto graph = std::move(result.value());
 

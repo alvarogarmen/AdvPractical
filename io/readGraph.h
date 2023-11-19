@@ -6,7 +6,7 @@
 #include <string>
 
 template <typename BipartiteGraph>
-absl::StatusOr<std::unique_ptr<BipartiteGraph>> readGraph(const std::string& filename,
+absl::StatusOr<std::unique_ptr<BipartiteGraph>> readGraph(const std::istream& filename,
                                                           bool verbose = false,
                                                           bool readAll = true) {
   std::ifstream file(filename);
