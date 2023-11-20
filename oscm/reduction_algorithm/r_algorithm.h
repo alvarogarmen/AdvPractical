@@ -45,33 +45,9 @@ class ReductionAlgorithm {
       }
     }
   }
+
   // if we have c(u, v) = 1 and c(v, u) = 2 with d(u) == 2  d(v) == 2 then commit u < v and do
   // parameter accounting
-  /*
-  static void rr3(RGraph<NodeType, CrossingCountType>& graph) {
-    printf("check!!!!!!!!!!!!!!!!!!!!!\n\n");
-
-    for (NodeType u = 0; u < graph.getFreeNodesSize(); ++u) {
-      //for (const auto& pair : graph.getNodeCrossing(u)) {
-        for(i == )
-        NodeType v = pair.first;
-        CrossingCountType crossingValue = pair.second;
-
-        if (crossingValue == 1) {
-          if (graph.getNodeCrossing(v).at(u) == 2) {
-            if (graph.getFreeNodeNeighboursSize(u) == 2 &&
-                graph.getFreeNodeNeighboursSize(v) == 2) {
-              printf("u is %d v is %d\n", u, v);
-              // graph.parameterAccounting(u, v);
-            }
-          }
-        }
-      }
-      graph.parameterAccounting(1, 0);
-    }
-  }
-  */
-
   static void rr3(RGraph<NodeType, CrossingCountType>& graph) {
     // Create a list of pairs to be modified
     std::vector<std::pair<NodeType, NodeType>> pairsToModify;
