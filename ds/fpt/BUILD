@@ -11,7 +11,7 @@ cc_library(
 )
 
 cc_test(
-    name = "graph_test",
+    name = "fpt_graph_test",
     srcs = ["fpt_graph_test.cc"],
     deps = [
         ":fpt_graph",

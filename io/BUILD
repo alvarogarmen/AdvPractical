@@ -14,7 +14,7 @@ cc_library(
 )
 
 cc_test(
-    name = "ocsm_io_test",
+    name = "oscm_io_test",
     srcs = ["ocsm_graph_reader_test.cc"],
     deps = [
         ":io",
