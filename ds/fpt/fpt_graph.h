@@ -15,12 +15,15 @@ class FptGraph {
                                                         std::vector<NodeType>(freeNodes.size(), 0));
     yx = std::vector<std::vector<NodeType>>(freeNodes.size(), std::vector<NodeType>(0));
     dxScannedIndex = std::vector<NodeType>(freeNodes.size());
-    ;
+    freeNodesSize = freeNodes.size();
+    fixedNodesSize = fixedNodes.size();
   }
 
-  FptGraph(NodeType numFreeNodes, NodeType numFixedNodes, NodeType numEdges) {
+  FptGraph(NodeType numFixedNodes, NodeType numFreeNodes, NodeType numEdges) {
     freeNodes = std::vector<std::vector<NodeType>>(numFreeNodes, std::vector<NodeType>(0));
     fixedNodes = std::vector<std::vector<NodeType>>(numFixedNodes, std::vector<NodeType>(0));
+    freeNodesSize = numFreeNodes;
+    fixedNodesSize = numFixedNodes;
     crossingMatrix =
         std::vector<std::vector<NodeType>>(numFreeNodes, std::vector<NodeType>(numFreeNodes, 0));
     yx = std::vector<std::vector<NodeType>>(numFreeNodes, std::vector<NodeType>(0));
@@ -54,7 +57,8 @@ class FptGraph {
 
   void addEdge(NodeType freeNode, NodeType fixedNode) {
     freeNodes[freeNode].push_back(fixedNode);
-    fixedNodes[fixedNode].push_back(freeNode);
+    fixedNodes[fixedNode - freeNodesSize].push_back(
+        freeNode);  // NodeID of fixedNode starts at freeNodeSize
   }
 
   void buildYx() {
@@ -105,6 +109,9 @@ class FptGraph {
   std::vector<std::vector<NodeType>> freeNodes;
   // for each fixed node holds its neighbours
   std::vector<std::vector<NodeType>> fixedNodes;
+
+  NodeType freeNodesSize;
+  NodeType fixedNodesSize;
 
   // dxScannedIndex is the index of the last scanned x
   // used to count amount of the node neighbours smaller than x

@@ -57,8 +57,8 @@ absl::StatusOr<std::unique_ptr<BipartiteGraph>> readGraph(std::istream& stream,
   typename BipartiteGraph::NodeType source, target;
   const typename BipartiteGraph::NodeType size = n0 + n1;
   while (stream && stream >> source && stream >> target) {
-    if ((source < 1 || source > n0) ||
-        (target <= n0 || target > size)) {  // Check if nodes out of bounds
+    if ((source < 1 || source > n1) ||
+        (target <= n1 || target > size)) {  // Check if nodes out of bounds
       return absl::InvalidArgumentError("Invalid edge vertex indices");
     }
     bipartiteGraph->addEdge(source - 1, target - 1);  // adds an edge going from Source to Target
