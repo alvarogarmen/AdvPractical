@@ -12,7 +12,7 @@ cc_library(
 
 cc_test(
     name = "graph_test",
-    srcs = ["graph_test.cc"],
+    srcs = ["fpt_graph_test.cc"],
     deps = [
         ":fpt_graph",
         "@com_google_googletest//:gtest_main",

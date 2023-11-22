@@ -1,4 +1,4 @@
-#include "readGraph.h"
+#include "ocsm_graph_reader.h"
 
 #include <gtest/gtest.h>
 
@@ -18,7 +18,7 @@ TEST(ReadGraphTest, ValidGraph) {
   testData << "1 2" << std::endl;
 
   auto result = readGraph<FptGraph<int>>(testData);
-  ASSERT_TRUE(result.ok());
+  EXPECT_EQ(result.status(), absl::OkStatus());
   auto graph = std::move(result.value());
 
   // Check n0, n1, and m
@@ -104,7 +104,7 @@ TEST(ReadGraphTest, InvalidFileContent) {
 // Test case to check if the function handles errors correctly.
 TEST(ReadGraphTest, MissingInput) {
   // Test with a non-existing file/empty stringstream
-  const std::stringstream nonExistentFileName;
+  std::stringstream nonExistentFileName;
   auto result = readGraph<FptGraph<int>>(nonExistentFileName);
   ASSERT_FALSE(result.ok());
   ASSERT_EQ(result.status().code(), absl::StatusCode::kNotFound);

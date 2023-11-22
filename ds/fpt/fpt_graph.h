@@ -4,9 +4,10 @@
 #include <iostream>
 #include <vector>
 
-template <typename NodeType>
+template <typename NT>
 class FptGraph {
  public:
+  using NodeType = NT;
   FptGraph(const std::vector<std::vector<NodeType>>& freeNodes,
            const std::vector<std::vector<NodeType>>& fixedNodes)
       : freeNodes(freeNodes), fixedNodes(fixedNodes) {
@@ -17,7 +18,7 @@ class FptGraph {
     ;
   }
 
-  FptGraph(NodeType numFreeNodes, NodeType numFixedNodes) {
+  FptGraph(NodeType numFreeNodes, NodeType numFixedNodes, NodeType numEdges) {
     freeNodes = std::vector<std::vector<NodeType>>(numFreeNodes, std::vector<NodeType>(0));
     fixedNodes = std::vector<std::vector<NodeType>>(numFixedNodes, std::vector<NodeType>(0));
     crossingMatrix =
