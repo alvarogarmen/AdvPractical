@@ -9,6 +9,7 @@ cc_library(
     visibility = ["//visibility:public"],
     deps = [
         "//ds:bipartite_graph",
+        "@com_google_absl//absl/status",
     ],
 )
 
@@ -17,6 +18,7 @@ cc_test(
     srcs = ["readGraph_test.cc"],
     deps = [
         ":io",
+        "@com_google_absl//absl/status",
         "@com_google_googletest//:gtest_main",
     ],
 )

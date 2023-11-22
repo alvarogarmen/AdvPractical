@@ -17,15 +17,14 @@ TEST(ReadGraphTest, ValidGraph) {
   testData << "3 3" << std::endl;
   testData << "1 2" << std::endl;
 
-  auto result = readGraph<FptGraph>(testData);
+  auto result = readGraph<FptGraph<int>>(testData);
   ASSERT_TRUE(result.ok());
   auto graph = std::move(result.value());
 
   // Check n0, n1, and m
-  ASSERT_EQ(graph->getNumNodes0(), 3);
-  ASSERT_EQ(graph->getNumNodes1(), 4);
-  ASSERT_EQ(graph->getNumEdges(), 5);
-  std::remove(testFileName.c_str());
+  ASSERT_EQ(graph->getFixedNodesSize(), 3);
+  ASSERT_EQ(graph->getFreeNodesSize(), 4);
+  // ASSERT_EQ(graph->getEdgesSize(), 5);   No getEdges function in fptGraph
 }
 
 // Test case for invalid header format
@@ -35,7 +34,7 @@ TEST(ReadGraphTest, InvalidHeaderFormat) {
   testData << "c this is a comment and should not be read" << std::endl;
   testData << "invalid_header" << std::endl;
 
-  auto result = readGraph<BipartiteGraph>(testData);
+  auto result = readGraph<FptGraph<int>>(testData);
   ASSERT_FALSE(result.ok());
   ASSERT_EQ(result.status().code(), absl::StatusCode::kInvalidArgument);
 }
@@ -48,7 +47,7 @@ TEST(ReadGraphTest, InvalidLineFormat) {
   testData << "p ocr 3 4 5" << std::endl;
   testData << "invalid line" << std::endl;
 
-  auto result = readGraph<BipartiteGraph>(testData);
+  auto result = readGraph<FptGraph<int>>(testData);
   ASSERT_FALSE(result.ok());
   ASSERT_EQ(result.status().code(), absl::StatusCode::kInvalidArgument);
 }
@@ -61,7 +60,7 @@ TEST(ReadGraphTest, NodesOutOfBounds) {
   testData << "p ocr 3 4 5" << std::endl;
   testData << "4 2" << std::endl;  // Source node is out of bounds
 
-  auto result = readGraph<BipartiteGraph>(testData);
+  auto result = readGraph<FptGraph<int>>(testData);
   ASSERT_FALSE(result.ok());
   ASSERT_EQ(result.status().code(), absl::StatusCode::kInvalidArgument);
 }
@@ -73,7 +72,7 @@ TEST(ReadGraphTest, NegativeNumbers) {
   testData << "c this is a comment and should not be read" << std::endl;
   testData << "p ocr -3 4 5" << std::endl;  // Negative n0
 
-  auto result = readGraph<BipartiteGraph>(testData);
+  auto result = readGraph<FptGraph<int>>(testData);
   ASSERT_FALSE(result.ok());
   ASSERT_EQ(result.status().code(), absl::StatusCode::kInvalidArgument);
 }
@@ -85,7 +84,7 @@ TEST(ReadGraphTest, MissingPLine) {
   testData << "c this is a comment and should not be read" << std::endl;
   testData << "1 2" << std::endl;  // Edge line without 'p' line
 
-  auto result = readGraph<BipartiteGraph>(testData);
+  auto result = readGraph<FptGraph<int>>(testData);
   ASSERT_FALSE(result.ok());
   ASSERT_EQ(result.status().code(), absl::StatusCode::kInvalidArgument);
 }
@@ -97,16 +96,16 @@ TEST(ReadGraphTest, InvalidFileContent) {
   testData << "c this is a comment and should not be read" << std::endl;
   testData << "p ocr abc 4 5" << std::endl;  // Invalid n0
 
-  auto result = readGraph<BipartiteGraph>(testData);
+  auto result = readGraph<FptGraph<int>>(testData);
   ASSERT_FALSE(result.ok());
   ASSERT_EQ(result.status().code(), absl::StatusCode::kInvalidArgument);
 }
 
 // Test case to check if the function handles errors correctly.
-TEST(ReadGraphTest, ErrorHandling) {
+TEST(ReadGraphTest, MissingInput) {
   // Test with a non-existing file/empty stringstream
   const std::stringstream nonExistentFileName;
-  auto result = readGraph<BipartiteGraph>(nonExistentFileName);
+  auto result = readGraph<FptGraph<int>>(nonExistentFileName);
   ASSERT_FALSE(result.ok());
   ASSERT_EQ(result.status().code(), absl::StatusCode::kNotFound);
 }
