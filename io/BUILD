@@ -4,7 +4,7 @@ cc_library(
     name = "io",
     hdrs = [
         "input_graph_manually.h",
-        "readGraph.h",
+        "ocsm_graph_reader.h",
     ],
     visibility = ["//visibility:public"],
     deps = [
@@ -14,11 +14,13 @@ cc_library(
 )
 
 cc_test(
-    name = "io_test",
-    srcs = ["readGraph_test.cc"],
+    name = "ocsm_io_test",
+    srcs = ["ocsm_graph_reader_test.cc"],
     deps = [
         ":io",
-        "@com_google_absl//absl/status",
+        "//ds/fpt:fpt_graph",
+        "@com_google_absl//absl/status:statusor",
+        "@com_google_absl//absl/strings",
         "@com_google_googletest//:gtest_main",
     ],
 )
