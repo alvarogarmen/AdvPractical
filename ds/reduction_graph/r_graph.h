@@ -1,11 +1,12 @@
 #pragma once
-
 #include <algorithm>
 #include <iostream>
 #include <map>
 #include <numeric>
 #include <set>
 #include <vector>
+
+#include "undo.h"
 
 template <typename NodeType, typename CrossingCountType>
 class RGraph {
@@ -92,6 +93,28 @@ class RGraph {
 
   void setFreeNodes(std::vector<std::vector<NodeType>> newfreeNodes) { freeNodes = newfreeNodes; }
 
+  void deleteLeftNode(NodeType node, NodeType leftNode) { leftRightSet[node][0].erase(leftNode); }
+
+  void deleteRightNode(NodeType node, NodeType rightNode) {
+    leftRightSet[node][1].erase(rightNode);
+  }
+
+  void addCrossing(NodeType leftNode, NodeType rightNode, CrossingCountType crossingSum) {
+    crossings[leftNode][rightNode] = crossingSum;
+  }
+
+  void doUndo(Undo<NodeType, CrossingCountType>& undo) {
+    for (const auto& operation : undo.getParameterAccountingUndo()) {
+      deleteLeftNode(operation.rightNode, operation.leftNode);
+      deleteRightNode(operation.leftNode, operation.rightNode);
+      addCrossing(operation.leftNode, operation.rightNode, operation.leftRightCrossing);
+      addCrossing(operation.rightNode, operation.leftNode, operation.rightLeftCrossing);
+    }
+    for (const auto& position : undo.getSetPositionUndo()) {
+      setFixedPosition(0, position);
+    }
+  }
+
   void clearLeftRightSet() {
     for (NodeType u = 0; u < freeNodes.size(); ++u) {
       leftRightSet[u][0].clear();
@@ -99,20 +122,23 @@ class RGraph {
     }
   }
 
-  void parameterAccounting(NodeType u, NodeType v) {
+  void parameterAccounting(NodeType u, NodeType v,
+                           Undo<NodeType, CrossingCountType>* undo = nullptr) {
     if (u != v) {
       if (leftRightSet[u][1].find(v) == leftRightSet[u][1].end()) {
         leftRightSet[u][1].insert(v);
         leftRightSet[v][0].insert(u);
         currentSolution += crossings[u][v];
+        if (undo) {
+          (*undo).addParameterAccountingUndo(u, v, crossings[u][v], crossings[v][u]);
+        }
         crossings[u].erase(v);
         crossings[v].erase(u);
-        // TODO add undo
         for (const auto& smallerThanU : leftRightSet[u][0]) {
-          parameterAccounting(smallerThanU, v);
+          parameterAccounting(smallerThanU, v, undo);
           for (const auto& biggerThanV : leftRightSet[v][1]) {
-            parameterAccounting(smallerThanU, biggerThanV);
-            parameterAccounting(u, biggerThanV);
+            parameterAccounting(smallerThanU, biggerThanV, undo);
+            parameterAccounting(u, biggerThanV, undo);
           }
         }
       }

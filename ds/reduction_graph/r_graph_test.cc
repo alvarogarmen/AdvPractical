@@ -4,12 +4,12 @@
 
 #include "gmock/gmock-matchers.h"
 #include "gtest/gtest.h"
+#include "undo.h"
 
 TEST(GraphTest, SimpleTest) {
   std::vector<std::vector<int>> freeNodes = {{0, 1}, {0}, {0, 1, 2}};
   std::vector<std::vector<int>> fixedNodes = {{0, 1, 2}, {0, 2}, {2}};
   RGraph myGraph = RGraph<int, int>(freeNodes, fixedNodes);
-
   EXPECT_EQ(myGraph.getFreeNodesSize(), 3);
   EXPECT_EQ(myGraph.getFixedNodesSize(), 3);
   EXPECT_EQ(myGraph.getFreeNodeNeighboursSize(0), 2);
@@ -43,7 +43,6 @@ TEST(GraphTest, SimpleTest) {
   std::vector<std::vector<int>> freeNodes1 = {{0, 1}, {0}, {0, 1, 2}, {0}};
   std::vector<std::vector<int>> fixedNodes1 = {{0, 1, 2, 3}, {0, 2}, {2}};
   RGraph myGraph1 = RGraph<int, int>(freeNodes1, fixedNodes1);
-
   std::set<int> aLeftSet = {2};
   std::set<int> aRightSet = {};
   std::set<int> bLeftSet = {};
@@ -95,4 +94,35 @@ TEST(GraphTest, SimpleTest) {
   EXPECT_EQ(*(myGraph1.getLeftNodes(3).find(0)), 0);
   EXPECT_EQ(*(myGraph1.getLeftNodes(3).find(1)), 1);
   EXPECT_EQ(*(myGraph1.getLeftNodes(3).find(2)), 2);
+}
+TEST(GraphTest, undo) {
+  std::vector<std::vector<int>> freeNodes = {{0, 1}, {0}, {0, 1, 2}};
+  std::vector<std::vector<int>> fixedNodes = {{0, 1, 2}, {0, 2}, {2}};
+  RGraph myGraph = RGraph<int, int>(freeNodes, fixedNodes);
+  Undo undo = Undo<int, int>();
+  myGraph.parameterAccounting(0, 2, &undo);
+  EXPECT_EQ(undo.getParameterAccountingUndo().size(), 1);
+  EXPECT_EQ(undo.getParameterAccountingUndo()[0].leftNode, 0);
+  EXPECT_EQ(undo.getParameterAccountingUndo()[0].rightNode, 2);
+  EXPECT_EQ(undo.getParameterAccountingUndo()[0].leftRightCrossing, 1);
+  EXPECT_EQ(undo.getParameterAccountingUndo()[0].rightLeftCrossing, 3);
+  EXPECT_EQ(myGraph.getNodeCrossing(0).size(), 0);
+  EXPECT_EQ(myGraph.getNodeCrossing(1).size(), 0);
+  EXPECT_EQ(myGraph.getNodeCrossing(2).size(), 0);
+  EXPECT_EQ(myGraph.getLeftNodes(0).size(), 1);
+  EXPECT_EQ(myGraph.getLeftNodes(1).size(), 0);
+  EXPECT_EQ(myGraph.getLeftNodes(2).size(), 2);
+  myGraph.doUndo(undo);
+  EXPECT_EQ(myGraph.getNodeCrossing(0).size(), 1);
+  EXPECT_EQ(myGraph.getNodeCrossing(1).size(), 0);
+  EXPECT_EQ(myGraph.getNodeCrossing(2).size(), 1);
+  EXPECT_EQ(myGraph.getNodeCrossing(0).at(2), 1);
+  EXPECT_EQ(myGraph.getNodeCrossing(2).at(0), 3);
+
+  EXPECT_EQ(myGraph.getLeftNodes(0).size(), 1);
+  EXPECT_EQ(myGraph.getLeftNodes(1).size(), 0);
+  EXPECT_EQ(myGraph.getLeftNodes(2).size(), 1);
+  EXPECT_EQ(myGraph.getRightNodes(0).size(), 0);
+  EXPECT_EQ(myGraph.getRightNodes(1).size(), 2);
+  EXPECT_EQ(myGraph.getRightNodes(2).size(), 0);
 }
