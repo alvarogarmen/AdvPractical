@@ -56,3 +56,14 @@ TEST(AlgorithmTest, rr2) {
   EXPECT_EQ(myGraph.getRightNodes(2).size(), 0);
   EXPECT_EQ(*(myGraph.getLeftNodes(2).find(0)), 0);
 }
+
+TEST(AlgorithmTest, rrLarge) {
+  std::vector<std::vector<int>> freeNodes = {{0, 1}, {0}, {0, 1, 2}};
+  std::vector<std::vector<int>> fixedNodes = {{0, 1, 2}, {0, 2}, {2}};
+  RGraph myGraph = RGraph<int, int>(freeNodes, fixedNodes);
+  ReductionAlgorithm<int, int>::rrLarge(myGraph, 2);
+  EXPECT_EQ(myGraph.getLeftNodes(0).size(), 1);
+  EXPECT_EQ(myGraph.getRightNodes(0).size(), 1);
+  EXPECT_EQ(myGraph.getRightNodes(2).size(), 0);
+  EXPECT_EQ(myGraph.getLeftNodes(2).size(), 2);
+}

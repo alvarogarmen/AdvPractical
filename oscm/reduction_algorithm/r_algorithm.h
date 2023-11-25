@@ -87,7 +87,8 @@ class ReductionAlgorithm {
 
     return true;
   }
-
+  // For each pair of free nodes u, v with N(u) = N(v),(arbitrarily) commit a < b, and do parameter
+  // accounting.
   static void rr2(RGraph<NodeType, CrossingCountType>& graph) {
     NodeType n = graph.getFreeNodesSize();
     for (NodeType u = 0; u < n; ++u) {
@@ -96,6 +97,24 @@ class ReductionAlgorithm {
           graph.parameterAccounting(u, v);
         }
       }
+    }
+  }
+
+  // If c(u, v) > k, then commit v < u and do the parameter accounting.
+  static void rrLarge(RGraph<NodeType, CrossingCountType>& graph, CrossingCountType crossingsLeft) {
+    std::vector<std::pair<NodeType, NodeType>> pairsToModify;
+    for (NodeType u = 0; u < graph.getFreeNodesSize(); ++u) {
+      for (const auto& pair : graph.getNodeCrossing(u)) {
+        NodeType v = pair.first;
+        CrossingCountType crossingValue = pair.second;
+
+        if (crossingValue > crossingsLeft) {
+          pairsToModify.emplace_back(v, u);
+        }
+      }
+    }
+    for (const auto& pair : pairsToModify) {
+      graph.parameterAccounting(pair.first, pair.second);
     }
   }
 };
