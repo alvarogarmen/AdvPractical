@@ -63,7 +63,7 @@ class RGraph {
 
   NodeType getFreeNodeNeighboursSize(NodeType nodeID) const { return freeNodes[nodeID].size(); }
 
-  const auto& getFreeNodeNeighbours(NodeType freeNodeID) const { return fixedNodes[freeNodeID]; }
+  const auto& getFreeNodeNeighbours(NodeType freeNodeID) const { return freeNodes[freeNodeID]; }
 
   const auto& getNodeCrossing(NodeType u) const { return crossings[u]; }
 

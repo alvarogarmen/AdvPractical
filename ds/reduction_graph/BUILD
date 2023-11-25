@@ -12,7 +12,7 @@ cc_library(
 )
 
 cc_library(
-    name = "r_graph",
+    name = "reduction_graph",
     hdrs = [
         "r_graph.h",
     ],
@@ -26,7 +26,7 @@ cc_test(
     name = "r_graph_test",
     srcs = ["r_graph_test.cc"],
     deps = [
-        ":r_graph",
+        ":reduction_graph",
         ":undo",
         "@com_google_googletest//:gtest_main",
     ],

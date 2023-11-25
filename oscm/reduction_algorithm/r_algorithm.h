@@ -74,14 +74,26 @@ class ReductionAlgorithm {
     }
   }
 
+  static bool areVectorsEqual(const std::vector<NodeType>& v1, const std::vector<NodeType>& v2) {
+    if (v1.size() != v2.size()) {
+      return false;
+    }
+
+    for (NodeType i = 0; i < v1.size(); ++i) {
+      if (v1[i] != v2[i]) {
+        return false;
+      }
+    }
+
+    return true;
+  }
+
   static void rr2(RGraph<NodeType, CrossingCountType>& graph) {
     NodeType n = graph.getFreeNodesSize();
     for (NodeType u = 0; u < n; ++u) {
       for (NodeType v = u + 1; v < n; ++v) {
-        if (graph.getFreeNodeNeighboursSize(u) == graph.getFreeNodeNeighboursSize(v)) {
-          if (graph.getFreeNodeNeighbours(u) == graph.getFreeNodeNeighbours(v)) {
-            graph.parameterAccounting(u, v);
-          }
+        if (areVectorsEqual(graph.getFreeNodeNeighbours(u), graph.getFreeNodeNeighbours(v))) {
+          graph.parameterAccounting(u, v);
         }
       }
     }

@@ -40,3 +40,19 @@ TEST(AlgorithmTest, rr3) {
   ReductionAlgorithm<int, int>::rrlo1(myGraph);
   EXPECT_EQ(myGraph.getFixedPosition()[0], 1);
 }
+
+TEST(AlgorithmTest, rr2) {
+  std::vector<std::vector<int>> freeNodes = {{0, 2}, {0, 1}, {0, 2}};
+  std::vector<std::vector<int>> fixedNodes = {{0, 1, 2}, {1}, {0, 2}};
+  RGraph myGraph = RGraph<int, int>(freeNodes, fixedNodes);
+
+  ReductionAlgorithm<int, int>::rr2(myGraph);
+  EXPECT_EQ(myGraph.getLeftNodes(0).size(), 0);
+  EXPECT_EQ(myGraph.getRightNodes(0).size(), 1);
+
+  EXPECT_EQ(*(myGraph.getRightNodes(0).find(2)), 2);
+
+  EXPECT_EQ(myGraph.getLeftNodes(2).size(), 1);
+  EXPECT_EQ(myGraph.getRightNodes(2).size(), 0);
+  EXPECT_EQ(*(myGraph.getLeftNodes(2).find(0)), 0);
+}
