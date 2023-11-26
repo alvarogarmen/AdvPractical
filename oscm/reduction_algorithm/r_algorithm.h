@@ -182,7 +182,7 @@ class ReductionAlgorithm {
                             NodeType rightNode) {
     Undo undo = Undo<NodeType, CrossingCountType>();
     if (isInitStep) {
-      graph.parameterAccounting(leftNode, rightNode, currentSolution, undo);
+      graph.parameterAccounting(leftNode, rightNode, currentSolution, &undo);
     }
     bool didChangeRrlo2 = true;
     bool didChangeRrLarge = true;
@@ -207,8 +207,15 @@ class ReductionAlgorithm {
       algorithmStep(graph, currentSolution, true, u, v);
     }
     graph.setBestSolution(currentSolution);
-    graph.setBestOrder(graph.fixedPosition);
+    graph.setBestOrder(graph.getFixedPosition());
     graph.doUndo(undo);
     return;
+  }
+
+  static void algorithm(RGraph<NodeType, CrossingCountType>& graph) {
+    CrossingCountType currentSolution = 0;
+    rr2(graph, currentSolution);
+    rr3(graph, currentSolution);
+    algorithmStep(graph, currentSolution, false, 0, 0);
   }
 };

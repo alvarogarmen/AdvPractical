@@ -81,6 +81,8 @@ class RGraph {
 
   const auto& getBestSolution() const { return bestSolution; }
 
+  const auto& getBestOrder() const { return bestOrder; }
+
   void setBestSolution(CrossingCountType newBest) { bestSolution = newBest; }
 
   void setCrossings(std::vector<std::map<NodeType, CrossingCountType>> m) { crossings = m; }

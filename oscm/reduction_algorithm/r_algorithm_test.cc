@@ -106,3 +106,14 @@ TEST(AlgorithmTest, IJEqualToTwo) {
   EXPECT_EQ(u, 0);
   EXPECT_EQ(v, 2);
 }
+
+TEST(AlgorithmTest, algorithm) {
+  std::vector<std::vector<int>> freeNodes = {{0, 1}, {0}, {0, 1, 2}};
+  std::vector<std::vector<int>> fixedNodes = {{0, 1, 2}, {0, 2}, {2}};
+  RGraph myGraph = RGraph<int, int>(freeNodes, fixedNodes);
+  ReductionAlgorithm<int, int>::algorithm(myGraph);
+  EXPECT_EQ(myGraph.getBestSolution(), 1);
+  EXPECT_EQ(myGraph.getBestOrder()[0], 1);
+  EXPECT_EQ(myGraph.getBestOrder()[1], 0);
+  EXPECT_EQ(myGraph.getBestOrder()[2], 2);
+}
