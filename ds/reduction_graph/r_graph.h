@@ -26,10 +26,10 @@ class RGraph {
   std::vector<std::map<NodeType, CrossingCountType>> crossings;
   // for each new branch save all the changes in order to do back tracking
   std::vector<NodeType> undo;
-  // holds the crossing number of the solution so far
+  // holds the crossing number of the best solution so far
   CrossingCountType bestSolution;
-  // holds the crossing number of the current selution
-  CrossingCountType currentSolution;
+  // holds the order of the solution best so far
+  std::vector<NodeType> bestOrder;
 
  public:
   RGraph(const std::vector<std::vector<NodeType>>& freeNodes,
@@ -39,7 +39,6 @@ class RGraph {
         fixedPosition(std::vector<NodeType>(freeNodes.size())),
         leftRightSet(std::vector<std::array<std::set<NodeType>, 2>>(freeNodes.size())),
         crossings(std::vector<std::map<NodeType, CrossingCountType>>(freeNodes.size())) {
-    currentSolution = 0;
     computeCrossingSums();
   }
 
@@ -49,7 +48,6 @@ class RGraph {
         fixedPosition(std::vector<NodeType>(freeNodes.size())),
         leftRightSet(std::vector<std::array<std::set<NodeType>, 2>>(freeNodes.size())),
         crossings(std::vector<std::map<NodeType, CrossingCountType>>(freeNodes.size())) {
-    currentSolution = 0;
     computeCrossingSums();
   }
 
@@ -81,10 +79,6 @@ class RGraph {
 
   void setFixedPosition(NodeType u, NodeType index) { fixedPosition[index] = u; }
 
-  const auto& getCurrentSolution() const { return currentSolution; }
-
-  void setCurrentSolution(CrossingCountType newCurrent) { currentSolution = newCurrent; }
-
   const auto& getBestSolution() const { return bestSolution; }
 
   void setBestSolution(CrossingCountType newBest) { bestSolution = newBest; }
@@ -98,6 +92,8 @@ class RGraph {
   void deleteRightNode(NodeType node, NodeType rightNode) {
     leftRightSet[node][1].erase(rightNode);
   }
+
+  void setBestOrder(std::vector<NodeType> bestOrderSoFar) { bestOrder = bestOrderSoFar; }
 
   void addCrossing(NodeType leftNode, NodeType rightNode, CrossingCountType crossingSum) {
     crossings[leftNode][rightNode] = crossingSum;
@@ -122,7 +118,7 @@ class RGraph {
     }
   }
 
-  void parameterAccounting(NodeType u, NodeType v,
+  void parameterAccounting(NodeType u, NodeType v, CrossingCountType& currentSolution,
                            Undo<NodeType, CrossingCountType>* undo = nullptr) {
     if (u != v) {
       if (leftRightSet[u][1].find(v) == leftRightSet[u][1].end()) {
@@ -135,10 +131,10 @@ class RGraph {
         crossings[u].erase(v);
         crossings[v].erase(u);
         for (const auto& smallerThanU : leftRightSet[u][0]) {
-          parameterAccounting(smallerThanU, v, undo);
+          parameterAccounting(smallerThanU, v, currentSolution, undo);
           for (const auto& biggerThanV : leftRightSet[v][1]) {
-            parameterAccounting(smallerThanU, biggerThanV, undo);
-            parameterAccounting(u, biggerThanV, undo);
+            parameterAccounting(smallerThanU, biggerThanV, currentSolution, undo);
+            parameterAccounting(u, biggerThanV, currentSolution, undo);
           }
         }
       }
@@ -166,17 +162,18 @@ class RGraph {
   // left of u  and to its right
 
   void computeCrossingSums() {
+    CrossingCountType currentSolution = 0;
     for (NodeType u = 0; u < freeNodes.size(); ++u) {
       for (NodeType v = u + 1; v < freeNodes.size(); ++v) {
         CrossingCountType crossingUV = computeUVcrossing(u, v);
         // reduction RR1: For each pair of vertices {u, v} ⊆ free nodes that forms a 0/j pattern
         // with j > 0, commit u < v
         if (crossingUV == 0) {
-          parameterAccounting(u, v);
+          parameterAccounting(u, v, currentSolution);
         } else {
           CrossingCountType crossingVU = computeUVcrossing(v, u);
           if (crossingVU == 0) {
-            parameterAccounting(v, u);
+            parameterAccounting(v, u, currentSolution);
           } else {
             crossings[u][v] = crossingUV;
             crossings[v][u] = crossingVU;

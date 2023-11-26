@@ -10,11 +10,13 @@ TEST(AlgorithmTest, rrlo1Rrlo2) {
   std::vector<std::vector<int>> freeNodes = {{0, 1}, {0}, {0, 1, 2}};
   std::vector<std::vector<int>> fixedNodes = {{0, 1, 2}, {0, 2}, {2}};
   RGraph myGraph = RGraph<int, int>(freeNodes, fixedNodes);
+  int currentSolution = 0;
+
   ReductionAlgorithm<int, int>::rrlo1(myGraph);
   EXPECT_EQ(myGraph.getFixedPosition()[0], 1);
   EXPECT_EQ(myGraph.getFixedPosition()[1], 0);
   EXPECT_EQ(myGraph.getFixedPosition()[2], 0);
-  ReductionAlgorithm<int, int>::rrlo2(myGraph);
+  ReductionAlgorithm<int, int>::rrlo2(myGraph, currentSolution);
   ReductionAlgorithm<int, int>::rrlo1(myGraph);
   EXPECT_EQ(myGraph.getFixedPosition()[0], 1);
   EXPECT_EQ(myGraph.getFixedPosition()[1], 0);
@@ -24,7 +26,9 @@ TEST(AlgorithmTest, rr3) {
   std::vector<std::vector<int>> freeNodes = {{0, 2}, {0, 1}, {0, 2}};
   std::vector<std::vector<int>> fixedNodes = {{0, 1, 2}, {1}, {0, 2}};
   RGraph myGraph = RGraph<int, int>(freeNodes, fixedNodes);
-  ReductionAlgorithm<int, int>::rr3(myGraph);
+  int currentSolution = 0;
+
+  ReductionAlgorithm<int, int>::rr3(myGraph, currentSolution);
   EXPECT_EQ(myGraph.getLeftNodes(0).size(), 1);
   EXPECT_EQ(myGraph.getRightNodes(0).size(), 0);
   EXPECT_EQ(*(myGraph.getLeftNodes(0).find(1)), 1);
@@ -45,8 +49,9 @@ TEST(AlgorithmTest, rr2) {
   std::vector<std::vector<int>> freeNodes = {{0, 2}, {0, 1}, {0, 2}};
   std::vector<std::vector<int>> fixedNodes = {{0, 1, 2}, {1}, {0, 2}};
   RGraph myGraph = RGraph<int, int>(freeNodes, fixedNodes);
+  int currentSolution = 0;
 
-  ReductionAlgorithm<int, int>::rr2(myGraph);
+  ReductionAlgorithm<int, int>::rr2(myGraph, currentSolution);
   EXPECT_EQ(myGraph.getLeftNodes(0).size(), 0);
   EXPECT_EQ(myGraph.getRightNodes(0).size(), 1);
 
@@ -61,9 +66,43 @@ TEST(AlgorithmTest, rrLarge) {
   std::vector<std::vector<int>> freeNodes = {{0, 1}, {0}, {0, 1, 2}};
   std::vector<std::vector<int>> fixedNodes = {{0, 1, 2}, {0, 2}, {2}};
   RGraph myGraph = RGraph<int, int>(freeNodes, fixedNodes);
-  ReductionAlgorithm<int, int>::rrLarge(myGraph, 2);
+  int currentSolution = 0;
+  ReductionAlgorithm<int, int>::rrLarge(myGraph, 2, currentSolution);
   EXPECT_EQ(myGraph.getLeftNodes(0).size(), 1);
   EXPECT_EQ(myGraph.getRightNodes(0).size(), 1);
   EXPECT_EQ(myGraph.getRightNodes(2).size(), 0);
   EXPECT_EQ(myGraph.getLeftNodes(2).size(), 2);
+}
+
+TEST(AlgorithmTest, IJBiggerThenFour) {
+  std::vector<std::vector<int>> freeNodes = {{0, 1}, {0}, {0, 1, 2}};
+  std::vector<std::vector<int>> fixedNodes = {{0, 1, 2}, {0, 2}, {2}};
+  RGraph myGraph = RGraph<int, int>(freeNodes, fixedNodes);
+  int u = 0;
+  int v = 0;
+  ReductionAlgorithm<int, int>::IJBiggerThenFour(myGraph, &u, &v);
+  EXPECT_EQ(u, 0);
+  EXPECT_EQ(v, 2);
+}
+
+TEST(AlgorithmTest, IJEqualToThree) {
+  std::vector<std::vector<int>> freeNodes = {{0, 1}, {0}, {0, 2}};
+  std::vector<std::vector<int>> fixedNodes = {{0, 1, 2}, {0}, {2}};
+  RGraph myGraph = RGraph<int, int>(freeNodes, fixedNodes);
+  int u = 0;
+  int v = 0;
+  ReductionAlgorithm<int, int>::IJEqualToThree(myGraph, &u, &v);
+  EXPECT_EQ(u, 2);
+  EXPECT_EQ(v, 0);
+}
+
+TEST(AlgorithmTest, IJEqualToTwo) {
+  std::vector<std::vector<int>> freeNodes = {{1, 2}, {0}, {0, 1, 2}};
+  std::vector<std::vector<int>> fixedNodes = {{1, 2}, {0, 2}, {0, 2}};
+  RGraph myGraph = RGraph<int, int>(freeNodes, fixedNodes);
+  int u = 0;
+  int v = 0;
+  ReductionAlgorithm<int, int>::IJEqualToTwo(myGraph, &u, &v);
+  EXPECT_EQ(u, 0);
+  EXPECT_EQ(v, 2);
 }

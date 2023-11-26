@@ -10,6 +10,7 @@ TEST(GraphTest, SimpleTest) {
   std::vector<std::vector<int>> freeNodes = {{0, 1}, {0}, {0, 1, 2}};
   std::vector<std::vector<int>> fixedNodes = {{0, 1, 2}, {0, 2}, {2}};
   RGraph myGraph = RGraph<int, int>(freeNodes, fixedNodes);
+  int currentSolution = 0;
   EXPECT_EQ(myGraph.getFreeNodesSize(), 3);
   EXPECT_EQ(myGraph.getFixedNodesSize(), 3);
   EXPECT_EQ(myGraph.getFreeNodeNeighboursSize(0), 2);
@@ -34,9 +35,7 @@ TEST(GraphTest, SimpleTest) {
   EXPECT_EQ(myGraph.getNodeCrossing(1).size(), 0);
   EXPECT_EQ(myGraph.getNodeCrossing(2).size(), 1);
 
-  EXPECT_EQ(myGraph.getCurrentSolution(), 0);
-  myGraph.parameterAccounting(2, 0);
-  EXPECT_EQ(myGraph.getCurrentSolution(), 3);
+  myGraph.parameterAccounting(2, 0, currentSolution);
   EXPECT_EQ(myGraph.getNodeCrossing(0).size(), 0);
   EXPECT_EQ(myGraph.getNodeCrossing(2).size(), 0);
 
@@ -67,7 +66,7 @@ TEST(GraphTest, SimpleTest) {
   EXPECT_EQ(*(myGraph1.getRightNodes(1).find(3)), 3);
   EXPECT_EQ(*(myGraph1.getRightNodes(2).find(0)), 0);
   EXPECT_EQ(*(myGraph1.getLeftNodes(3).find(1)), 1);
-  myGraph1.parameterAccounting(0, 1);
+  myGraph1.parameterAccounting(0, 1, currentSolution);
 
   EXPECT_EQ(myGraph1.getLeftNodes(0).size(), 1);
   EXPECT_EQ(myGraph1.getRightNodes(0).size(), 2);
@@ -100,7 +99,9 @@ TEST(GraphTest, undo) {
   std::vector<std::vector<int>> fixedNodes = {{0, 1, 2}, {0, 2}, {2}};
   RGraph myGraph = RGraph<int, int>(freeNodes, fixedNodes);
   Undo undo = Undo<int, int>();
-  myGraph.parameterAccounting(0, 2, &undo);
+  int currentSolution = 0;
+
+  myGraph.parameterAccounting(0, 2, currentSolution, &undo);
   EXPECT_EQ(undo.getParameterAccountingUndo().size(), 1);
   EXPECT_EQ(undo.getParameterAccountingUndo()[0].leftNode, 0);
   EXPECT_EQ(undo.getParameterAccountingUndo()[0].rightNode, 2);
