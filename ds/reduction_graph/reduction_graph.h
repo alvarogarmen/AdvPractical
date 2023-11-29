@@ -6,10 +6,10 @@
 #include <set>
 #include <vector>
 
-#include "undo.h"
+#include "ds/reduction_graph/undo.h"
 
 template <typename NodeType, typename CrossingCountType>
-class RGraph {
+class ReductionGraph {
   // for each free node holds its neighbours
   std::vector<std::vector<NodeType>> freeNodes;
   // for each fixed node holds its neighbours
@@ -24,30 +24,28 @@ class RGraph {
   // yet.
   // saves the crossing number of u and v assuming u is placed before v
   std::vector<std::map<NodeType, CrossingCountType>> crossings;
-  // for each new branch save all the changes in order to do back tracking
-  std::vector<NodeType> undo;
   // holds the crossing number of the best solution so far
   CrossingCountType bestSolution;
   // holds the order of the solution best so far
   std::vector<NodeType> bestOrder;
 
  public:
-  RGraph(const std::vector<std::vector<NodeType>>& freeNodes,
-         const std::vector<std::vector<NodeType>>& fixedNodes)
+  ReductionGraph(const std::vector<std::vector<NodeType>>& freeNodes,
+                 const std::vector<std::vector<NodeType>>& fixedNodes)
       : freeNodes(freeNodes),
         fixedNodes(fixedNodes),
-        fixedPosition(std::vector<NodeType>(freeNodes.size())),
-        leftRightSet(std::vector<std::array<std::set<NodeType>, 2>>(freeNodes.size())),
-        crossings(std::vector<std::map<NodeType, CrossingCountType>>(freeNodes.size())) {
+        fixedPosition(freeNodes.size()),
+        leftRightSet(freeNodes.size()),
+        crossings(freeNodes.size()) {
     computeCrossingSums();
   }
 
-  RGraph(NodeType numFreeNodes, NodeType numFixedNodes)
-      : freeNodes(std::vector<std::vector<NodeType>>(numFreeNodes, std::vector<NodeType>(0))),
-        fixedNodes(std::vector<std::vector<NodeType>>(numFreeNodes, std::vector<NodeType>(0))),
-        fixedPosition(std::vector<NodeType>(freeNodes.size())),
-        leftRightSet(std::vector<std::array<std::set<NodeType>, 2>>(freeNodes.size())),
-        crossings(std::vector<std::map<NodeType, CrossingCountType>>(freeNodes.size())) {
+  ReductionGraph(NodeType numFreeNodes, NodeType numFixedNodes)
+      : freeNodes(numFreeNodes, std::vector<NodeType>(0)),
+        fixedNodes(numFreeNodes, std::vector<NodeType>(0)),
+        fixedPosition(freeNodes.size()),
+        leftRightSet(freeNodes.size()),
+        crossings(freeNodes.size()) {
     computeCrossingSums();
   }
 
@@ -95,7 +93,7 @@ class RGraph {
     leftRightSet[node][1].erase(rightNode);
   }
 
-  void setBestOrder(std::vector<NodeType> bestOrderSoFar) { bestOrder = bestOrderSoFar; }
+  void setBestOrder(const std::vector<NodeType>& bestOrderSoFar) { bestOrder = bestOrderSoFar; }
 
   void addCrossing(NodeType leftNode, NodeType rightNode, CrossingCountType crossingSum) {
     crossings[leftNode][rightNode] = crossingSum;
@@ -128,7 +126,7 @@ class RGraph {
         leftRightSet[v][0].insert(u);
         currentSolution += crossings[u][v];
         if (undo) {
-          (*undo).addParameterAccountingUndo(u, v, crossings[u][v], crossings[v][u]);
+          undo->addParameterAccountingUndo(u, v, crossings[u][v], crossings[v][u]);
         }
         crossings[u].erase(v);
         crossings[v].erase(u);

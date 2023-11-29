@@ -14,7 +14,7 @@ cc_library(
 cc_library(
     name = "reduction_graph",
     hdrs = [
-        "r_graph.h",
+        "reduction_graph.h",
     ],
     visibility = ["//visibility:public"],
     deps = [
@@ -23,8 +23,8 @@ cc_library(
 )
 
 cc_test(
-    name = "r_graph_test",
-    srcs = ["r_graph_test.cc"],
+    name = "reduction_graph_test",
+    srcs = ["reduction_graph_test.cc"],
     deps = [
         ":reduction_graph",
         ":undo",

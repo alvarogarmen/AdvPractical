@@ -9,7 +9,7 @@
 #include <set>
 #include <vector>
 
-#include "ds/reduction_graph/r_graph.h"
+#include "ds/reduction_graph/reduction_graph.h"
 #include "ds/reduction_graph/undo.h"
 
 template <typename NodeType, typename CrossingCountType>
@@ -17,7 +17,7 @@ class ReductionAlgorithm {
  public:
   //  if a free node v is comparable  with all other free nodes, then put v in its right fixed
   //  position
-  static void rrlo1(RGraph<NodeType, CrossingCountType>& graph) {
+  static void rrlo1(ReductionGraph<NodeType, CrossingCountType>& graph) {
     for (NodeType v = 0; v < graph.getFreeNodesSize(); ++v) {
       if (graph.getNodeCrossing(v).size() == 0) {
         NodeType endIndex = graph.getLeftNodes(v).size();
@@ -28,7 +28,7 @@ class ReductionAlgorithm {
 
   // If {u, v} is an incomparable pair in which, u and v are comparable with all other nodes, with
   // c(u, v) <= c(v, u) , then commit u < v, and do the parameter accounting.
-  static bool rrlo2(RGraph<NodeType, CrossingCountType>& graph,
+  static bool rrlo2(ReductionGraph<NodeType, CrossingCountType>& graph,
                     CrossingCountType& currentSolution) {
     NodeType n = graph.getFreeNodesSize();
     bool didChange = false;
@@ -54,7 +54,8 @@ class ReductionAlgorithm {
 
   // if we have c(u, v) = 1 and c(v, u) = 2 with d(u) == 2  d(v) == 2 then commit u < v and do
   // parameter accounting
-  static void rr3(RGraph<NodeType, CrossingCountType>& graph, CrossingCountType& currentSolution) {
+  static void rr3(ReductionGraph<NodeType, CrossingCountType>& graph,
+                  CrossingCountType& currentSolution) {
     // Create a list of pairs to be modified
     std::vector<std::pair<NodeType, NodeType>> pairsToModify;
 
@@ -95,7 +96,8 @@ class ReductionAlgorithm {
   }
   // For each pair of free nodes u, v with N(u) = N(v),(arbitrarily) commit a < b, and do parameter
   // accounting.
-  static void rr2(RGraph<NodeType, CrossingCountType>& graph, CrossingCountType& currentSolution) {
+  static void rr2(ReductionGraph<NodeType, CrossingCountType>& graph,
+                  CrossingCountType& currentSolution) {
     NodeType n = graph.getFreeNodesSize();
     for (NodeType u = 0; u < n; ++u) {
       for (NodeType v = u + 1; v < n; ++v) {
@@ -107,8 +109,8 @@ class ReductionAlgorithm {
   }
 
   // If c(u, v) > k, then commit v < u and do the parameter accounting.
-  static bool rrLarge(RGraph<NodeType, CrossingCountType>& graph, CrossingCountType crossingsLeft,
-                      CrossingCountType& currentSolution) {
+  static bool rrLarge(ReductionGraph<NodeType, CrossingCountType>& graph,
+                      CrossingCountType crossingsLeft, CrossingCountType& currentSolution) {
     std::vector<std::pair<NodeType, NodeType>> pairsToModify;
     bool didChange = false;
     for (NodeType u = 0; u < graph.getFreeNodesSize(); ++u) {
@@ -129,8 +131,8 @@ class ReductionAlgorithm {
   }
 
   // Check if there is  an incomparable i/j pattern {u, v} with i + j >= 4,
-  static bool IJBiggerThenFour(const RGraph<NodeType, CrossingCountType>& graph, NodeType* u,
-                               NodeType* v) {
+  static bool IJBiggerThenFour(const ReductionGraph<NodeType, CrossingCountType>& graph,
+                               NodeType* u, NodeType* v) {
     for (NodeType firstNode = 0; firstNode < graph.getFreeNodesSize(); ++firstNode) {
       for (const auto& pair : graph.getNodeCrossing(firstNode)) {
         NodeType secondNode = pair.first;
@@ -147,7 +149,7 @@ class ReductionAlgorithm {
   }
 
   // Check if there is an there is a dependent 2/1 pattern {u, v} with c(u, v) + c(v, u) = 3
-  static bool IJEqualToThree(const RGraph<NodeType, CrossingCountType>& graph, NodeType* u,
+  static bool IJEqualToThree(const ReductionGraph<NodeType, CrossingCountType>& graph, NodeType* u,
                              NodeType* v) {
     for (NodeType firstNode = 0; firstNode < graph.getFreeNodesSize(); ++firstNode) {
       for (const auto& pair : graph.getNodeCrossing(firstNode)) {
@@ -164,7 +166,7 @@ class ReductionAlgorithm {
   }
 
   // Check if there is a 1/1 pattern {u, v}
-  static bool IJEqualToTwo(const RGraph<NodeType, CrossingCountType>& graph, NodeType* u,
+  static bool IJEqualToTwo(const ReductionGraph<NodeType, CrossingCountType>& graph, NodeType* u,
                            NodeType* v) {
     for (NodeType firstNode = 0; firstNode < graph.getFreeNodesSize(); ++firstNode) {
       for (const auto& pair : graph.getNodeCrossing(firstNode)) {
@@ -177,7 +179,7 @@ class ReductionAlgorithm {
     return false;
   }
 
-  static void algorithmStep(RGraph<NodeType, CrossingCountType>& graph,
+  static void algorithmStep(ReductionGraph<NodeType, CrossingCountType>& graph,
                             CrossingCountType currentSolution, bool isInitStep, NodeType leftNode,
                             NodeType rightNode) {
     Undo undo = Undo<NodeType, CrossingCountType>();
@@ -212,7 +214,7 @@ class ReductionAlgorithm {
     return;
   }
 
-  static void algorithm(RGraph<NodeType, CrossingCountType>& graph) {
+  static void algorithm(ReductionGraph<NodeType, CrossingCountType>& graph) {
     CrossingCountType currentSolution = 0;
     rr2(graph, currentSolution);
     rr3(graph, currentSolution);

@@ -1,4 +1,4 @@
-#include "r_graph.h"
+#include "reduction_graph.h"
 
 #include <vector>
 
@@ -9,7 +9,7 @@
 TEST(GraphTest, SimpleTest) {
   std::vector<std::vector<int>> freeNodes = {{0, 1}, {0}, {0, 1, 2}};
   std::vector<std::vector<int>> fixedNodes = {{0, 1, 2}, {0, 2}, {2}};
-  RGraph myGraph = RGraph<int, int>(freeNodes, fixedNodes);
+  ReductionGraph myGraph = ReductionGraph<int, int>(freeNodes, fixedNodes);
   int currentSolution = 0;
   EXPECT_EQ(myGraph.getFreeNodesSize(), 3);
   EXPECT_EQ(myGraph.getFixedNodesSize(), 3);
@@ -41,7 +41,7 @@ TEST(GraphTest, SimpleTest) {
 
   std::vector<std::vector<int>> freeNodes1 = {{0, 1}, {0}, {0, 1, 2}, {0}};
   std::vector<std::vector<int>> fixedNodes1 = {{0, 1, 2, 3}, {0, 2}, {2}};
-  RGraph myGraph1 = RGraph<int, int>(freeNodes1, fixedNodes1);
+  ReductionGraph myGraph1 = ReductionGraph<int, int>(freeNodes1, fixedNodes1);
   std::set<int> aLeftSet = {2};
   std::set<int> aRightSet = {};
   std::set<int> bLeftSet = {};
@@ -97,7 +97,7 @@ TEST(GraphTest, SimpleTest) {
 TEST(GraphTest, undo) {
   std::vector<std::vector<int>> freeNodes = {{0, 1}, {0}, {0, 1, 2}};
   std::vector<std::vector<int>> fixedNodes = {{0, 1, 2}, {0, 2}, {2}};
-  RGraph myGraph = RGraph<int, int>(freeNodes, fixedNodes);
+  ReductionGraph myGraph = ReductionGraph<int, int>(freeNodes, fixedNodes);
   Undo undo = Undo<int, int>();
   int currentSolution = 0;
 

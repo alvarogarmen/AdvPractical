@@ -3,16 +3,17 @@
 
 template <typename NodeType, typename CrossingCountType>
 struct Operation {
+  NodeType leftNode;
+  NodeType rightNode;
+  CrossingCountType leftRightCrossing;
+  CrossingCountType rightLeftCrossing;
+
   Operation(NodeType leftNode, NodeType rightNode, CrossingCountType leftRightCrossing,
             CrossingCountType rightLeftCrossing)
       : leftNode(leftNode),
         rightNode(rightNode),
         leftRightCrossing(leftRightCrossing),
         rightLeftCrossing(rightLeftCrossing) {}
-  NodeType leftNode;
-  NodeType rightNode;
-  CrossingCountType leftRightCrossing;
-  CrossingCountType rightLeftCrossing;
 };
 
 template <typename NodeType, typename CrossingCountType>
