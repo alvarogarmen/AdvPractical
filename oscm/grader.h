@@ -14,7 +14,7 @@ bool edgeCross(Edge<SizeType>& edge1, Edge<SizeType>& edge2) {
   return false;
 }
 template <typename SizeType>
-int crossGrader(Graph<SizeType>& myGraph) {
+int crossGrader(BipartiteGraph<SizeType>& myGraph) {
   int crossings = 0;
   for (int i = 0; i < myGraph.edges.size(); i++) {
     for (int j = i; j < myGraph.edges.size(); j++) {

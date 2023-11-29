@@ -19,15 +19,12 @@ absl::StatusOr<std::unique_ptr<BipartiteGraph>> readGraph(std::istream& stream,
       return absl::NotFoundError("File does not contain enough lines. Could not read header.");
     }
     std::getline(stream, header);
-    if (header.length() > 0 && header[0] == '%') {
-      header = "";
-    }
   }
 
   std::string line;
-  typename BipartiteGraph::NodeType n0 = 0;
-  typename BipartiteGraph::NodeType n1 = 0;
-  typename BipartiteGraph::NodeType m = 0;
+  typename BipartiteGraph::NodeType n0 = 0;  // Number of fixed Nodes
+  typename BipartiteGraph::NodeType n1 = 0;  // Number of free Nodes
+  typename BipartiteGraph::NodeType m = 0;   // Number of edges
 
   while (std::getline(stream, line) && (line.empty() || line[0] == 'c')) {
     // Comment line, skip
@@ -62,6 +59,7 @@ absl::StatusOr<std::unique_ptr<BipartiteGraph>> readGraph(std::istream& stream,
       return absl::InvalidArgumentError("Invalid edge vertex indices");
     }
     bipartiteGraph->addEdge(source - 1, target - 1);  // adds an edge going from Source to Target
+    // internally we want 0-indexed arrays but the input is 1-indexed
   }
   // TODO: implement finish on data structures
   // bipartiteGraph->finish();

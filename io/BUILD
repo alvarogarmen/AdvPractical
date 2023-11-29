@@ -18,7 +18,6 @@ cc_test(
     srcs = ["ocsm_graph_reader_test.cc"],
     deps = [
         ":io",
-        "//ds/fpt:fpt_graph",
         "@com_google_absl//absl/status:statusor",
         "@com_google_absl//absl/strings",
         "@com_google_googletest//:gtest_main",

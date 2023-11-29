@@ -13,7 +13,7 @@ cc_test(
     srcs = ["grader_test.cc"],
     deps = [
         ":oscm",
-        "//ds:bipartite_graph",
+        "//ds:bipartite_graph.h",
         "@com_google_googletest//:gtest_main",
     ],
 )
