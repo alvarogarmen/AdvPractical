@@ -69,13 +69,9 @@ class ReductionAlgorithm {
         NodeType v = pair.first;
         CrossingCountType crossingValue = pair.second;
 
-        if (crossingValue == 1) {
-          if (graph.getNodeCrossing(v).at(u) == 2) {
-            if (graph.getFreeNodeNeighboursSize(u) == 2 &&
-                graph.getFreeNodeNeighboursSize(v) == 2) {
-              pairsToModify.emplace_back(u, v);
-            }
-          }
+        if (crossingValue == 1 && graph.getNodeCrossing(v).at(u) == 2 &&
+            graph.getFreeNodeNeighboursSize(u) == 2 && graph.getFreeNodeNeighboursSize(v) == 2) {
+          pairsToModify.emplace_back(u, v);
         }
       }
     }
@@ -86,19 +82,6 @@ class ReductionAlgorithm {
     }
   }
 
-  static bool areVectorsEqual(const std::vector<NodeType>& v1, const std::vector<NodeType>& v2) {
-    if (v1.size() != v2.size()) {
-      return false;
-    }
-
-    for (NodeType i = 0; i < v1.size(); ++i) {
-      if (v1[i] != v2[i]) {
-        return false;
-      }
-    }
-
-    return true;
-  }
   // For each pair of free nodes u, v with N(u) = N(v),(arbitrarily) commit a < b, and do parameter
   // accounting.
   static void rr2(ReductionGraph<NodeType, CrossingCountType>& graph,
@@ -106,7 +89,9 @@ class ReductionAlgorithm {
     NodeType n = graph.getFreeNodesSize();
     for (NodeType u = 0; u < n; ++u) {
       for (NodeType v = u + 1; v < n; ++v) {
-        if (areVectorsEqual(graph.getFreeNodeNeighbours(u), graph.getFreeNodeNeighbours(v))) {
+        if (std::equal(graph.getFreeNodeNeighbours(u).begin(), graph.getFreeNodeNeighbours(u).end(),
+                       graph.getFreeNodeNeighbours(v).begin(),
+                       graph.getFreeNodeNeighbours(v).end())) {
           graph.parameterAccounting(u, v, currentSolution);
         }
       }
@@ -119,18 +104,15 @@ class ReductionAlgorithm {
     std::vector<std::pair<NodeType, NodeType>> pairsToModify;
     bool didChange = false;
     for (NodeType u = 0; u < graph.getFreeNodesSize(); ++u) {
-      for (const auto& pair : graph.getNodeCrossing(u)) {
-        NodeType v = pair.first;
-        CrossingCountType crossingValue = pair.second;
-
+      for (auto [v, crossingValue] : graph.getNodeCrossing(u)) {
         if (crossingValue > crossingsLeft) {
           pairsToModify.emplace_back(v, u);
           didChange = true;
         }
       }
     }
-    for (const auto& pair : pairsToModify) {
-      graph.parameterAccounting(pair.first, pair.second, currentSolution);
+    for (auto [v, crossingValue] : pairsToModify) {
+      graph.parameterAccounting(v, crossingValue, currentSolution);
     }
     return didChange;
   }
@@ -139,9 +121,7 @@ class ReductionAlgorithm {
   static bool IJBiggerThenFour(const ReductionGraph<NodeType, CrossingCountType>& graph,
                                NodeType* u, NodeType* v) {
     for (NodeType firstNode = 0; firstNode < graph.getFreeNodesSize(); ++firstNode) {
-      for (const auto& pair : graph.getNodeCrossing(firstNode)) {
-        NodeType secondNode = pair.first;
-        CrossingCountType FirstSecondcrossingValue = pair.second;
+      for (auto [secondNode, FirstSecondcrossingValue] : graph.getNodeCrossing(firstNode)) {
         CrossingCountType secondFirstcrossingValue = graph.getCrossing(secondNode, firstNode);
         if (FirstSecondcrossingValue + secondFirstcrossingValue >= 4) {
           *u = firstNode;
@@ -157,9 +137,7 @@ class ReductionAlgorithm {
   static bool IJEqualToThree(const ReductionGraph<NodeType, CrossingCountType>& graph, NodeType* u,
                              NodeType* v) {
     for (NodeType firstNode = 0; firstNode < graph.getFreeNodesSize(); ++firstNode) {
-      for (const auto& pair : graph.getNodeCrossing(firstNode)) {
-        NodeType secondNode = pair.first;
-        CrossingCountType FirstSecondcrossingValue = pair.second;
+      for (auto [secondNode, FirstSecondcrossingValue] : graph.getNodeCrossing(firstNode)) {
         if (FirstSecondcrossingValue == 2) {
           *u = firstNode;
           *v = secondNode;
@@ -174,8 +152,7 @@ class ReductionAlgorithm {
   static bool IJEqualToTwo(const ReductionGraph<NodeType, CrossingCountType>& graph, NodeType* u,
                            NodeType* v) {
     for (NodeType firstNode = 0; firstNode < graph.getFreeNodesSize(); ++firstNode) {
-      for (const auto& pair : graph.getNodeCrossing(firstNode)) {
-        NodeType secondNode = pair.first;
+      for (auto [secondNode, FirstSecondcrossingValue] : graph.getNodeCrossing(firstNode)) {
         *u = firstNode;
         *v = secondNode;
         return true;

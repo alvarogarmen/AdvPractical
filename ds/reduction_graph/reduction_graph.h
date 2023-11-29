@@ -119,8 +119,8 @@ class ReductionGraph {
   }
 
   /*
-   * for
-   *
+   * For each decision u < v that we make adjust the leftRightSet of u and v
+   * Add all the transitiv decisions that follow the u < v decision
    */
   void parameterAccounting(NodeType u, NodeType v, CrossingCountType* currentSolution,
                            Undo<NodeType, CrossingCountType>* undo = nullptr) {
