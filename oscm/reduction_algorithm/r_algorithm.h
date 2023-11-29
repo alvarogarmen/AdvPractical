@@ -17,11 +17,13 @@ class ReductionAlgorithm {
  public:
   //  if a free node v is comparable  with all other free nodes, then put v in its right fixed
   //  position
-  static void rrlo1(ReductionGraph<NodeType, CrossingCountType>& graph) {
+  static void rrlo1(ReductionGraph<NodeType, CrossingCountType>& graph,
+                    Undo<NodeType, CrossingCountType> undo) {
     for (NodeType v = 0; v < graph.getFreeNodesSize(); ++v) {
       if (graph.getNodeCrossing(v).size() == 0) {
         NodeType endIndex = graph.getLeftNodes(v).size();
         graph.setFixedPosition(v, endIndex);
+        undo.addSetPositionUndo(endIndex);
       }
     }
   }
@@ -29,21 +31,24 @@ class ReductionAlgorithm {
   // If {u, v} is an incomparable pair in which, u and v are comparable with all other nodes, with
   // c(u, v) <= c(v, u) , then commit u < v, and do the parameter accounting.
   static bool rrlo2(ReductionGraph<NodeType, CrossingCountType>& graph,
-                    CrossingCountType& currentSolution) {
+                    CrossingCountType* currentSolution) {
     NodeType n = graph.getFreeNodesSize();
     bool didChange = false;
     for (NodeType u = 0; u < n; ++u) {
+      // only one node is missing for u
       if (graph.getLeftNodes(u).size() + graph.getRightNodes(u).size() == n - 2) {
         for (NodeType v = u + 1; v < n; ++v) {
-          if (graph.getLeftNodes(v).size() + graph.getRightNodes(v).size() == n - 2) {
-            if (graph.getLeftNodes(v).size() == graph.getLeftNodes(u).size()) {
-              if (graph.getCrossing(u, v) <= graph.getCrossing(v, u)) {
-                graph.parameterAccounting(u, v, currentSolution);
-                didChange = true;
-              } else {
-                graph.parameterAccounting(v, u, currentSolution);
-                didChange = true;
-              }
+          // only one node missing for v
+          // same number of left and right nodes for v and u ->
+          // v and u are neighbours and v is missing for u and the other way around
+          if (graph.getLeftNodes(v).size() + graph.getRightNodes(v).size() == n - 2 &&
+              graph.getLeftNodes(v).size() == graph.getLeftNodes(u).size()) {
+            if (graph.getCrossing(u, v) <= graph.getCrossing(v, u)) {
+              graph.parameterAccounting(u, v, currentSolution);
+              didChange = true;
+            } else {
+              graph.parameterAccounting(v, u, currentSolution);
+              didChange = true;
             }
           }
         }
@@ -55,7 +60,7 @@ class ReductionAlgorithm {
   // if we have c(u, v) = 1 and c(v, u) = 2 with d(u) == 2  d(v) == 2 then commit u < v and do
   // parameter accounting
   static void rr3(ReductionGraph<NodeType, CrossingCountType>& graph,
-                  CrossingCountType& currentSolution) {
+                  CrossingCountType* currentSolution) {
     // Create a list of pairs to be modified
     std::vector<std::pair<NodeType, NodeType>> pairsToModify;
 
@@ -97,7 +102,7 @@ class ReductionAlgorithm {
   // For each pair of free nodes u, v with N(u) = N(v),(arbitrarily) commit a < b, and do parameter
   // accounting.
   static void rr2(ReductionGraph<NodeType, CrossingCountType>& graph,
-                  CrossingCountType& currentSolution) {
+                  CrossingCountType* currentSolution) {
     NodeType n = graph.getFreeNodesSize();
     for (NodeType u = 0; u < n; ++u) {
       for (NodeType v = u + 1; v < n; ++v) {
@@ -110,7 +115,7 @@ class ReductionAlgorithm {
 
   // If c(u, v) > k, then commit v < u and do the parameter accounting.
   static bool rrLarge(ReductionGraph<NodeType, CrossingCountType>& graph,
-                      CrossingCountType crossingsLeft, CrossingCountType& currentSolution) {
+                      CrossingCountType crossingsLeft, CrossingCountType* currentSolution) {
     std::vector<std::pair<NodeType, NodeType>> pairsToModify;
     bool didChange = false;
     for (NodeType u = 0; u < graph.getFreeNodesSize(); ++u) {
@@ -184,14 +189,15 @@ class ReductionAlgorithm {
                             NodeType rightNode) {
     Undo undo = Undo<NodeType, CrossingCountType>();
     if (isInitStep) {
-      graph.parameterAccounting(leftNode, rightNode, currentSolution, &undo);
+      graph.parameterAccounting(leftNode, rightNode, &currentSolution, &undo);
     }
     bool didChangeRrlo2 = true;
     bool didChangeRrLarge = true;
     while (didChangeRrlo2 || didChangeRrLarge) {
-      didChangeRrlo2 = rrlo2(graph, currentSolution);
-      didChangeRrLarge = rrLarge(graph, graph.getBestSolution() - currentSolution, currentSolution);
-      rrlo1(graph);
+      didChangeRrlo2 = rrlo2(graph, &currentSolution);
+      didChangeRrLarge =
+          rrLarge(graph, graph.getBestSolution() - currentSolution, &currentSolution);
+      rrlo1(graph, undo);
     }
     if (graph.getBestSolution() <= currentSolution) {
       graph.doUndo(undo);
@@ -216,8 +222,8 @@ class ReductionAlgorithm {
 
   static void algorithm(ReductionGraph<NodeType, CrossingCountType>& graph) {
     CrossingCountType currentSolution = 0;
-    rr2(graph, currentSolution);
-    rr3(graph, currentSolution);
+    rr2(graph, &currentSolution);
+    rr3(graph, &currentSolution);
     algorithmStep(graph, currentSolution, false, 0, 0);
   }
 };

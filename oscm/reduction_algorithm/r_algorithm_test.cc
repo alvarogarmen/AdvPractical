@@ -11,13 +11,14 @@ TEST(AlgorithmTest, rrlo1Rrlo2) {
   std::vector<std::vector<int>> fixedNodes = {{0, 1, 2}, {0, 2}, {2}};
   ReductionGraph myGraph = ReductionGraph<int, int>(freeNodes, fixedNodes);
   int currentSolution = 0;
+  Undo undo = Undo<int, int>();
 
-  ReductionAlgorithm<int, int>::rrlo1(myGraph);
+  ReductionAlgorithm<int, int>::rrlo1(myGraph, undo);
   EXPECT_EQ(myGraph.getFixedPosition()[0], 1);
   EXPECT_EQ(myGraph.getFixedPosition()[1], 0);
   EXPECT_EQ(myGraph.getFixedPosition()[2], 0);
-  ReductionAlgorithm<int, int>::rrlo2(myGraph, currentSolution);
-  ReductionAlgorithm<int, int>::rrlo1(myGraph);
+  ReductionAlgorithm<int, int>::rrlo2(myGraph, &currentSolution);
+  ReductionAlgorithm<int, int>::rrlo1(myGraph, undo);
   EXPECT_EQ(myGraph.getFixedPosition()[0], 1);
   EXPECT_EQ(myGraph.getFixedPosition()[1], 0);
   EXPECT_EQ(myGraph.getFixedPosition()[2], 2);
@@ -26,9 +27,10 @@ TEST(AlgorithmTest, rr3) {
   std::vector<std::vector<int>> freeNodes = {{0, 2}, {0, 1}, {0, 2}};
   std::vector<std::vector<int>> fixedNodes = {{0, 1, 2}, {1}, {0, 2}};
   ReductionGraph myGraph = ReductionGraph<int, int>(freeNodes, fixedNodes);
+  Undo undo = Undo<int, int>();
   int currentSolution = 0;
 
-  ReductionAlgorithm<int, int>::rr3(myGraph, currentSolution);
+  ReductionAlgorithm<int, int>::rr3(myGraph, &currentSolution);
   EXPECT_EQ(myGraph.getLeftNodes(0).size(), 1);
   EXPECT_EQ(myGraph.getRightNodes(0).size(), 0);
   EXPECT_EQ(*(myGraph.getLeftNodes(0).find(1)), 1);
@@ -41,7 +43,7 @@ TEST(AlgorithmTest, rr3) {
   EXPECT_EQ(myGraph.getLeftNodes(2).size(), 1);
   EXPECT_EQ(myGraph.getRightNodes(2).size(), 0);
   EXPECT_EQ(*(myGraph.getLeftNodes(2).find(1)), 1);
-  ReductionAlgorithm<int, int>::rrlo1(myGraph);
+  ReductionAlgorithm<int, int>::rrlo1(myGraph, undo);
   EXPECT_EQ(myGraph.getFixedPosition()[0], 1);
 }
 
@@ -51,7 +53,7 @@ TEST(AlgorithmTest, rr2) {
   ReductionGraph myGraph = ReductionGraph<int, int>(freeNodes, fixedNodes);
   int currentSolution = 0;
 
-  ReductionAlgorithm<int, int>::rr2(myGraph, currentSolution);
+  ReductionAlgorithm<int, int>::rr2(myGraph, &currentSolution);
   EXPECT_EQ(myGraph.getLeftNodes(0).size(), 0);
   EXPECT_EQ(myGraph.getRightNodes(0).size(), 1);
 
@@ -68,7 +70,7 @@ TEST(AlgorithmTest, rrLarge) {
   std::vector<std::vector<int>> fixedNodes = {{0, 1, 2}, {0, 2}, {2}};
   ReductionGraph myGraph = ReductionGraph<int, int>(freeNodes, fixedNodes);
   int currentSolution = 0;
-  ReductionAlgorithm<int, int>::rrLarge(myGraph, 2, currentSolution);
+  ReductionAlgorithm<int, int>::rrLarge(myGraph, 2, &currentSolution);
   EXPECT_EQ(myGraph.getLeftNodes(0).size(), 1);
   EXPECT_EQ(myGraph.getRightNodes(0).size(), 1);
   EXPECT_EQ(myGraph.getRightNodes(2).size(), 0);

@@ -118,21 +118,25 @@ class ReductionGraph {
     }
   }
 
-  void parameterAccounting(NodeType u, NodeType v, CrossingCountType& currentSolution,
+  /*
+   * for
+   *
+   */
+  void parameterAccounting(NodeType u, NodeType v, CrossingCountType* currentSolution,
                            Undo<NodeType, CrossingCountType>* undo = nullptr) {
     if (u != v) {
       if (leftRightSet[u][1].find(v) == leftRightSet[u][1].end()) {
         leftRightSet[u][1].insert(v);
         leftRightSet[v][0].insert(u);
-        currentSolution += crossings[u][v];
+        *currentSolution += crossings[u][v];
         if (undo) {
           undo->addParameterAccountingUndo(u, v, crossings[u][v], crossings[v][u]);
         }
         crossings[u].erase(v);
         crossings[v].erase(u);
-        for (const auto& smallerThanU : leftRightSet[u][0]) {
+        for (NodeType smallerThanU : leftRightSet[u][0]) {
           parameterAccounting(smallerThanU, v, currentSolution, undo);
-          for (const auto& biggerThanV : leftRightSet[v][1]) {
+          for (NodeType biggerThanV : leftRightSet[v][1]) {
             parameterAccounting(smallerThanU, biggerThanV, currentSolution, undo);
             parameterAccounting(u, biggerThanV, currentSolution, undo);
           }
@@ -169,11 +173,11 @@ class ReductionGraph {
         // reduction RR1: For each pair of vertices {u, v} ⊆ free nodes that forms a 0/j pattern
         // with j > 0, commit u < v
         if (crossingUV == 0) {
-          parameterAccounting(u, v, currentSolution);
+          parameterAccounting(u, v, &currentSolution);
         } else {
           CrossingCountType crossingVU = computeUVcrossing(v, u);
           if (crossingVU == 0) {
-            parameterAccounting(v, u, currentSolution);
+            parameterAccounting(v, u, &currentSolution);
           } else {
             crossings[u][v] = crossingUV;
             crossings[v][u] = crossingVU;
