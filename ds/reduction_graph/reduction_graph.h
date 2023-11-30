@@ -6,7 +6,7 @@
 #include <set>
 #include <vector>
 
-#include "ds/reduction_graph/undo.h"
+#include "ds/reduction_graph/UndoAlgorithmStep.h"
 
 template <typename NT, typename CCT>
 class ReductionGraph {
@@ -101,7 +101,7 @@ class ReductionGraph {
     crossings[leftNode][rightNode] = crossingSum;
   }
 
-  void doUndo(Undo<NodeType, CrossingCountType>& undo) {
+  void doUndo(UndoAlgorithmStep<NodeType, CrossingCountType>& undo) {
     for (const auto& operation : undo.getParameterAccountingUndo()) {
       deleteLeftNode(operation.rightNode, operation.leftNode);
       deleteRightNode(operation.leftNode, operation.rightNode);
@@ -125,7 +125,7 @@ class ReductionGraph {
    * Add all the transitiv decisions that follow the u < v decision
    */
   void parameterAccounting(NodeType u, NodeType v, CrossingCountType* currentSolution,
-                           Undo<NodeType, CrossingCountType>* undo = nullptr) {
+                           UndoAlgorithmStep<NodeType, CrossingCountType>* undo = nullptr) {
     if (u != v) {
       if (leftRightSet[u][1].find(v) == leftRightSet[u][1].end()) {
         leftRightSet[u][1].insert(v);

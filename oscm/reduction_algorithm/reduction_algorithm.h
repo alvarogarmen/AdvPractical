@@ -9,8 +9,8 @@
 #include <set>
 #include <vector>
 
+#include "ds/reduction_graph/UndoAlgorithmStep.h"
 #include "ds/reduction_graph/reduction_graph.h"
-#include "ds/reduction_graph/undo.h"
 
 //  if a free node v is comparable  with all other free nodes, then put v in its right fixed
 //  position

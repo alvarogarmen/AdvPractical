@@ -17,7 +17,7 @@ struct Operation {
 };
 
 template <typename NT, typename CCT>
-class Undo {
+class UndoAlgorithmStep {
   std::vector<Operation<NT, CCT>> parameterAccountingUndo;
   std::vector<NT> setPositionUndo;
 
@@ -25,7 +25,7 @@ class Undo {
   using NodeType = NT;
   using CrossingCountType = CCT;
 
-  Undo() {}
+  UndoAlgorithmStep() {}
 
   void addParameterAccountingUndo(NodeType leftNode, NodeType rightNode,
                                   CrossingCountType leftRightCrossing,
