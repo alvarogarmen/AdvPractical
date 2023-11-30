@@ -1,4 +1,4 @@
-#include "r_algorithm.h"
+#include "reduction_algorithm.h"
 
 #include <map>
 #include <vector>
@@ -13,12 +13,12 @@ TEST(AlgorithmTest, rrlo1Rrlo2) {
   int currentSolution = 0;
   Undo undo = Undo<int, int>();
 
-  ReductionAlgorithm<int, int>::rrlo1(myGraph, undo);
+  rrlo1<ReductionGraph<int, int>, Undo<int, int>>(myGraph, &undo);
   EXPECT_EQ(myGraph.getFixedPosition()[0], 1);
   EXPECT_EQ(myGraph.getFixedPosition()[1], 0);
   EXPECT_EQ(myGraph.getFixedPosition()[2], 0);
-  ReductionAlgorithm<int, int>::rrlo2(myGraph, &currentSolution);
-  ReductionAlgorithm<int, int>::rrlo1(myGraph, undo);
+  rrlo2<ReductionGraph<int, int>, Undo<int, int>>(myGraph, &currentSolution, &undo);
+  rrlo1<ReductionGraph<int, int>, Undo<int, int>>(myGraph, &undo);
   EXPECT_EQ(myGraph.getFixedPosition()[0], 1);
   EXPECT_EQ(myGraph.getFixedPosition()[1], 0);
   EXPECT_EQ(myGraph.getFixedPosition()[2], 2);
@@ -30,7 +30,7 @@ TEST(AlgorithmTest, rr3) {
   Undo undo = Undo<int, int>();
   int currentSolution = 0;
 
-  ReductionAlgorithm<int, int>::rr3(myGraph, &currentSolution);
+  rr3<ReductionGraph<int, int>, Undo<int, int>>(myGraph, &currentSolution, &undo);
   EXPECT_EQ(myGraph.getLeftNodes(0).size(), 1);
   EXPECT_EQ(myGraph.getRightNodes(0).size(), 0);
   EXPECT_EQ(*(myGraph.getLeftNodes(0).find(1)), 1);
@@ -43,7 +43,7 @@ TEST(AlgorithmTest, rr3) {
   EXPECT_EQ(myGraph.getLeftNodes(2).size(), 1);
   EXPECT_EQ(myGraph.getRightNodes(2).size(), 0);
   EXPECT_EQ(*(myGraph.getLeftNodes(2).find(1)), 1);
-  ReductionAlgorithm<int, int>::rrlo1(myGraph, undo);
+  rrlo1<ReductionGraph<int, int>, Undo<int, int>>(myGraph, &undo);
   EXPECT_EQ(myGraph.getFixedPosition()[0], 1);
 }
 
@@ -53,7 +53,7 @@ TEST(AlgorithmTest, rr2) {
   ReductionGraph myGraph = ReductionGraph<int, int>(freeNodes, fixedNodes);
   int currentSolution = 0;
 
-  ReductionAlgorithm<int, int>::rr2(myGraph, &currentSolution);
+  rr2<ReductionGraph<int, int>>(myGraph, &currentSolution);
   EXPECT_EQ(myGraph.getLeftNodes(0).size(), 0);
   EXPECT_EQ(myGraph.getRightNodes(0).size(), 1);
 
@@ -70,7 +70,7 @@ TEST(AlgorithmTest, rrLarge) {
   std::vector<std::vector<int>> fixedNodes = {{0, 1, 2}, {0, 2}, {2}};
   ReductionGraph myGraph = ReductionGraph<int, int>(freeNodes, fixedNodes);
   int currentSolution = 0;
-  ReductionAlgorithm<int, int>::rrLarge(myGraph, 2, &currentSolution);
+  rrLarge<ReductionGraph<int, int>, Undo<int, int>>(myGraph, 2, &currentSolution);
   EXPECT_EQ(myGraph.getLeftNodes(0).size(), 1);
   EXPECT_EQ(myGraph.getRightNodes(0).size(), 1);
   EXPECT_EQ(myGraph.getRightNodes(2).size(), 0);
@@ -83,7 +83,7 @@ TEST(AlgorithmTest, IJBiggerThenFour) {
   ReductionGraph myGraph = ReductionGraph<int, int>(freeNodes, fixedNodes);
   int u = 0;
   int v = 0;
-  ReductionAlgorithm<int, int>::IJBiggerThenFour(myGraph, &u, &v);
+  IJBiggerThenFour<ReductionGraph<int, int>>(myGraph, &u, &v);
   EXPECT_EQ(u, 0);
   EXPECT_EQ(v, 2);
 }
@@ -94,7 +94,7 @@ TEST(AlgorithmTest, IJEqualToThree) {
   ReductionGraph myGraph = ReductionGraph<int, int>(freeNodes, fixedNodes);
   int u = 0;
   int v = 0;
-  ReductionAlgorithm<int, int>::IJEqualToThree(myGraph, &u, &v);
+  IJEqualToThree<ReductionGraph<int, int>>(myGraph, &u, &v);
   EXPECT_EQ(u, 2);
   EXPECT_EQ(v, 0);
 }
@@ -105,7 +105,7 @@ TEST(AlgorithmTest, IJEqualToTwo) {
   ReductionGraph myGraph = ReductionGraph<int, int>(freeNodes, fixedNodes);
   int u = 0;
   int v = 0;
-  ReductionAlgorithm<int, int>::IJEqualToTwo(myGraph, &u, &v);
+  IJEqualToTwo<ReductionGraph<int, int>>(myGraph, &u, &v);
   EXPECT_EQ(u, 0);
   EXPECT_EQ(v, 2);
 }
@@ -114,7 +114,7 @@ TEST(AlgorithmTest, algorithm) {
   std::vector<std::vector<int>> freeNodes = {{0, 1}, {0}, {0, 1, 2}};
   std::vector<std::vector<int>> fixedNodes = {{0, 1, 2}, {0, 2}, {2}};
   ReductionGraph myGraph = ReductionGraph<int, int>(freeNodes, fixedNodes);
-  ReductionAlgorithm<int, int>::algorithm(myGraph);
+  algorithm<ReductionGraph<int, int>, Undo<int, int>>(myGraph);
   EXPECT_EQ(myGraph.getBestSolution(), 1);
   EXPECT_EQ(myGraph.getBestOrder()[0], 1);
   EXPECT_EQ(myGraph.getBestOrder()[1], 0);

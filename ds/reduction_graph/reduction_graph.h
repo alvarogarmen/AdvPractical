@@ -8,28 +8,30 @@
 
 #include "ds/reduction_graph/undo.h"
 
-template <typename NodeType, typename CrossingCountType>
+template <typename NT, typename CCT>
 class ReductionGraph {
   // for each free node holds its neighbours
-  std::vector<std::vector<NodeType>> freeNodes;
+  std::vector<std::vector<NT>> freeNodes;
   // for each fixed node holds its neighbours
-  std::vector<std::vector<NodeType>> fixedNodes;
+  std::vector<std::vector<NT>> fixedNodes;
   // holds the end position of free nodes
-  std::vector<NodeType> fixedPosition;
+  std::vector<NT> fixedPosition;
   // for each free node u, the first place hold free node that are knowned to be positioned to the
   // left of u
   // and the second hold the free nodes that are knowned to be positioned to its right
-  std::vector<std::array<std::set<NodeType>, 2>> leftRightSet;
+  std::vector<std::array<std::set<NT>, 2>> leftRightSet;
   // save the crossing number that accur between two free nodes (u, v) ,that do not have < order
   // yet.
   // saves the crossing number of u and v assuming u is placed before v
-  std::vector<std::map<NodeType, CrossingCountType>> crossings;
+  std::vector<std::map<NT, CCT>> crossings;
   // holds the crossing number of the best solution so far
-  CrossingCountType bestSolution;
+  CCT bestSolution;
   // holds the order of the solution best so far
-  std::vector<NodeType> bestOrder;
+  std::vector<NT> bestOrder;
 
  public:
+  using NodeType = NT;
+  using CrossingCountType = CCT;
   ReductionGraph(const std::vector<std::vector<NodeType>>& freeNodes,
                  const std::vector<std::vector<NodeType>>& fixedNodes)
       : freeNodes(freeNodes),

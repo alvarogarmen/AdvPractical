@@ -16,12 +16,15 @@ struct Operation {
         rightLeftCrossing(rightLeftCrossing) {}
 };
 
-template <typename NodeType, typename CrossingCountType>
+template <typename NT, typename CCT>
 class Undo {
-  std::vector<Operation<NodeType, CrossingCountType>> parameterAccountingUndo;
-  std::vector<NodeType> setPositionUndo;
+  std::vector<Operation<NT, CCT>> parameterAccountingUndo;
+  std::vector<NT> setPositionUndo;
 
  public:
+  using NodeType = NT;
+  using CrossingCountType = CCT;
+
   Undo() {}
 
   void addParameterAccountingUndo(NodeType leftNode, NodeType rightNode,
