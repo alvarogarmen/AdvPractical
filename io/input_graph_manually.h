@@ -6,9 +6,9 @@
 
 #include "ds/bipartite_graph.h"
 
-template <typename BipartiteGraph>
-BipartiteGraph inputGraphManually() {
-  BipartiteGraph myGraph = BipartiteGraph();
+template <typename SizeType>
+BipartiteGraph<SizeType> inputGraphManually() {
+  BipartiteGraph myGraph = BipartiteGraph<SizeType>();
   int source;
   int target;
   int degree;

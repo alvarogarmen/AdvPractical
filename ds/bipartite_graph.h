@@ -41,19 +41,20 @@ struct BipartiteGraph {
   };
   BipartiteGraph(NodeType fixedNodesSize, NodeType freeNodesSize, NodeType edgeSize)
       : freeNodes(freeNodesSize),
-        fixedNodes(fixedNodesSize){
-            // Edges will be added with push_back operations
+        fixedNodes(fixedNodesSize),
+        edgeHash(freeNodesSize){
+            // Concrete edges will be added with push_back operations
         };
 
   std::vector<NodeType> freeNodes;
   std::vector<NodeType> fixedNodes;
   std::vector<Edge<NodeType>> edges;  // Not sure if actually needed
-  std::vector<NodeType, std::vector<NodeType>>
+  std::unordered_map<NodeType, std::vector<NodeType>>
       edgeHash;  // nodeIDs are the indices. The first entry in the array is the
   // position of the nodeID in the freeNodes graph
-  const std::vector<NodeType>& getFreeNodes() { return this->freeNodes&; };
-  const std::vector<NodeType>& getFixedNodes() { return this->fixedNodes&; };
-  const std::vector<Edge<NodeType>>& getEdges() { return this->edges&; };
+  const std::vector<NodeType>& getFreeNodes() const { return this->freeNodes; }
+  const std::vector<NodeType>& getFixedNodes() const { return this->fixedNodes; }
+  const std::vector<Edge<NodeType>>& getEdges() const { return this->edges; }
 
   void insertFreeNode(Node<NodeType> node) {
     this->freeNodes.push_back((this->freeNodes.empty()) ? node.outDegree
