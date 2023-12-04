@@ -80,7 +80,6 @@ TEST(ReadGraphTest, NegativeNumbers) {
   // Negative n0
 
   auto result = readGraph<BipartiteGraph<int>>(testData);
-  ASSERT_FALSE(result.ok());
   EXPECT_EQ(result.status().code(), absl::StatusCode::kInvalidArgument);
 }
 
@@ -93,7 +92,6 @@ TEST(ReadGraphTest, MissingPLine) {
   // Edge line without 'p' line
 
   auto result = readGraph<BipartiteGraph<int>>(testData);
-  ASSERT_FALSE(result.ok());
   EXPECT_EQ(result.status().code(), absl::StatusCode::kInvalidArgument);
 }
 

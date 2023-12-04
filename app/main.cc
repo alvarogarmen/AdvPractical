@@ -21,7 +21,7 @@ int main(int argc, char* argv[]) {
   // Call out functions
   std::cout << "Something";
 
-  BipartiteGraph myGraph = inputGraphManually<int>();
+  auto myGraph = inputGraphManually<int>();
   std::cout << "Crossings: " << crossGrader(myGraph) << std::endl;
 
   return 0;
