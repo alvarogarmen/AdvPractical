@@ -53,12 +53,16 @@ absl::StatusOr<std::unique_ptr<BipartiteGraph>> readGraph(std::istream& stream,
                                                     // n0=numFixedNodes, n1=numFreeNodes, m=numEdges
   typename BipartiteGraph::NodeType source, target;
   const typename BipartiteGraph::NodeType size = n0 + n1;
-  while (stream && stream >> source && stream >> target) {
-    if ((source < 1 || source > n1) ||
-        (target <= n1 || target > size)) {  // Check if nodes out of bounds
+  while (stream && stream >> target &&
+         stream >> source) {  // Fixed Node appears first, free Node second
+    if ((target < 1 || target > n0) ||
+        (source <= n0 || source > size)) {  // Check if nodes out of bounds
       return absl::InvalidArgumentError("Invalid edge vertex indices");
     }
-    bipartiteGraph->addEdge(source - 1, target - 1);  // adds an edge going from Source to Target
+
+    bipartiteGraph->addEdge(source - 1, target - 1);
+
+    // adds an edge going from Source to Target
     // internally we want 0-indexed arrays but the input is 1-indexed
   }
   // TODO: implement finish on data structures

@@ -15,20 +15,20 @@ TEST(ReadGraphTest, ValidGraph) {
       "p ocr 3 4 5\n"
       "1 5\n"
       "2 6\n"
-      "3 7\n"
-      "4 7\n");
+      "3 4\n"
+      "2 7\n"
+      "3 5\n");
 
   auto result = readGraph<BipartiteGraph<int>>(testData);
   EXPECT_EQ(result.status(), absl::OkStatus());
-
   auto graph = std::move(result.value());
 
   // Check n0, n1, and m
-  EXPECT_EQ(graph->edges[0].source, 0);  // 0 instead of 1 because internally we use 0-indexation
-  EXPECT_EQ(graph->edges[0].target, 4);  // instead of 1-indexation
-  ASSERT_EQ(graph->getFixedNodesSize(), 3);
-  ASSERT_EQ(graph->getFreeNodesSize(), 4);
-  ASSERT_EQ(graph->getEdgesSize(), 4);
+  EXPECT_EQ(graph->edges[0][0], 0);  // Position of first node is 0
+  EXPECT_EQ(graph->edges[0][1], 2);  // Target of first edge of node 0 is 2 (we use 0-indexation)
+  ASSERT_EQ(graph->getFixedNodesSize(), 3);  // We have 3 fixed Nodes
+  ASSERT_EQ(graph->getFreeNodesSize(), 4);   // We have 4 free Nodes
+  ASSERT_EQ(graph->getEdgesSize(), 5);       // We have 5 edges
 }
 
 // Test case for invalid header format

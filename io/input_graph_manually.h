@@ -11,18 +11,17 @@ BipartiteGraph<SizeType> inputGraphManually() {
   BipartiteGraph myGraph = BipartiteGraph<SizeType>();
   int source;
   int target;
-  int degree;
   int rightSize;
-  int nodeID = 1;
+  int nodeID = 0;
   bool out = true;
   int leftRight = 0;
   while (out) {
     switch (leftRight) {
       case 0:
-        std::cout << "Input degree of node: " << nodeID << std::endl;
-        std::cin >> degree;
-        myGraph.insertFreeNode(Node(nodeID, degree));
-        while (myGraph.edges.size() < myGraph.freeNodes[nodeID - 1]) {
+        std::cout << "Input source of edge: " << nodeID << std::endl;
+        std::cin >> source;
+        myGraph.insertFreeNode(nodeID);
+        while (static_cast<SizeType>(myGraph.edges.size()) < myGraph.freeNodes[nodeID - 1]) {
           std::cout << "Input target of edge" << std::endl;
           std::cin >> target;
           myGraph.addEdge(nodeID, target);
@@ -35,7 +34,7 @@ BipartiteGraph<SizeType> inputGraphManually() {
         nodeID = 1;
         std::cout << "Input number of nodes on right side" << std::endl;
         std::cin >> rightSize;
-        while (myGraph.fixedNodes.size() < rightSize) {
+        while (static_cast<SizeType>(myGraph.fixedNodes.size()) < rightSize) {
           myGraph.fixedNodes.push_back(0);
         }
         out = false;
