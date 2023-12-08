@@ -30,8 +30,8 @@ class UndoAlgorithmStep {
   void addParameterAccountingUndo(NodeType leftNode, NodeType rightNode,
                                   CrossingCountType leftRightCrossing,
                                   CrossingCountType rightLeftCrossing) {
-    Operation opUndo = Operation(leftNode, rightNode, leftRightCrossing, rightLeftCrossing);
-    parameterAccountingUndo.push_back(opUndo);
+    parameterAccountingUndo.push_back(
+        Operation(leftNode, rightNode, leftRightCrossing, rightLeftCrossing));
   }
   // Undo every SetPosition node for a specific step
   void addSetPositionUndo(NodeType position) { setPositionUndo.push_back(position); }

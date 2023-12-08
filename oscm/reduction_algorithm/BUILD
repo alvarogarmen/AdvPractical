@@ -3,6 +3,7 @@ load("@rules_cc//cc:defs.bzl", "cc_library", "cc_test")
 cc_library(
     name = "reduction_algorithm",
     hdrs = [
+        "compute_crossings.h",
         "reduction_algorithm.h",
     ],
     visibility = ["//visibility:public"],

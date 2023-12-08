@@ -11,6 +11,35 @@
 
 #include "ds/reduction_graph/UndoAlgorithmStep.h"
 #include "ds/reduction_graph/reduction_graph.h"
+#include "oscm/reduction_algorithm/compute_crossings.h"
+
+/*
+ * For each decision u < v that we make adjust the leftRightSet of u and v
+ * Add all the transitiv decisions that follow the u < v decision
+ */
+template <class Graph, class Undo>
+void parameterAccounting(Graph& graph, typename Graph::NodeType u, typename Graph::NodeType v,
+                         typename Graph::CrossingCountType* currentSolution, Undo* undo = nullptr) {
+  using NodeType = typename Graph::NodeType;
+  if (u != v) {
+    if (graph.getRightNodes(u).find(v) == graph.getRightNodes(u).end()) {
+      graph.insertRightNode(u, v);
+      graph.insertLeftNode(v, u);
+      *currentSolution += graph.getCrossing(u, v);
+      if (undo) {
+        undo->addParameterAccountingUndo(u, v, graph.getCrossing(u, v), graph.getCrossing(v, u));
+      }
+      graph.deleteCrossings(u, v);
+      for (NodeType smallerThanU : graph.getLeftNodes(u)) {
+        parameterAccounting<Graph, Undo>(graph, smallerThanU, v, currentSolution, undo);
+        for (NodeType biggerThanV : graph.getRightNodes(v)) {
+          parameterAccounting<Graph, Undo>(graph, smallerThanU, biggerThanV, currentSolution, undo);
+          parameterAccounting<Graph, Undo>(graph, u, biggerThanV, currentSolution, undo);
+        }
+      }
+    }
+  }
+}
 
 //  if a free node v is comparable  with all other free nodes, then put v in its right fixed
 //  position
@@ -46,10 +75,10 @@ bool rrlo2(Graph& graph, typename Graph::CrossingCountType* currentSolution, Und
         if (graph.getLeftNodes(v).size() + graph.getRightNodes(v).size() == n - 2 &&
             graph.getLeftNodes(v).size() == graph.getLeftNodes(u).size()) {
           if (graph.getCrossing(u, v) <= graph.getCrossing(v, u)) {
-            graph.parameterAccounting(u, v, currentSolution, undo);
+            parameterAccounting<Graph, Undo>(graph, u, v, currentSolution, undo);
             didChange = true;
           } else {
-            graph.parameterAccounting(v, u, currentSolution, undo);
+            parameterAccounting<Graph, Undo>(graph, v, u, currentSolution, undo);
             didChange = true;
           }
         }
@@ -79,13 +108,13 @@ void rr3(Graph& graph, typename Graph::CrossingCountType* currentSolution, Undo*
 
   // Modify the pairs outside the loop
   for (auto [u, v] : pairsToModify) {
-    graph.parameterAccounting(u, v, currentSolution, undo);
+    parameterAccounting<Graph, Undo>(graph, u, v, currentSolution, undo);
   }
 }
 
 // For each pair of free nodes u, v with N(u) = N(v),(arbitrarily) commit a < b, and do parameter
 // accounting.
-template <class Graph>
+template <class Graph, class Undo>
 void rr2(Graph& graph, typename Graph::CrossingCountType* currentSolution) {
   using NodeType = typename Graph::NodeType;
   NodeType n = graph.getFreeNodesSize();
@@ -94,7 +123,7 @@ void rr2(Graph& graph, typename Graph::CrossingCountType* currentSolution) {
       if (std::equal(graph.getFreeNodeNeighbours(u).begin(), graph.getFreeNodeNeighbours(u).end(),
                      graph.getFreeNodeNeighbours(v).begin(),
                      graph.getFreeNodeNeighbours(v).end())) {
-        graph.parameterAccounting(u, v, currentSolution);
+        parameterAccounting<Graph, Undo>(graph, u, v, currentSolution);
       }
     }
   }
@@ -116,7 +145,7 @@ bool rrLarge(Graph& graph, typename Graph::CrossingCountType crossingsLeft,
     }
   }
   for (auto [v, u] : pairsToModify) {
-    graph.parameterAccounting(v, u, currentSolution, undo);
+    parameterAccounting<Graph, Undo>(graph, v, u, currentSolution, undo);
   }
   return didChange;
 }
@@ -173,9 +202,9 @@ template <class Graph, class Undo>
 void algorithmStep(Graph& graph, typename Graph::CrossingCountType currentSolution, bool isInitStep,
                    typename Graph::NodeType leftNode, typename Graph::NodeType rightNode) {
   using NodeType = typename Graph::NodeType;
-  Undo undo = Undo();
+  Undo undo;
   if (isInitStep) {
-    graph.parameterAccounting(leftNode, rightNode, &currentSolution, &undo);
+    parameterAccounting<Graph, Undo>(graph, leftNode, rightNode, &currentSolution, &undo);
   }
   bool didChangeRrlo2 = true;
   bool didChangeRrLarge = true;
@@ -200,8 +229,7 @@ void algorithmStep(Graph& graph, typename Graph::CrossingCountType currentSoluti
   } else if (IJEqualToTwo(graph, &u, &v)) {
     algorithmStep<Graph, Undo>(graph, currentSolution, true, u, v);
   }
-  graph.setBestSolution(currentSolution);
-  graph.setBestOrder(graph.getFixedPosition());
+  graph.setBestSolution(currentSolution, graph.getFixedPosition());
   graph.doUndo(undo);
   return;
 }
@@ -209,9 +237,9 @@ void algorithmStep(Graph& graph, typename Graph::CrossingCountType currentSoluti
 template <class Graph, class Undo>
 void algorithm(Graph& graph) {
   using CrossingCountType = typename Graph::CrossingCountType;
-
+  computeCrossingSums<Graph, Undo>(graph);
   CrossingCountType currentSolution = 0;
-  rr2<Graph>(graph, &currentSolution);
+  rr2<Graph, Undo>(graph, &currentSolution);
   bool didChangeRrlo2 = true;
   bool didChangeRrLarge = true;
 
