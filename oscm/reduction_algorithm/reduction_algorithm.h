@@ -9,8 +9,8 @@
 #include <set>
 #include <vector>
 
-#include "ds/reduction_graph/UndoAlgorithmStep.h"
 #include "ds/reduction_graph/reduction_graph.h"
+#include "ds/reduction_graph/undoAlgorithmStep.h"
 #include "oscm/reduction_algorithm/compute_crossings.h"
 
 /*

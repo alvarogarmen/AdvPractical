@@ -9,8 +9,8 @@
 #include <set>
 #include <vector>
 
-#include "ds/reduction_graph/UndoAlgorithmStep.h"
 #include "ds/reduction_graph/reduction_graph.h"
+#include "ds/reduction_graph/undoAlgorithmStep.h"
 
 // copmute the number of crossings created by the edges from two free nodes (u, v)
 // when u is to the left of v

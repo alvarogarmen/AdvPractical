@@ -3,8 +3,8 @@ load("@rules_cc//cc:defs.bzl", "cc_library", "cc_test")
 cc_library(
     name = "reduction_graph",
     hdrs = [
-        "UndoAlgorithmStep.h",
         "reduction_graph.h",
+        "undoAlgorithmStep.h",
     ],
     visibility = ["//visibility:public"],
     deps = [
