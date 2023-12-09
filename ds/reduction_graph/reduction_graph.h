@@ -24,10 +24,6 @@ class ReductionGraph {
   // yet.
   // saves the crossing number of u and v assuming u is placed before v
   std::vector<std::map<NT, CCT>> crossings;
-  // holds the crossing number of the best solution so far
-  CCT bestSolution;
-  // holds the order of the solution best so far
-  std::vector<NT> bestOrder;
 
  public:
   using NodeType = NT;
@@ -78,15 +74,6 @@ class ReductionGraph {
   const auto& getFixedPosition() const { return fixedPosition; }
 
   void setFixedPosition(NodeType u, NodeType index) { fixedPosition[index] = u; }
-
-  const auto& getBestSolution() const { return bestSolution; }
-
-  const auto& getBestOrder() const { return bestOrder; }
-
-  void setBestSolution(CrossingCountType newBest, const std::vector<NodeType>& bestOrderSoFar) {
-    bestSolution = newBest;
-    bestOrder = bestOrderSoFar;
-  }
 
   void setCrossings(const std::vector<std::map<NodeType, CrossingCountType>>& m) { crossings = m; }
 
