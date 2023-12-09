@@ -20,3 +20,12 @@ cc_test(
         "@com_google_googletest//:gtest_main",
     ],
 )
+
+cc_test(
+    name = "compute_crossings_test",
+    srcs = ["compute_crossings_test.cc"],
+    deps = [
+        ":reduction_algorithm",
+        "@com_google_googletest//:gtest_main",
+    ],
+)
