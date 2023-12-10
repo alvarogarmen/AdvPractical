@@ -22,9 +22,7 @@ int main(int argc, char* argv[]) {
   std::cout << "Something";
 
   auto myGraph = inputGraphManually<int>();
-  std::cout << "Crossings: "
-            << crossGrader<decltype(myGraph), decltype(myGraph.getFreeNodesSize())>(myGraph)
-            << std::endl;
+  std::cout << "Crossings: " << crossGrader<decltype(myGraph)>(myGraph) << std::endl;
 
   return 0;
 }

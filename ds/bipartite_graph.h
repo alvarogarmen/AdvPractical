@@ -15,18 +15,16 @@ struct Edge {
 };
 
 template <typename NodeType>
-Edge<NodeType>::Edge(NodeType source, NodeType target) {
-  source = source;
-  target = target;
+Edge<NodeType>::Edge(NodeType sourceNode, NodeType targetNode) {
+  source = sourceNode;
+  target = targetNode;
 }
 
 template <typename NT>
 struct BipartiteGraph {
   using NodeType = NT;
-  BipartiteGraph() {
-    freeNodes = std::vector<NodeType>(0);
-    fixedNodes = std::vector<NodeType>(0);
-  };
+  BipartiteGraph() : freeNodes({}), fixedNodes({}){};
+
   BipartiteGraph(NodeType fixedNodesSize, NodeType freeNodesSize, NodeType edgeSize)
       : freeNodes(freeNodesSize), fixedNodes(fixedNodesSize), edges(freeNodesSize) {
     numEdges = edgeSize;
@@ -40,9 +38,9 @@ struct BipartiteGraph {
   NodeType numEdges;
   std::vector<NodeType> freeNodes;
   std::vector<NodeType> fixedNodes;
-  std::vector<std::vector<NodeType>> edges;
-  // sourceNodeIDs are the indices, targets are the vector's entries. The first entry is the
-  // position tho.
+  std::vector<std::vector<NodeType>> edges;  //
+  // sourceNodeIDs are the indices (FreeNodes), targets are the vector's entries (FixedNodes). The
+  // first entry is the position tho.
   const std::vector<NodeType>& getFreeNodes() const { return freeNodes; }
   const std::vector<NodeType>& getFixedNodes() const { return fixedNodes; }
   const std::vector<std::vector<NodeType>>& getEdges() const { return edges; }

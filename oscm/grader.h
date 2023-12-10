@@ -2,30 +2,22 @@
 // Created by alvar on 25/10/2023.
 //
 #pragma once
-
-#include "ds/bipartite_graph.h"
-
-template <typename SizeType>
-bool edgeCross(SizeType& sourceEdge1, SizeType& targetEdge1, SizeType& sourceEdge2,
-               SizeType& targetEdge2) {
-  if (((sourceEdge1 < sourceEdge2 && targetEdge1 > targetEdge2)) ||
-      (sourceEdge1 > sourceEdge2 && targetEdge1 < sourceEdge2)) {
-    return true;
-  }
-  return false;
-}
-template <typename BipartiteGraphType, typename SizeType>
+#include <cstddef>
+#include <iostream>
+template <typename BipartiteGraphType>
 int crossGrader(BipartiteGraphType& myGraph) {  // Looks very bad but it is needed to iterate over
                                                 // all edge combinations
   int crossings = 0;
-  for (SizeType i = 0; i < myGraph.getFreeNodesSize(); i++) {                        // O(freeNodes)
-    for (SizeType j = 0; j < static_cast<SizeType>(myGraph.edges[i].size()); j++) {  // O(maxDegree)
-      for (SizeType k = 1; k < myGraph.getFreeNodesSize(); k++) {                    // O(freeNodes)
-        for (SizeType l = 0;                                                         // O(maxDegree)
-             l < static_cast<SizeType>(myGraph.edges[k].size()); l++) {
-          if (edgeCross(i, myGraph.edges[i][j], k, myGraph.edges[k][l])) {
-            crossings++;
-          }
+  using NodeType = typename BipartiteGraphType::NodeType;
+  for (NodeType i = myGraph.getFreeNodes()[0]; i < myGraph.getFreeNodesSize(); i++) {
+    for (size_t j = 1; j < (myGraph.edges[i].size());
+         j++) {  // First entry in "edges" is the position of the node in the FreeNodes array
+      for (NodeType k = i + 1; k < myGraph.getFreeNodesSize(); k++) {
+        for (size_t l = 1; l < (myGraph.edges[k].size()); l++) {
+          std::cout << i << " " << k << std::endl;
+          std::cout << myGraph.edges[i][j] << " " << myGraph.edges[k][l] << std::endl;
+          std::cout << (i < k && myGraph.edges[i][j] > myGraph.edges[k][l]) << std::endl;
+          crossings += (i < k && myGraph.edges[i][j] > myGraph.edges[k][l]);
         }
       }
     }
