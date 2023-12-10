@@ -4,7 +4,7 @@
 
 #include "gmock/gmock-matchers.h"
 #include "gtest/gtest.h"
-#include "undoAlgorithmStep.h"
+#include "undo_algorithm_step.h"
 
 TEST(GraphTest, SimpleTest) {
   std::vector<std::vector<int>> freeNodes = {{0, 1}, {0}, {0, 1, 2}};

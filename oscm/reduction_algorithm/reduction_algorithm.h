@@ -11,7 +11,7 @@
 #include <vector>
 
 #include "ds/reduction_graph/reduction_graph.h"
-#include "ds/reduction_graph/undoAlgorithmStep.h"
+#include "ds/reduction_graph/undo_algorithm_step.h"
 #include "oscm/reduction_algorithm/compute_crossings.h"
 
 /*

@@ -6,7 +6,7 @@
 #include <set>
 #include <vector>
 
-#include "ds/reduction_graph/undoAlgorithmStep.h"
+#include "ds/reduction_graph/undo_algorithm_step.h"
 
 template <typename NT, typename CCT>
 class ReductionGraph {

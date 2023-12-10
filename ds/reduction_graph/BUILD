@@ -4,7 +4,7 @@ cc_library(
     name = "reduction_graph",
     hdrs = [
         "reduction_graph.h",
-        "undoAlgorithmStep.h",
+        "undo_algorithm_step.h",
     ],
     visibility = ["//visibility:public"],
     deps = [
