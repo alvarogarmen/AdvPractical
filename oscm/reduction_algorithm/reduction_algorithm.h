@@ -190,6 +190,9 @@ std::tuple<bool, typename Graph::NodeType, typename Graph::NodeType> IJEqualToTw
   using NodeType = typename Graph::NodeType;
   for (NodeType firstNode = 0; firstNode < graph.getFreeNodesSize(); ++firstNode) {
     for (auto [secondNode, FirstSecondcrossingValue] : graph.getNodeCrossing(firstNode)) {
+      // Because we do not have any more IJBiggerThanFour and IJEqualToThree, and we delete the
+      // crossing entries for each order that we set. All the crossings that are left are in the
+      // form IJEqualToTwo.
       return std::make_tuple(true, firstNode, secondNode);
     }
   }
