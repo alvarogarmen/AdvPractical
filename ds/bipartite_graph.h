@@ -7,19 +7,6 @@
 #include <unordered_map>
 #include <vector>
 
-template <typename NodeType>
-struct Edge {
-  Edge(NodeType source, NodeType target);
-  NodeType source;
-  NodeType target;
-};
-
-template <typename NodeType>
-Edge<NodeType>::Edge(NodeType sourceNode, NodeType targetNode) {
-  source = sourceNode;
-  target = targetNode;
-}
-
 template <typename NT>
 struct BipartiteGraph {
   using NodeType = NT;

@@ -11,11 +11,6 @@ int crossGrader(BipartiteGraphType& myGraph) {  // Looks very bad but it is need
          j++) {  // First entry in "edges" is the position of the node in the FreeNodes array
       for (NodeType k = i + 1; k < myGraph.getFreeNodesSize(); k++) {
         for (size_t l = 1; l < (myGraph.edges[k].size()); l++) {
-          std::cout << i << " " << k << std::endl;
-          std::cout << myGraph.edges[i][j] << " " << myGraph.edges[k][l] << std::endl;
-          std::cout << (myGraph.edges[i][0] < myGraph.edges[k][0] &&
-                        myGraph.edges[i][j] > myGraph.edges[k][l])
-                    << std::endl;
           crossings += (myGraph.edges[i][0] < myGraph.edges[k][0] &&
                         myGraph.edges[i][j] > myGraph.edges[k][l]);
         }
