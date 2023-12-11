@@ -1,6 +1,3 @@
-//
-// Created by alvar on 25/10/2023.
-//
 #pragma once
 #include <cstddef>
 #include <iostream>
@@ -16,8 +13,11 @@ int crossGrader(BipartiteGraphType& myGraph) {  // Looks very bad but it is need
         for (size_t l = 1; l < (myGraph.edges[k].size()); l++) {
           std::cout << i << " " << k << std::endl;
           std::cout << myGraph.edges[i][j] << " " << myGraph.edges[k][l] << std::endl;
-          std::cout << (i < k && myGraph.edges[i][j] > myGraph.edges[k][l]) << std::endl;
-          crossings += (i < k && myGraph.edges[i][j] > myGraph.edges[k][l]);
+          std::cout << (myGraph.edges[i][0] < myGraph.edges[k][0] &&
+                        myGraph.edges[i][j] > myGraph.edges[k][l])
+                    << std::endl;
+          crossings += (myGraph.edges[i][0] < myGraph.edges[k][0] &&
+                        myGraph.edges[i][j] > myGraph.edges[k][l]);
         }
       }
     }
@@ -25,5 +25,3 @@ int crossGrader(BipartiteGraphType& myGraph) {  // Looks very bad but it is need
 
   return crossings;
 }
-// Add the bools instead of conditional addition ->std::accumulate or transform reduce
-// Henrik does not like for loops, use algorithm lib for c++
