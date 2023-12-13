@@ -50,9 +50,11 @@ void rrlo1(Graph& graph, Undo* undo = nullptr) {
   for (NodeType v = 0; v < graph.getFreeNodesSize(); ++v) {
     if (graph.getNodeCrossing(v).size() == 0) {
       NodeType endIndex = graph.getLeftNodes(v).size();
-      graph.setFixedPosition(v, endIndex);
-      if (undo) {
-        undo->addSetPositionUndo(endIndex);
+      if (graph.getFixedPosition()[endIndex] != v) {
+        graph.setFixedPosition(v, endIndex);
+        if (undo) {
+          undo->addSetPositionUndo(endIndex);
+        }
       }
     }
   }
@@ -205,6 +207,8 @@ void algorithmStep(Graph& graph, typename Graph::CrossingCountType currentSoluti
                    std::vector<typename Graph::NodeType>& bestOrder) {
   using NodeType = typename Graph::NodeType;
   Undo undo;
+  std::cout << "went in algorithmStep " << std::endl;
+
   if (isInitStep) {
     parameterAccounting<Graph, Undo>(graph, leftNode, rightNode, currentSolution, &undo);
   }
@@ -236,6 +240,7 @@ void algorithmStep(Graph& graph, typename Graph::CrossingCountType currentSoluti
     NodeType u = std::get<1>(EqualToTwo);
     NodeType v = std::get<2>(EqualToTwo);
     algorithmStep<Graph, Undo>(graph, currentSolution, true, u, v, bestSolution, bestOrder);
+    return;
   }
   bestSolution = currentSolution;
   bestOrder = graph.getFixedPosition();
