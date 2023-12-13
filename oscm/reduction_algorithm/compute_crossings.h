@@ -18,7 +18,8 @@ template <class Graph>
 typename Graph::CrossingCountType const computeUVcrossing(Graph& graph, typename Graph::NodeType u,
                                                           typename Graph::NodeType v) {
   using NodeType = typename Graph::NodeType;
-  NodeType crossingSum = 0;
+  using CrossingCountType = typename Graph::CrossingCountType;
+  CrossingCountType crossingSum = 0;
   for (const auto uNeighbour : graph.getFreeNodeNeighbours(u)) {
     for (const auto vNeighbour : graph.getFreeNodeNeighbours(v)) {
       crossingSum += vNeighbour < uNeighbour;

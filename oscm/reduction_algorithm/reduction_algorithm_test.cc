@@ -140,10 +140,7 @@ TEST(AlgorithmTest, IJBiggerThenFour) {
   ReductionGraph myGraph = ReductionGraph<int, int>(freeNodes, fixedNodes);
   computeCrossingSums<ReductionGraph<int, int>, UndoAlgorithmStep<int, int>>(myGraph);
 
-  std::tuple<bool, int, int> tupel = IJBiggerThenFour<ReductionGraph<int, int>>(myGraph);
-  int u = std::get<1>(tupel);
-  int v = std::get<2>(tupel);
-
+  auto [success, u, v] = IJBiggerThenFour<ReductionGraph<int, int>>(myGraph);
   EXPECT_EQ(u, 0);
   EXPECT_EQ(v, 2);
 }
@@ -154,9 +151,7 @@ TEST(AlgorithmTest, IJEqualToThree) {
   ReductionGraph myGraph = ReductionGraph<int, int>(freeNodes, fixedNodes);
   computeCrossingSums<ReductionGraph<int, int>, UndoAlgorithmStep<int, int>>(myGraph);
 
-  std::tuple<bool, int, int> tupel = IJEqualToThree<ReductionGraph<int, int>>(myGraph);
-  int u = std::get<1>(tupel);
-  int v = std::get<2>(tupel);
+  auto [success, u, v] = IJEqualToThree<ReductionGraph<int, int>>(myGraph);
   EXPECT_EQ(u, 2);
   EXPECT_EQ(v, 0);
 }
@@ -167,9 +162,7 @@ TEST(AlgorithmTest, IJEqualToTwo) {
   ReductionGraph myGraph = ReductionGraph<int, int>(freeNodes, fixedNodes);
   computeCrossingSums<ReductionGraph<int, int>, UndoAlgorithmStep<int, int>>(myGraph);
 
-  std::tuple<bool, int, int> tupel = IJEqualToTwo<ReductionGraph<int, int>>(myGraph);
-  int u = std::get<1>(tupel);
-  int v = std::get<2>(tupel);
+  auto [success, u, v] = IJEqualToTwo<ReductionGraph<int, int>>(myGraph);
   EXPECT_EQ(u, 0);
   EXPECT_EQ(v, 2);
 }
@@ -178,13 +171,12 @@ TEST(AlgorithmTest, algorithm) {
   std::vector<std::vector<int>> freeNodes = {{0, 1}, {0}, {0, 1, 2}};
   std::vector<std::vector<int>> fixedNodes = {{0, 1, 2}, {0, 2}, {2}};
   ReductionGraph myGraph = ReductionGraph<int, int>(freeNodes, fixedNodes);
-
-  std::tuple<int, std::vector<int>> resultsTupel =
+  auto [crossingSum, orderVector] =
       algorithm<ReductionGraph<int, int>, UndoAlgorithmStep<int, int>>(myGraph);
-  EXPECT_EQ(std::get<0>(resultsTupel), 1);
-  EXPECT_EQ(std::get<1>(resultsTupel)[0], 1);
-  EXPECT_EQ(std::get<1>(resultsTupel)[1], 0);
-  EXPECT_EQ(std::get<1>(resultsTupel)[2], 2);
+  EXPECT_EQ(crossingSum, 1);
+  EXPECT_EQ(orderVector[0], 1);
+  EXPECT_EQ(orderVector[1], 0);
+  EXPECT_EQ(orderVector[2], 2);
 }
 
 TEST(GraphTest, UndoAlgorithmStep) {

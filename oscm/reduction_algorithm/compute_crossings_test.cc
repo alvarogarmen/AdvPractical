@@ -10,12 +10,9 @@ TEST(ComputeCrossings, computeUVcrossing) {
   std::vector<std::vector<int>> fixedNodes = {{0, 1, 2}, {0, 2}, {2}};
   ReductionGraph myGraph = ReductionGraph<int, int>(freeNodes, fixedNodes);
   UndoAlgorithmStep undo = UndoAlgorithmStep<int, int>();
-  int uvSum = computeUVcrossing<ReductionGraph<int, int>>(myGraph, 0, 2);
-  EXPECT_EQ(uvSum, 1);
-  uvSum = computeUVcrossing<ReductionGraph<int, int>>(myGraph, 1, 0);
-  EXPECT_EQ(uvSum, 0);
-  uvSum = computeUVcrossing<ReductionGraph<int, int>>(myGraph, 2, 0);
-  EXPECT_EQ(uvSum, 3);
+  EXPECT_EQ((computeUVcrossing<ReductionGraph<int, int>>(myGraph, 0, 2)), 1);
+  EXPECT_EQ((computeUVcrossing<ReductionGraph<int, int>>(myGraph, 1, 0)), 0);
+  EXPECT_EQ((computeUVcrossing<ReductionGraph<int, int>>(myGraph, 2, 0)), 3);
 }
 
 TEST(ComputeCrossings, computeCrossingSum) {
