@@ -231,11 +231,13 @@ void algorithmStep(Graph& graph, typename Graph::CrossingCountType currentSoluti
     NodeType v = std::get<2>(tupelBiggerThenFour);
     algorithmStep<Graph, Undo>(graph, currentSolution, true, u, v, bestSolution, bestOrder);
     algorithmStep<Graph, Undo>(graph, currentSolution, true, v, u, bestSolution, bestOrder);
+    return;
   } else if (std::get<0>(EqualToThree)) {
     NodeType u = std::get<1>(EqualToThree);
     NodeType v = std::get<2>(EqualToThree);
     algorithmStep<Graph, Undo>(graph, currentSolution, true, u, v, bestSolution, bestOrder);
     algorithmStep<Graph, Undo>(graph, currentSolution, true, v, u, bestSolution, bestOrder);
+    return;
   } else if (std::get<0>(EqualToTwo)) {
     NodeType u = std::get<1>(EqualToTwo);
     NodeType v = std::get<2>(EqualToTwo);
