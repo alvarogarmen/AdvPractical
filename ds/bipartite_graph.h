@@ -15,17 +15,19 @@ struct BipartiteGraph {
   BipartiteGraph(NodeType fixedNodesSize, NodeType freeNodesSize, NodeType edgeSize)
       : freeNodes(freeNodesSize), fixedNodes(fixedNodesSize), edges(freeNodesSize) {
     numEdges = edgeSize;
-
-    // Write the (trivial) position of each free node in the edges matrix
-    for (NodeType i = 0; i < freeNodesSize; ++i) {
-      edges[i].push_back(i);
+    // Write trivial positions in both vectors
+    for (NodeType i = 0; i < freeNodesSize; i++) {
+      freeNodes[i] = i;
+    }
+    for (NodeType i = 0; i < fixedNodesSize; i++) {
+      fixedNodes[i] = i;
     }
     // Concrete edges will be added with push_back operations
   };
   NodeType numEdges;
-  std::vector<NodeType> freeNodes;
+  std::vector<NodeType> freeNodes;  // Stores the position of each node, e.g. freeNodes[0]=position
   std::vector<NodeType> fixedNodes;
-  std::vector<std::vector<NodeType>> edges;  //
+  std::vector<std::vector<NodeType>> edges;
   // sourceNodeIDs are the indices (FreeNodes), targets are the vector's entries (FixedNodes). The
   // first entry is the position tho.
   const std::vector<NodeType>& getFreeNodes() const { return freeNodes; }
@@ -45,8 +47,8 @@ struct BipartiteGraph {
   const NodeType getEdgesSize() { return numEdges; };
 
   void switchNodes(NodeType firstNodeID, NodeType secondNodeID) {
-    NodeType& firstPosition = edges[firstNodeID - fixedNodes.size()][0];
-    NodeType& secondPosition = edges[secondNodeID - fixedNodes.size()][0];
+    NodeType& firstPosition = freeNodes[firstNodeID - fixedNodes.size()];
+    NodeType& secondPosition = freeNodes[secondNodeID - fixedNodes.size()];
     std::swap(firstPosition, secondPosition);
   };
 };
