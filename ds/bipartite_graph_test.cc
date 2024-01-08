@@ -31,8 +31,8 @@ TEST(BipartiteTest, AddEdgeTest) {
   int fixedNodes = 3;
   BipartiteGraph myGraph = BipartiteGraph<int>(fixedNodes, freeNodes, 4);
 
-  myGraph.addEdge(3, 0);
-  myGraph.addEdge(4, 2);
+  myGraph.addEdge(0, 0);
+  myGraph.addEdge(1, 2);
 
   std::vector<std::vector<int>> edges = myGraph.getEdges();
   // Reminder that nodeIDs of freeNodes start at fixedNodes.size(), hence 3 corresponds here to the
@@ -46,7 +46,7 @@ TEST(BipartiteTest, SwitchNodesTest) {
   int fixedNodes = 3;
   BipartiteGraph myGraph = BipartiteGraph<int>(fixedNodes, freeNodes, 4);
 
-  myGraph.switchNodes(3, 4);
+  myGraph.switchNodes(0, 1);
   std::vector<int> gottenFreeNodes = myGraph.getFreeNodes();
   // Reminder that nodeIDs of freeNodes start at fixedNodes.size(), hence 3 corresponds here to the
   // index 0

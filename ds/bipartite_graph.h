@@ -38,8 +38,8 @@ struct BipartiteGraph {
   void insertFixedNode(NodeType node) { fixedNodes.push_back(node); };
 
   void addEdge(NodeType sourceID, NodeType targetID) {
-    edges[sourceID - fixedNodes.size()].push_back(targetID);  // free Nodes come after the fixed
-                                                              // ones
+    edges[sourceID].push_back(targetID);  // free Nodes come after the fixed
+                                          // ones
   };
 
   const NodeType getFreeNodesSize() { return freeNodes.size(); };
@@ -47,8 +47,8 @@ struct BipartiteGraph {
   const NodeType getEdgesSize() { return numEdges; };
 
   void switchNodes(NodeType firstNodeID, NodeType secondNodeID) {
-    NodeType& firstPosition = freeNodes[firstNodeID - fixedNodes.size()];
-    NodeType& secondPosition = freeNodes[secondNodeID - fixedNodes.size()];
+    NodeType& firstPosition = freeNodes[firstNodeID];
+    NodeType& secondPosition = freeNodes[secondNodeID];
     std::swap(firstPosition, secondPosition);
   };
 };

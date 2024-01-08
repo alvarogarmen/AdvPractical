@@ -24,8 +24,13 @@ TEST(ReadGraphTest, ValidGraph) {
   auto graph = std::move(result.value());
 
   // Check n0, n1, and m
-  EXPECT_EQ(graph->edges[0][0], 0);  // Position of first node is 0
-  EXPECT_EQ(graph->edges[0][1], 2);  // Target of first edge of node 0 is 2 (we use 0-indexation)
+  EXPECT_EQ(graph->edges[1][0],
+            0);  // Target of first edge of node 1 (5) is 0 (we use 0-indexation)
+  EXPECT_EQ(graph->edges[2][0],
+            1);  // Target of first edge of node 2 (6) is 1 (we use 0-indexation)
+  EXPECT_EQ(graph->edges[0][0],
+            2);  // Target of first edge of node 0 (4) is 2 (we use 0-indexation)
+
   ASSERT_EQ(graph->getFixedNodesSize(), 3);  // We have 3 fixed Nodes
   ASSERT_EQ(graph->getFreeNodesSize(), 4);   // We have 4 free Nodes
   ASSERT_EQ(graph->getEdgesSize(), 5);       // We have 5 edges
@@ -42,20 +47,6 @@ TEST(ReadGraphTest, InvalidHeaderFormat) {
   ASSERT_FALSE(result.ok());
   EXPECT_EQ(result.status().code(), absl::StatusCode::kInvalidArgument);
 }
-
-// Test case for invalid line format
-// Removed because we won´t get such files
-/*TEST(ReadGraphTest, InvalidLineFormat) {
-  std::stringstream testData;
-  // Invalid line format: characters instead of integers
-  testData << "c this is a comment and should not be read" << std::endl;
-  testData << "p ocr 3 4 5" << std::endl;
-  testData << "invalid line" << std::endl;
-
-  auto result = readGraph<BipartiteGraph<int>>(testData);
-  ASSERT_FALSE(result.ok());
-  ASSERT_EQ(result.status().code(), absl::StatusCode::kInvalidArgument);
-}*/
 
 // Test case for nodes out of bounds
 TEST(ReadGraphTest, NodesOutOfBounds) {
