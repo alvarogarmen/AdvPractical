@@ -8,8 +8,10 @@
 #include <vector>
 
 template <typename NT>
-struct BipartiteGraph {
+class BipartiteGraph {
   using NodeType = NT;
+
+ public:
   BipartiteGraph() : freeNodes({}), fixedNodes({}){};
 
   BipartiteGraph(NodeType fixedNodesSize, NodeType freeNodesSize, NodeType edgeSize)
@@ -24,12 +26,7 @@ struct BipartiteGraph {
     }
     // Concrete edges will be added with push_back operations
   };
-  NodeType numEdges;
-  std::vector<NodeType> freeNodes;  // Stores the position of each node, e.g. freeNodes[0]=position
-  std::vector<NodeType> fixedNodes;
-  std::vector<std::vector<NodeType>> edges;
-  // sourceNodeIDs are the indices (FreeNodes), targets are the vector's entries (FixedNodes). The
-  // first entry is the position tho.
+
   const std::vector<NodeType>& getFreeNodes() const { return freeNodes; }
   const std::vector<NodeType>& getFixedNodes() const { return fixedNodes; }
   const std::vector<std::vector<NodeType>>& getEdges() const { return edges; }
@@ -51,4 +48,12 @@ struct BipartiteGraph {
     NodeType& secondPosition = freeNodes[secondNodeID];
     std::swap(firstPosition, secondPosition);
   };
+
+ private:
+  NodeType numEdges;
+  std::vector<NodeType> freeNodes;  // Stores the position of each node, e.g. freeNodes[0]=position
+  std::vector<NodeType> fixedNodes;
+  std::vector<std::vector<NodeType>> edges;
+  // sourceNodeIDs are the indices (FreeNodes), targets are the vector's entries (FixedNodes). The
+  // first entry is the position tho.
 };
