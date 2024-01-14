@@ -19,10 +19,6 @@ int main(int argc, char* argv[]) {
   auto example = absl::GetFlag(FLAGS_example);  // Get the variable and store it
   std::cout << example << std::endl;
   // Call out functions
-  std::cout << "Something";
-
-  auto myGraph = inputGraphManually<int>();
-  std::cout << "Crossings: " << crossGrader<decltype(myGraph)>(myGraph) << std::endl;
 
   return 0;
 }

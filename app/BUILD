@@ -5,10 +5,10 @@ cc_binary(
     srcs = ["main.cc"],
     visibility = ["//visibility:public"],
     deps = [
+        "//app",
         "//ds:bipartite_graph",
         "//io",
         "//oscm",
-        "//toolkit/toolkit/app",
         "@com_google_absl//absl/flags:flag",
         "@com_google_absl//absl/flags:parse",
     ],
