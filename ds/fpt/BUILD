@@ -11,8 +11,8 @@ cc_library(
 )
 
 cc_test(
-    name = "graph_test",
-    srcs = ["graph_test.cc"],
+    name = "fpt_graph_test",
+    srcs = ["fpt_graph_test.cc"],
     deps = [
         ":fpt_graph",
         "@com_google_googletest//:gtest_main",

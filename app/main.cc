@@ -21,8 +21,8 @@ int main(int argc, char* argv[]) {
   // Call out functions
   std::cout << "Something";
 
-  Graph myGraph = inputGraphManually<int>();
-  std::cout << "Crossings: " << crossGrader(myGraph) << std::endl;
+  auto myGraph = inputGraphManually<int>();
+  std::cout << "Crossings: " << crossGrader<decltype(myGraph)>(myGraph) << std::endl;
 
   return 0;
 }

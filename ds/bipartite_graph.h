@@ -7,114 +7,53 @@
 #include <unordered_map>
 #include <vector>
 
-template <typename NodeType>
-struct Node {
-  Node(NodeType nodeID, NodeType outDegree);
-  int nodeID{};
-  int outDegree{};
+template <typename NT>
+class BipartiteGraph {
+  using NodeType = NT;
+
+ public:
+  BipartiteGraph() : freeNodes({}), fixedNodes({}){};
+
+  BipartiteGraph(NodeType fixedNodesSize, NodeType freeNodesSize, NodeType edgeSize)
+      : freeNodes(freeNodesSize), fixedNodes(fixedNodesSize), edges(freeNodesSize) {
+    numEdges = edgeSize;
+    // Write trivial positions in both vectors
+    for (NodeType i = 0; i < freeNodesSize; i++) {
+      freeNodes[i] = i;
+    }
+    for (NodeType i = 0; i < fixedNodesSize; i++) {
+      fixedNodes[i] = i;
+    }
+    // Concrete edges will be added with push_back operations
+  };
+
+  const std::vector<NodeType>& getFreeNodes() const { return freeNodes; }
+  const std::vector<NodeType>& getFixedNodes() const { return fixedNodes; }
+  const std::vector<std::vector<NodeType>>& getEdges() const { return edges; }
+
+  void insertFreeNode(NodeType node) { freeNodes.push_back(node); };
+  void insertFixedNode(NodeType node) { fixedNodes.push_back(node); };
+
+  void addEdge(NodeType sourceID, NodeType targetID) {
+    edges[sourceID].push_back(targetID);  // free Nodes come after the fixed
+                                          // ones
+  };
+
+  const NodeType getFreeNodesSize() { return freeNodes.size(); };
+  const NodeType getFixedNodesSize() { return fixedNodes.size(); };
+  const NodeType getEdgesSize() { return numEdges; };
+
+  void switchNodes(NodeType firstNodeID, NodeType secondNodeID) {
+    NodeType& firstPosition = freeNodes[firstNodeID];
+    NodeType& secondPosition = freeNodes[secondNodeID];
+    std::swap(firstPosition, secondPosition);
+  };
+
+ private:
+  NodeType numEdges;
+  std::vector<NodeType> freeNodes;  // Stores the position of each node, e.g. freeNodes[0]=position
+  std::vector<NodeType> fixedNodes;
+  std::vector<std::vector<NodeType>> edges;
+  // sourceNodeIDs are the indices (FreeNodes), targets are the vector's entries (FixedNodes). The
+  // first entry is the position tho.
 };
-template <typename NodeType>
-Node<NodeType>::Node(NodeType nodeID, NodeType outDegree) {
-  this->nodeID = nodeID;
-  this->outDegree = outDegree;
-}
-
-template <typename SizeType>
-struct Edge {
-  Edge(SizeType source, SizeType target);
-  SizeType source;
-  SizeType target;
-};
-
-template <typename SizeType>
-Edge<SizeType>::Edge(SizeType source, SizeType target) {
-  this->source = source;
-  this->target = target;
-}
-
-template <typename SizeType>
-struct Graph {
-  Graph();
-  Graph(SizeType leftSize, SizeType rightSize, SizeType edgeSize);
-  std::vector<SizeType> left;
-  std::vector<SizeType> right;
-  std::vector<Edge<SizeType>> edges;  // Not sure if actually needed
-  std::unordered_map<SizeType, std::vector<SizeType>>
-      edgeHash;  // nodeIDs are used as handles. The first entry in the array is the
-  // position of the nodeID in the left graph
-  std::vector<SizeType> getLeftNodes();
-  std::vector<SizeType> getRightNodes();
-  std::vector<Edge<SizeType>> getEdges();
-
-  void insertLeftNode(Node<SizeType> node);
-  void insertRightNode(Node<SizeType> node);
-  void insertEdgeAtIndex(SizeType sourceID, SizeType targetID, SizeType index);
-  void insertEdge(SizeType sourceID,
-                  SizeType targetID);  // nodeID represents the target of the edge. The index in
-                                       // combination with the left
-  // vector gives the source of the edge.
-
-  void switchNodes(SizeType firstNodeID, SizeType secondNodeID);
-};
-
-template <typename SizeType>
-Graph<SizeType>::Graph() {
-  this->left = std::vector<SizeType>(0);
-  this->right = std::vector<SizeType>(0);
-}
-
-template <typename SizeType>
-Graph<SizeType>::Graph(SizeType leftSize, SizeType rightSize, SizeType edgeSize) {
-  this->left = std::vector<SizeType>(leftSize);
-  this->right = std::vector<SizeType>(rightSize);
-  this->edges = std::vector<Edge<SizeType>>(edgeSize, Edge(0, 0));
-}
-
-template <typename SizeType>
-std::vector<SizeType> Graph<SizeType>::getLeftNodes() {
-  return this->left;
-}
-
-template <typename SizeType>
-std::vector<SizeType> Graph<SizeType>::getRightNodes() {
-  return this->right;
-}
-
-template <typename SizeType>
-std::vector<Edge<SizeType>> Graph<SizeType>::getEdges() {
-  return this->edges;
-}
-
-template <typename SizeType>
-void Graph<SizeType>::insertLeftNode(Node<SizeType> node) {
-  this->left.push_back((this->left.empty()) ? node.outDegree : this->left.back() + node.outDegree);
-  if (this->edgeHash[node.nodeID].empty()) {
-    this->edgeHash[node.nodeID].push_back(this->left.size() - 1);
-  } else {
-    this->edgeHash[node.nodeID][0] = this->left.size() - 1;
-  }
-}
-
-template <typename SizeType>
-void Graph<SizeType>::insertRightNode(Node<SizeType> node) {
-  this->right.push_back(node.outDegree);
-}
-
-template <typename SizeType>
-void Graph<SizeType>::insertEdgeAtIndex(SizeType sourceID, SizeType targetID, SizeType index) {
-  this->edges[index].source = sourceID;
-  this->edges[index].target = targetID;
-}
-
-template <typename SizeType>
-void Graph<SizeType>::insertEdge(SizeType sourceID, SizeType targetID) {
-  this->edges.push_back(Edge(sourceID, targetID));
-  this->edgeHash[sourceID].push_back(targetID);
-}
-
-template <typename SizeType>
-void Graph<SizeType>::switchNodes(SizeType firstNodeID, SizeType secondNodeID) {
-  SizeType& firstPosition = this->edgeHash[firstNodeID][0];
-  SizeType& secondPosition = this->edgeHash[secondNodeID][0];
-  std::swap(firstPosition, secondPosition);
-}

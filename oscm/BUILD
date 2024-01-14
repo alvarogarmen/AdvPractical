@@ -6,6 +6,9 @@ cc_library(
         "grader.h",
     ],
     visibility = ["//visibility:public"],
+    deps = [
+        "//ds:bipartite_graph",
+    ],
 )
 
 cc_test(
@@ -13,7 +16,6 @@ cc_test(
     srcs = ["grader_test.cc"],
     deps = [
         ":oscm",
-        "//ds:bipartite_graph",
         "@com_google_googletest//:gtest_main",
     ],
 )
