@@ -170,9 +170,10 @@ TEST(AlgorithmTest, IJEqualToTwo) {
 TEST(AlgorithmTest, algorithm) {
   std::vector<std::vector<int>> freeNodes = {{0, 1}, {0}, {0, 1, 2}};
   std::vector<std::vector<int>> fixedNodes = {{0, 1, 2}, {0, 2}, {2}};
+  ReductionAlgorithm ra;
   ReductionGraph myGraph = ReductionGraph<int, int>(freeNodes, fixedNodes);
   auto [crossingSum, orderVector] =
-      algorithm<ReductionGraph<int, int>, UndoAlgorithmStep<int, int>>(myGraph);
+      ra.algorithm<ReductionGraph<int, int>, UndoAlgorithmStep<int, int>>(myGraph);
   EXPECT_EQ(crossingSum, 1);
   EXPECT_EQ(orderVector[0], 1);
   EXPECT_EQ(orderVector[1], 0);

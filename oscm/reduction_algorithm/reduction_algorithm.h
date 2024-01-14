@@ -14,7 +14,14 @@
 #include "ds/reduction_graph/undo_algorithm_step.h"
 #include "oscm/reduction_algorithm/compute_crossings.h"
 
-/*
+
+template <class Graph, class Undo>
+class ReductionAlgorithm{
+  public:
+  
+  static constexpr absl::string_view AlgorithmName = "reduction_solver";
+
+  /*
  * For each decision u < v that we make adjust the leftRightSet of u and v
  * Add all the transitiv decisions that follow the u < v decision
  */
@@ -250,8 +257,7 @@ void algorithmStep(Graph& graph, typename Graph::CrossingCountType currentSoluti
   return;
 }
 
-template <class Graph, class Undo>
-std::tuple<typename Graph::CrossingCountType, std::vector<typename Graph::NodeType>> algorithm(
+  std::tuple<typename Graph::CrossingCountType, std::vector<typename Graph::NodeType>> algorithm(
     Graph& graph) {
   using CrossingCountType = typename Graph::CrossingCountType;
   using NodeType = typename Graph::NodeType;
@@ -274,4 +280,5 @@ std::tuple<typename Graph::CrossingCountType, std::vector<typename Graph::NodeTy
   rr3<Graph, Undo>(graph, currentSolution);
   algorithmStep<Graph, Undo>(graph, currentSolution, false, 0, 0, bestSolution, bestOrder);
   return std::make_tuple(bestSolution, bestOrder);
-}
+  }
+};
