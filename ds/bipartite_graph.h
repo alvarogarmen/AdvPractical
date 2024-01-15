@@ -9,9 +9,10 @@
 
 template <typename NT>
 class BipartiteGraph {
-  using NodeType = NT;
 
  public:
+  using NodeType = NT;
+
   BipartiteGraph() : freeNodes({}), fixedNodes({}){};
 
   BipartiteGraph(NodeType fixedNodesSize, NodeType freeNodesSize, NodeType edgeSize)
