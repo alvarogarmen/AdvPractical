@@ -43,9 +43,9 @@ class ReductionGraph {
         leftRightSet(freeNodes.size()),
         crossings(freeNodes.size()) {}
 
-  ReductionGraph(NodeType numFreeNodes, NodeType numFixedNodes, CrossingCountType numEdges)
+  ReductionGraph(NodeType numFixedNodes, NodeType numFreeNodes, CrossingCountType numEdges)
       : freeNodes(numFreeNodes, std::vector<NodeType>(0)),
-        fixedNodes(numFreeNodes, std::vector<NodeType>(0)),
+        fixedNodes(numFixedNodes, std::vector<NodeType>(0)),
         fixedPosition(freeNodes.size()),
         leftRightSet(freeNodes.size()),
         crossings(freeNodes.size()) {}
