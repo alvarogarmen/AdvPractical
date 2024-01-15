@@ -5,6 +5,7 @@
 #include <numeric>
 #include <set>
 #include <vector>
+#include "absl/strings/string_view.h"
 
 #include "ds/reduction_graph/undo_algorithm_step.h"
 
@@ -26,7 +27,11 @@ class ReductionGraph {
   std::vector<std::map<NT, CCT>> crossings;
 
  public:
+  NT currentNumNodes(){return getFreeNodesSize()+getFixedNodesSize();}
+  NT currentNumEdges(){return 0;}
+  using EdgeType = NT;
   using NodeType = NT;
+  using WeightType = NT;
   using CrossingCountType = CCT;
   ReductionGraph(const std::vector<std::vector<NodeType>>& freeNodes,
                  const std::vector<std::vector<NodeType>>& fixedNodes)

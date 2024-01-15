@@ -8,6 +8,8 @@ cc_library(
     ],
     visibility = ["//visibility:public"],
     deps = [
+        "@abseil-cpp//absl/strings",
+
     ],
 )
 
