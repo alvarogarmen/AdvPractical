@@ -5,7 +5,7 @@
 
 #include "gmock/gmock-matchers.h"
 #include "gtest/gtest.h"
-
+using namespace reductionalgorithms;
 TEST(AlgorithmTest, ParameterAccounting) {
   std::vector<std::vector<int>> freeNodes = {{0, 2}, {0, 3}, {0, 1}, {1, 3}};
   std::vector<std::vector<int>> fixedNodes = {{0, 1, 2}, {2, 3}, {0}, {1, 3}};

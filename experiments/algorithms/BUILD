@@ -13,6 +13,7 @@ cc_library(
         "@henrixapp_toolkit//toolkit/app:app_io_cc_proto",
         "@henrixapp_toolkit//toolkit/ds:empty_problem",
         "//io:io",
+        "//oscm/reduction_algorithm"
     ],
     alwayslink=1,
 )
