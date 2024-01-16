@@ -57,8 +57,6 @@ class ReductionGraph {
 
   void addEdge(NodeType source,
                NodeType target) {  // where source is the freeNode and target is the fixedNode
-    std::cout << "Free Nodes size: " << freeNodes.size() << " try index: " << source << std::endl;
-    std::cout << "Fixed Nodes size: " << fixedNodes.size() << " try index: " << target << std::endl;
     freeNodes[source].push_back(target);
     fixedNodes[target].push_back(source);
     return;
