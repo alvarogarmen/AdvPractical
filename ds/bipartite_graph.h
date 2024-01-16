@@ -9,7 +9,6 @@
 
 template <typename NT>
 class BipartiteGraph {
-
  public:
   using NodeType = NT;
 
@@ -39,7 +38,8 @@ class BipartiteGraph {
     edges[sourceID].push_back(targetID);  // free Nodes come after the fixed
                                           // ones
   };
-  //TODO: getEdge(NT nodeID, NT number) { return auto const& edges[nodeIT]}
+  NodeType getEdge(NodeType sourceID, NodeType index) { return edges[sourceID][index]; }
+  // TODO: getEdge(NT nodeID, NT number) { return auto const& edges[nodeIT]}
   const NodeType getFreeNodesSize() { return freeNodes.size(); };
   const NodeType getFixedNodesSize() { return fixedNodes.size(); };
   const NodeType getEdgesSize() { return numEdges; };
