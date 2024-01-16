@@ -59,6 +59,8 @@ absl::StatusOr<std::unique_ptr<BipartiteGraph>> readGraph(std::istream& stream,
         (source <= n0 || source > size)) {  // Check if nodes out of bounds
       return absl::InvalidArgumentError("Invalid edge vertex indices");
     }
+    std::cout << "HERE" << source << " " << target << std::endl;
+
     bipartiteGraph->addEdge(source - n0 - 1, target - 1);
     // source - n0 because the input files have the freeNodeIDs start at n0 instead of 0
     // adds an edge going from Source to Target

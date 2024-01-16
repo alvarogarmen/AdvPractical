@@ -5,8 +5,8 @@
 #include <numeric>
 #include <set>
 #include <vector>
-#include "absl/strings/string_view.h"
 
+#include "absl/strings/string_view.h"
 #include "ds/reduction_graph/undo_algorithm_step.h"
 
 template <typename NT, typename CCT>
@@ -27,8 +27,8 @@ class ReductionGraph {
   std::vector<std::map<NT, CCT>> crossings;
 
  public:
-  NT currentNumNodes(){return getFreeNodesSize()+getFixedNodesSize();}
-  NT currentNumEdges(){return 0;}
+  NT currentNumNodes() { return getFreeNodesSize() + getFixedNodesSize(); }
+  NT currentNumEdges() { return 0; }
   using EdgeType = NT;
   using NodeType = NT;
   using WeightType = NT;
@@ -48,19 +48,23 @@ class ReductionGraph {
         leftRightSet(freeNodes.size()),
         crossings(freeNodes.size()) {}
 
-  ReductionGraph(NodeType numFreeNodes, NodeType numFixedNodes, CrossingCountType numEdges)
+  ReductionGraph(NodeType numFixedNodes, NodeType numFreeNodes, CrossingCountType numEdges)
       : freeNodes(numFreeNodes, std::vector<NodeType>(0)),
-        fixedNodes(numFreeNodes, std::vector<NodeType>(0)),
+        fixedNodes(numFixedNodes, std::vector<NodeType>(0)),
         fixedPosition(freeNodes.size()),
         leftRightSet(freeNodes.size()),
         crossings(freeNodes.size()) {}
 
   void addEdge(NodeType source,
                NodeType target) {  // where source is the freeNode and target is the fixedNode
+    std::cout << "Free Nodes size: " << freeNodes.size() << " try index: " << source << std::endl;
+    std::cout << "Fixed Nodes size: " << fixedNodes.size() << " try index: " << target << std::endl;
     freeNodes[source].push_back(target);
     fixedNodes[target].push_back(source);
     return;
   }
+
+  NodeType getEdge(NodeType source, NodeType index) { return freeNodes[source][index]; }
 
   NodeType getFixedNodesSize() const { return fixedNodes.size(); }
 

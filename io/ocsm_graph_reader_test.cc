@@ -19,22 +19,21 @@ TEST(ReadGraphTest, ValidGraph) {
       "3 4\n"
       "2 7\n"
       "3 5\n");
-
   auto result = readGraph<ReductionGraph<int, int>>(testData);
   EXPECT_EQ(result.status(), absl::OkStatus());
   auto graph = std::move(result.value());
 
   // Check n0, n1, and m
-  /*EXPECT_EQ(graph->edges[1][0],
+  EXPECT_EQ(graph->getEdge(1, 0),
             0);  // Target of first edge of node 1 (5) is 0 (we use 0-indexation)
-  EXPECT_EQ(graph->edges[2][0],
+  EXPECT_EQ(graph->getEdge(2, 0),
             1);  // Target of first edge of node 2 (6) is 1 (we use 0-indexation)
-  EXPECT_EQ(graph->edges[0][0],
+  EXPECT_EQ(graph->getEdge(0, 0),
             2);  // Target of first edge of node 0 (4) is 2 (we use 0-indexation)
-*/
+
   ASSERT_EQ(graph->getFixedNodesSize(), 3);  // We have 3 fixed Nodes
-  ASSERT_EQ(graph->getFreeNodesSize(), 4);   // We have 4 free Nodes
-//  ASSERT_EQ(graph->getEdgesSize(), 5);       // We have 5 edges
+
+  ASSERT_EQ(graph->getFreeNodesSize(), 4);  // We have 4 free Nodes
 }
 
 // Test case for invalid header format
@@ -44,7 +43,7 @@ TEST(ReadGraphTest, InvalidHeaderFormat) {
       "invalid header\n");
   // Invalid header format: missing 'p' or incorrect format
 
-  auto result = readGraph<BipartiteGraph<int>>(testData);
+  auto result = readGraph<ReductionGraph<int, int>>(testData);
   ASSERT_FALSE(result.ok());
   EXPECT_EQ(result.status().code(), absl::StatusCode::kInvalidArgument);
 }
@@ -58,7 +57,7 @@ TEST(ReadGraphTest, NodesOutOfBounds) {
   // Nodes out of bounds: source node greater than n0
   // Source node is out of bounds
 
-  auto result = readGraph<BipartiteGraph<int>>(testData);
+  auto result = readGraph<ReductionGraph<int, int>>(testData);
   ASSERT_FALSE(result.ok());
   EXPECT_EQ(result.status().code(), absl::StatusCode::kInvalidArgument);
 }
@@ -71,7 +70,7 @@ TEST(ReadGraphTest, NegativeNumbers) {
   // Negative number of nodes
   // Negative n0
 
-  auto result = readGraph<BipartiteGraph<int>>(testData);
+  auto result = readGraph<ReductionGraph<int, int>>(testData);
   EXPECT_EQ(result.status().code(), absl::StatusCode::kInvalidArgument);
 }
 
@@ -83,7 +82,7 @@ TEST(ReadGraphTest, MissingPLine) {
   // Missing 'p' line
   // Edge line without 'p' line
 
-  auto result = readGraph<BipartiteGraph<int>>(testData);
+  auto result = readGraph<ReductionGraph<int, int>>(testData);
   EXPECT_EQ(result.status().code(), absl::StatusCode::kInvalidArgument);
 }
 
@@ -95,7 +94,7 @@ TEST(ReadGraphTest, InvalidFileContent) {
   // Invalid content: non-integer characters instead of number of nodes/edges
   // Invalid n0
 
-  auto result = readGraph<BipartiteGraph<int>>(testData);
+  auto result = readGraph<ReductionGraph<int, int>>(testData);
   ASSERT_FALSE(result.ok());
   EXPECT_EQ(result.status().code(), absl::StatusCode::kInvalidArgument);
 }
@@ -104,7 +103,7 @@ TEST(ReadGraphTest, InvalidFileContent) {
 TEST(ReadGraphTest, MissingInput) {
   // Test with a non-existing file/empty stringstream
   std::stringstream nonExistentFileName;
-  auto result = readGraph<BipartiteGraph<int>>(nonExistentFileName);
+  auto result = readGraph<ReductionGraph<int, int>>(nonExistentFileName);
   ASSERT_FALSE(result.ok());
   EXPECT_EQ(result.status().code(), absl::StatusCode::kNotFound);
 }
