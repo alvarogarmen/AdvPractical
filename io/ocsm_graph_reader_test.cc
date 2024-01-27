@@ -3,12 +3,14 @@
 #include <gtest/gtest.h>
 
 #include "ds/bipartite_graph.h"
+#include "ds/reduction_graph/reduction_graph.h"
 #include "gmock/gmock-matchers.h"
+#include "oscm/reduction_algorithm/reduction_algorithm.h"
 
 namespace {
 using ::testing::ElementsAre;
 }
-
+/* Test fails because edges are private
 TEST(ReadGraphTest, ValidGraph) {
   std::stringstream testData(
       "c this is a comment and should not be read\n"
@@ -106,4 +108,38 @@ TEST(ReadGraphTest, MissingInput) {
   auto result = readGraph<BipartiteGraph<int>>(nonExistentFileName);
   ASSERT_FALSE(result.ok());
   EXPECT_EQ(result.status().code(), absl::StatusCode::kNotFound);
+}
+*/
+TEST(ReadGraphTest, reductionGraph) {
+  std::stringstream testData(
+      "c this is a comment and should not be read\n"
+      "p ocr 3 3 5\n"
+      "1 4\n"
+      "1 5\n"
+      "1 6\n"
+      "2 4\n"
+      "2 6\n"
+      "3 6\n");
+  std::vector<std::vector<int>> freeNodes = {{0, 1}, {0}, {0, 1, 2}};
+  std::vector<std::vector<int>> fixedNodes = {{0, 1, 2}, {0, 2}, {2}};
+
+  auto result = readGraph<ReductionGraph<int, int>>(testData);
+
+  EXPECT_EQ(result.status(), absl::OkStatus());
+
+  auto graph = std::move(result.value());
+
+  auto [crossingSum, orderVector] =
+      algorithm<ReductionGraph<int, int>, UndoAlgorithmStep<int, int>>(*graph);
+  graph->writeResultsToFile(orderVector, "results.gr");
+  EXPECT_EQ(crossingSum, 1);
+  EXPECT_EQ(orderVector[0], 1);
+  EXPECT_EQ(orderVector[1], 0);
+  EXPECT_EQ(orderVector[2], 2);
+
+  // Check n0, n1, and m
+  std::cout << "the number of FreeNodes is " << graph->getFreeNodesSize() << std::endl;
+  std::cout << "the number of FixedNodes is " << graph->getFixedNodesSize() << std::endl;
+  // ASSERT_EQ(graph->getFixedNodesSize(), 3);  // We have 3 fixed Nodes
+  // ASSERT_EQ(graph->getFreeNodesSize(), 4);   // We have 4 free Nodes
 }

@@ -140,7 +140,7 @@ TEST(AlgorithmTest, IJBiggerThenFour) {
   ReductionGraph myGraph = ReductionGraph<int, int>(freeNodes, fixedNodes);
   computeCrossingSums<ReductionGraph<int, int>, UndoAlgorithmStep<int, int>>(myGraph);
 
-  auto [success, u, v] = IJBiggerThenFour<ReductionGraph<int, int>>(myGraph);
+  auto [best, u, v] = IJBiggerThenFour<ReductionGraph<int, int>>(myGraph);
   EXPECT_EQ(u, 0);
   EXPECT_EQ(v, 2);
 }

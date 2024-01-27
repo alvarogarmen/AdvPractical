@@ -9,20 +9,41 @@
 #include "absl/flags/flag.h"
 #include "absl/flags/parse.h"
 #include "ds/bipartite_graph.h"
-#include "io/input_graph_manually.h"
-#include "oscm/grader.h"
+#include "ds/reduction_graph/reduction_graph.h"
+#include "io/ocsm_graph_reader.h"
+#include "oscm/reduction_algorithm/reduction_algorithm.h"
 
-ABSL_FLAG(std::string, example, "Default value", "Helpful text");
-// bazel run app -- --example="bazel?"; ./bazel-bin/app/app
+// ABSL_FLAG(std::string, example, "Default value", "Helpful text");
+//  bazel run app -- --example="bazel?"; ./bazel-bin/app/app
 int main(int argc, char* argv[]) {
-  absl::ParseCommandLine(argc, argv);
-  auto example = absl::GetFlag(FLAGS_example);  // Get the variable and store it
-  std::cout << example << std::endl;
-  // Call out functions
-  std::cout << "Something";
+  if (argc != 3) {
+    std::cerr << "Usage: " << argv[0] << " <input filename> <output filename>" << std::endl;
+    return 1;  // Exit with an error code
+  }
 
-  auto myGraph = inputGraphManually<int>();
-  std::cout << "Crossings: " << crossGrader<decltype(myGraph)>(myGraph) << std::endl;
+  // Open the file using std::ifstream
+  std::ifstream input(argv[1]);
+
+  // Check if the file is successfully opened
+  if (!input.is_open()) {
+    std::cerr << "Error opening file: " << argv[1] << std::endl;
+    return 1;  // Exit with an error code
+  }
+  auto result = readGraph<ReductionGraph<int, int>>(input);
+
+  if (result.status() != absl::OkStatus()) {
+    std::cerr << "result status in not ok: " << std::endl;
+    return 1;  // Exit with an error code
+  }
+
+  auto graph = std::move(result.value());
+  auto [crossingSum, orderVector] =
+      algorithm<ReductionGraph<int, int>, UndoAlgorithmStep<int, int>>(*graph);
+
+  graph->writeResultsToFile(orderVector, argv[2]);
+
+  // auto myGraph = inputGraphManually<int>();
+  // std::cout << "Crossings: " << crossGrader<decltype(myGraph)>(myGraph) << std::endl;
 
   return 0;
 }

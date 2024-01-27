@@ -26,7 +26,7 @@ void parameterAccounting(Graph& graph, typename Graph::NodeType u, typename Grap
     if (graph.getRightNodes(u).find(v) == graph.getRightNodes(u).end()) {
       graph.insertRightNode(u, v);
       graph.insertLeftNode(v, u);
-      currentSolution += graph.getCrossing(u, v);
+      currentSolution += graph.getCrossing(u, v);  // TODO u,v does not exist yet
       if (undo) {
         undo->addParameterAccountingUndo(u, v, graph.getCrossing(u, v), graph.getCrossing(v, u));
       }
@@ -35,8 +35,10 @@ void parameterAccounting(Graph& graph, typename Graph::NodeType u, typename Grap
         parameterAccounting<Graph, Undo>(graph, smallerThanU, v, currentSolution, undo);
         for (NodeType biggerThanV : graph.getRightNodes(v)) {
           parameterAccounting<Graph, Undo>(graph, smallerThanU, biggerThanV, currentSolution, undo);
-          parameterAccounting<Graph, Undo>(graph, u, biggerThanV, currentSolution, undo);
         }
+      }
+      for (NodeType biggerThanV : graph.getRightNodes(v)) {
+        parameterAccounting<Graph, Undo>(graph, u, biggerThanV, currentSolution, undo);
       }
     }
   }
@@ -142,8 +144,13 @@ bool rrLarge(Graph& graph, typename Graph::CrossingCountType crossingsLeft,
   for (NodeType u = 0; u < graph.getFreeNodesSize(); ++u) {
     for (auto [v, crossingValue] : graph.getNodeCrossing(u)) {
       if (crossingValue > crossingsLeft) {
-        pairsToModify.emplace_back(v, u);
-        didChange = true;
+        if (u < v) {
+          pairsToModify.emplace_back(v, u);
+          didChange = true;
+        } else if (graph.getNodeCrossing(v).at(u) < crossingsLeft) {
+          pairsToModify.emplace_back(v, u);
+          didChange = true;
+        }
       }
     }
   }
@@ -231,17 +238,20 @@ void algorithmStep(Graph& graph, typename Graph::CrossingCountType currentSoluti
     NodeType v = std::get<2>(tupelBiggerThenFour);
     algorithmStep<Graph, Undo>(graph, currentSolution, true, u, v, bestSolution, bestOrder);
     algorithmStep<Graph, Undo>(graph, currentSolution, true, v, u, bestSolution, bestOrder);
+    graph.doUndo(undo);
     return;
   } else if (std::get<0>(EqualToThree)) {
     NodeType u = std::get<1>(EqualToThree);
     NodeType v = std::get<2>(EqualToThree);
     algorithmStep<Graph, Undo>(graph, currentSolution, true, u, v, bestSolution, bestOrder);
     algorithmStep<Graph, Undo>(graph, currentSolution, true, v, u, bestSolution, bestOrder);
+    graph.doUndo(undo);
     return;
   } else if (std::get<0>(EqualToTwo)) {
     NodeType u = std::get<1>(EqualToTwo);
     NodeType v = std::get<2>(EqualToTwo);
     algorithmStep<Graph, Undo>(graph, currentSolution, true, u, v, bestSolution, bestOrder);
+    graph.doUndo(undo);
     return;
   }
   bestSolution = currentSolution;

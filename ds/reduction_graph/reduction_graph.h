@@ -1,5 +1,6 @@
 #pragma once
 #include <algorithm>
+#include <fstream>
 #include <iostream>
 #include <map>
 #include <numeric>
@@ -55,6 +56,38 @@ class ReductionGraph {
     freeNodes[source].push_back(target);
     fixedNodes[target].push_back(source);
     return;
+  }
+
+  void writeResultsToFile(const std::vector<NodeType>& vec, const std::string& filename) {
+    std::cout << "inside write to file" << filename << std::endl;
+    // Open the file for writing
+
+    std::ofstream outputFile(filename);
+    // Check if the file is open
+    if (!outputFile.is_open()) {
+      std::cerr << "Error opening file: " << filename << std::endl;
+      return;
+    }
+
+    // Write each element of the vector to a new line in the file
+    for (NodeType element : vec) {
+      NodeType n = fixedNodes.size();
+      element = element + n + 1;
+      outputFile << element << std::endl;
+      std::cout << element << std::endl;
+
+      // Flush the output buffer
+      outputFile.flush();
+
+      // Check for errors after writing each element
+      if (!outputFile) {
+        std::cerr << "Error writing element to file: " << filename << std::endl;
+        // Handle the error as needed
+      }
+    }
+
+    // Close the file
+    outputFile.close();
   }
 
   NodeType getFixedNodesSize() const { return fixedNodes.size(); }
