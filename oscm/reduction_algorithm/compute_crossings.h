@@ -12,8 +12,8 @@
 #include "ds/reduction_graph/reduction_graph.h"
 #include "ds/reduction_graph/undo_algorithm_step.h"
 
-namespace reductionalgorithms{
-// copmute the number of crossings created by the edges from two free nodes (u, v)
+namespace reductionalgorithms {
+// compute the number of crossings created by the edges from two free nodes (u, v)
 // when u is to the left of v
 template <class Graph>
 typename Graph::CrossingCountType const computeUVcrossing(Graph& graph, typename Graph::NodeType u,
@@ -54,4 +54,4 @@ void computeCrossingSums(Graph& graph) {
     }
   }
 }
-}
+}  // namespace reductionalgorithms

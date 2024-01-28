@@ -5,6 +5,7 @@
 
 #include "gmock/gmock-matchers.h"
 #include "gtest/gtest.h"
+namespace {
 using namespace reductionalgorithms;
 TEST(AlgorithmTest, ParameterAccounting) {
   std::vector<std::vector<int>> freeNodes = {{0, 2}, {0, 3}, {0, 1}, {1, 3}};
@@ -225,4 +226,5 @@ TEST(GraphTest, UndoAlgorithmStep) {
   EXPECT_EQ(myGraph.getRightNodes(0).size(), 0);
   EXPECT_EQ(myGraph.getRightNodes(1).size(), 2);
   EXPECT_EQ(myGraph.getRightNodes(2).size(), 0);
+}
 }
