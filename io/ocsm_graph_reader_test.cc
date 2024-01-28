@@ -24,11 +24,11 @@ TEST(ReadGraphTest, ValidGraph) {
   auto graph = std::move(result.value());
 
   // Check n0, n1, and m
-  EXPECT_EQ(graph->edges[1][0],
+  EXPECT_EQ(graph->getEdges()[1][0],
             0);  // Target of first edge of node 1 (5) is 0 (we use 0-indexation)
-  EXPECT_EQ(graph->edges[2][0],
+  EXPECT_EQ(graph->getEdges()[2][0],
             1);  // Target of first edge of node 2 (6) is 1 (we use 0-indexation)
-  EXPECT_EQ(graph->edges[0][0],
+  EXPECT_EQ(graph->getEdges()[0][0],
             2);  // Target of first edge of node 0 (4) is 2 (we use 0-indexation)
 
   ASSERT_EQ(graph->getFixedNodesSize(), 3);  // We have 3 fixed Nodes

@@ -9,13 +9,14 @@
 
 template <typename NT>
 class BipartiteGraph {
-  using NodeType = NT;
-
  public:
+  using NodeType = NT;
   BipartiteGraph() : freeNodes({}), fixedNodes({}){};
 
   BipartiteGraph(NodeType fixedNodesSize, NodeType freeNodesSize, NodeType edgeSize)
-      : freeNodes(freeNodesSize), fixedNodes(fixedNodesSize), edges(freeNodesSize) {
+      : freeNodes(freeNodesSize),
+        fixedNodes(fixedNodesSize),
+        edges(freeNodesSize, -1) {  // nodes with no edges get assigned a -1
     numEdges = edgeSize;
     // Write trivial positions in both vectors
     for (NodeType i = 0; i < freeNodesSize; i++) {
