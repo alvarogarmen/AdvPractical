@@ -13,9 +13,12 @@
 #include "io/ocsm_graph_reader.h"
 #include "oscm/reduction_algorithm/reduction_algorithm.h"
 
-// ABSL_FLAG(std::string, example, "Default value", "Helpful text");
+ABSL_FLAG(std::string, example, "Default value", "Helpful text");
 //  bazel run app -- --example="bazel?"; ./bazel-bin/app/app
 int main(int argc, char* argv[]) {
+  absl::ParseCommandLine(argc, argv);
+  auto example = absl::GetFlag(FLAGS_example);  // Get the variable and store it
+  std::cout << example << std::endl;
   if (argc != 3) {
     std::cerr << "Usage: " << argv[0] << " <input filename> <output filename>" << std::endl;
     return 1;  // Exit with an error code
