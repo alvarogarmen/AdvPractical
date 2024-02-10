@@ -44,6 +44,23 @@ void parameterAccounting(Graph& graph, typename Graph::NodeType u, typename Grap
   }
 }
 
+//  For each pair of free nodes a, b  that forms a 0/j pattern with j > 0, commit a < b.
+template <class Graph, class Undo>
+void rr1(Graph& graph, typename Graph::CrossingCountType& currentSolution) {
+  using NodeType = typename Graph::NodeType;
+  for (NodeType u = 0; u < graph.getFreeNodesSize(); ++u) {
+    for (NodeType v = u + 1; v < graph.getFreeNodesSize(); ++v) {
+      if (graph.getNodeCrossing(u).find(v) != graph.getNodeCrossing(u).end()) {
+        if (graph.getNodeCrossing(u).at(v) == 0) {
+          parameterAccounting<Graph, Undo>(graph, u, v, currentSolution);
+        } else if (graph.getNodeCrossing(v).at(u) == 0) {
+          parameterAccounting<Graph, Undo>(graph, v, u, currentSolution);
+        }
+      }
+    }
+  }
+}
+
 //  if a free node v is comparable  with all other free nodes, then put v in its right fixed
 //  position
 template <class Graph, class Undo>
@@ -273,6 +290,7 @@ std::tuple<typename Graph::CrossingCountType, std::vector<typename Graph::NodeTy
 
   computeCrossingSums<Graph, Undo>(graph);
   CrossingCountType currentSolution = 0;
+  rr1<Graph, Undo>(graph, currentSolution);
   rr2<Graph, Undo>(graph, currentSolution);
   bool didChangeRrlo2 = true;
 

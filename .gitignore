@@ -5,5 +5,5 @@ genhtml
 *.sol
 *.gr
 *.lock
-*.DS_Store
 MODULE.bazel
+.DS_Store

@@ -58,6 +58,7 @@ class ReductionGraph {
     return;
   }
 
+  // Should be moved to io
   void writeResultsToFile(const std::vector<NodeType>& vec, const std::string& filename) {
     std::cout << "inside write to file" << filename << std::endl;
     // Open the file for writing

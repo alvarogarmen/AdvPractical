@@ -41,15 +41,8 @@ void computeCrossingSums(Graph& graph) {
       graph.addCrossing(u, v, crossingUV);
       // reduction RR1: For each pair of vertices {u, v} ⊆ free nodes that forms a 0/j pattern
       // with j > 0, commit u < v
-      if (crossingUV == 0) {
-        parameterAccounting<Graph, Undo>(graph, u, v, currentSolution);
-      } else {
-        CrossingCountType crossingVU = computeUVcrossing(graph, v, u);
-        graph.addCrossing(v, u, crossingVU);
-        if (crossingVU == 0) {
-          parameterAccounting<Graph, Undo>(graph, v, u, currentSolution);
-        }
-      }
+      CrossingCountType crossingVU = computeUVcrossing(graph, v, u);
+      graph.addCrossing(v, u, crossingVU);
     }
   }
 }

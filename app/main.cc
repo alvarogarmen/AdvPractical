@@ -41,6 +41,7 @@ int main(int argc, char* argv[]) {
       algorithm<ReductionGraph<int, int>, UndoAlgorithmStep<int, int>>(*graph);
 
   graph->writeResultsToFile(orderVector, argv[2]);
+  std::cout << "the solution has " << crossingSum << " crossings" << std::endl;
 
   // auto myGraph = inputGraphManually<int>();
   // std::cout << "Crossings: " << crossGrader<decltype(myGraph)>(myGraph) << std::endl;
