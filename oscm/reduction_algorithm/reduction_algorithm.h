@@ -26,7 +26,7 @@ void parameterAccounting(Graph& graph, typename Graph::NodeType u, typename Grap
     if (graph.getRightNodes(u).find(v) == graph.getRightNodes(u).end()) {
       graph.insertRightNode(u, v);
       graph.insertLeftNode(v, u);
-      currentSolution += graph.getCrossing(u, v);  // TODO u,v does not exist yet
+      currentSolution += graph.getCrossing(u, v);
       if (undo) {
         undo->addParameterAccountingUndo(u, v, graph.getCrossing(u, v), graph.getCrossing(v, u));
       }
