@@ -5,23 +5,26 @@
 #include <numeric>
 #include <vector>
 
-template <typename NodeType, typename CrossingCountType>
-class HGraph {
+template <typename NT, typename CCT>
+class HeuristicGraph {
   // for each free node holds its neighbours
-  std::vector<std::vector<NodeType>> freeNodes;
+  std::vector<std::vector<NT>> freeNodes;
   // for each fixed node holds its neighbours
-  std::vector<std::vector<NodeType>> fixedNodes;
+  std::vector<std::vector<NT>> fixedNodes;
   // free nodes current position in the permutation
-  std::vector<NodeType> freeNodesPosition;
+  std::vector<NT> freeNodesPosition;
   // for each free node u, the first place hold the crossing sum with free node positioned to the
   // left of u and the second hold the sum to its right
-  std::vector<std::array<CrossingCountType, 2>> leftRightCrossingSum;
+  std::vector<std::array<CCT, 2>> leftRightCrossingSum;
   // hold free node id in its corrent position in the pemutation
-  std::vector<NodeType> permutation;
+  std::vector<NT> permutation;
 
  public:
-  HGraph(const std::vector<std::vector<NodeType>>& freeNodes,
-         const std::vector<std::vector<NodeType>>& fixedNodes)
+  using NodeType = NT;
+  using CrossingCountType = CCT;
+
+  HeuristicGraph(const std::vector<std::vector<NodeType>>& freeNodes,
+                 const std::vector<std::vector<NodeType>>& fixedNodes)
       : freeNodes(freeNodes),
         fixedNodes(fixedNodes),
         freeNodesPosition(std::vector<NodeType>(freeNodes.size())),
@@ -32,15 +35,21 @@ class HGraph {
     computeCrossingSums();
   }
 
-  HGraph(NodeType numFreeNodes, NodeType numFixedNodes)
-      : freeNodes(std::vector<std::vector<NodeType>>(numFreeNodes, std::vector<NodeType>(0))),
-        fixedNodes(std::vector<std::vector<NodeType>>(numFreeNodes, std::vector<NodeType>(0))),
-        freeNodesPosition(std::vector<NodeType>(freeNodes.size())),
-        leftRightCrossingSum(std::vector<std::array<CrossingCountType, 2>>(freeNodes.size())),
-        permutation(std::vector<NodeType>(freeNodes.size())) {
+  HeuristicGraph(NodeType numFixedNodes, NodeType numFreeNodes, CrossingCountType edgeNum)
+      : freeNodes(numFreeNodes, std::vector<NodeType>(0)),
+        fixedNodes(numFixedNodes, std::vector<NodeType>(0)),
+        freeNodesPosition(freeNodes.size()),
+        leftRightCrossingSum(freeNodes.size()),
+        permutation(freeNodes.size()) {
     std::iota(freeNodesPosition.begin(), freeNodesPosition.end(), 0);
     std::iota(permutation.begin(), permutation.end(), 0);
     computeCrossingSums();
+  }
+  void addEdge(NodeType source,
+               NodeType target) {  // where source is the freeNode and target is the fixedNode
+    freeNodes[source].push_back(target);
+    fixedNodes[target].push_back(source);
+    return;
   }
 
   NodeType getFixedNodesSize() const { return fixedNodes.size(); }
@@ -53,7 +62,7 @@ class HGraph {
 
   NodeType getFreeNodeNeighboursSize(NodeType nodeID) const { return freeNodes[nodeID].size(); }
 
-  const auto& getFreeNodeNeighbours(NodeType freeNodeID) const { return fixedNodes[freeNodeID]; }
+  const auto& getFreeNodeNeighbours(NodeType freeNodeID) const { return freeNodes[freeNodeID]; }
 
   CrossingCountType getLeftCrossings(NodeType freeNodeID) const {
     return leftRightCrossingSum[freeNodeID][0];
@@ -64,11 +73,6 @@ class HGraph {
   }
 
   const auto& getPermutation() const { return permutation; }
-
-  void addEdge(NodeType freeNode, NodeType fixedNode) {
-    freeNodes[freeNode].push_back(fixedNode);
-    fixedNodes[fixedNode].push_back(freeNode);
-  }
 
   // copmute the number of crossings created by the edges from two free nodes (u, v)
   // when u is to the left of v

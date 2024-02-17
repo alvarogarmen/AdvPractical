@@ -1,4 +1,4 @@
-#include "h_graph.h"
+#include "heuristic_graph.h"
 
 #include <vector>
 
@@ -8,7 +8,7 @@
 TEST(GraphTest, SimpleTest) {
   std::vector<std::vector<int>> freeNodes = {{0, 1}, {0}, {0, 1, 2}};
   std::vector<std::vector<int>> fixedNodes = {{0, 1, 2}, {0, 2}, {2}};
-  HGraph myGraph = HGraph<int, int>(freeNodes, fixedNodes);
+  HeuristicGraph myGraph = HeuristicGraph<int, int>(freeNodes, fixedNodes);
 
   EXPECT_EQ(myGraph.getFreeNodesSize(), 3);
   EXPECT_EQ(myGraph.getFixedNodesSize(), 3);
@@ -33,4 +33,18 @@ TEST(GraphTest, SimpleTest) {
   EXPECT_EQ(myGraph.getRightCrossings(0), 0);
   EXPECT_EQ(myGraph.getLeftCrossings(2), 0);
   EXPECT_EQ(myGraph.getRightCrossings(2), 3);
+}
+
+TEST(GraphTest, addEdge) {
+  HeuristicGraph myGraph = HeuristicGraph<int, int>(3, 3, 0);
+  myGraph.addEdge(0, 0);
+  myGraph.addEdge(0, 1);
+  myGraph.addEdge(1, 0);
+  myGraph.addEdge(2, 0);
+  myGraph.addEdge(2, 1);
+  myGraph.addEdge(2, 2);
+  EXPECT_EQ(myGraph.getFreeNodesSize(), 3);
+  EXPECT_EQ(myGraph.getFixedNodesSize(), 3);
+  EXPECT_EQ(myGraph.getFreeNodeNeighboursSize(0), 2);
+  EXPECT_EQ(myGraph.getFreeNodeNeighbours(0)[1], 1);
 }
