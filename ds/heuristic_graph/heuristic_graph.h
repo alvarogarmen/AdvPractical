@@ -74,6 +74,17 @@ class HeuristicGraph {
 
   const auto& getPermutation() const { return permutation; }
 
+  const auto& getFreeNodesPosition() const { return freeNodesPosition; }
+
+  const auto& getEdges() { return freeNodes; }
+
+  void setFreeNodes(const std::vector<NodeType>& newPermutation) {
+    for (NodeType i = 0; i < newPermutation.size(); ++i) {
+      freeNodesPosition[newPermutation[i]] = i;
+      permutation[i] = newPermutation[i];
+    }
+  }
+
   // copmute the number of crossings created by the edges from two free nodes (u, v)
   // when u is to the left of v
   CrossingCountType const computeUVcrossing(NodeType u, NodeType v) {

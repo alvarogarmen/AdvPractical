@@ -48,3 +48,24 @@ TEST(GraphTest, addEdge) {
   EXPECT_EQ(myGraph.getFreeNodeNeighboursSize(0), 2);
   EXPECT_EQ(myGraph.getFreeNodeNeighbours(0)[1], 1);
 }
+
+TEST(GraphTest, setFreeNodes) {
+  HeuristicGraph myGraph = HeuristicGraph<int, int>(3, 3, 0);
+  myGraph.addEdge(0, 0);
+  myGraph.addEdge(0, 1);
+  myGraph.addEdge(1, 0);
+  myGraph.addEdge(2, 0);
+  myGraph.addEdge(2, 1);
+  myGraph.addEdge(2, 2);
+
+  std::vector<int> permutation = {2, 1, 0};
+  myGraph.setFreeNodes(permutation);
+  EXPECT_EQ(myGraph.getFreeNodesPosition().size(), 3);
+  EXPECT_EQ(myGraph.getFreeNodesPosition()[0], 2);
+  EXPECT_EQ(myGraph.getFreeNodesPosition()[1], 1);
+  EXPECT_EQ(myGraph.getFreeNodesPosition()[2], 0);
+  EXPECT_EQ(myGraph.getPermutation().size(), 3);
+  EXPECT_EQ(myGraph.getPermutation()[0], 2);
+  EXPECT_EQ(myGraph.getPermutation()[1], 1);
+  EXPECT_EQ(myGraph.getPermutation()[2], 0);
+}
