@@ -78,6 +78,8 @@ class HeuristicGraph {
 
   const auto& getEdges() const { return freeNodes; }
 
+  const auto getPermutatuinAtIndex(NodeType i) const { return permutation[i]; }
+
   void setFreeNodes(const std::vector<NodeType>& newPermutation) {
     for (NodeType i = 0; i < newPermutation.size(); ++i) {
       freeNodesPosition[newPermutation[i]] = i;
