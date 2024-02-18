@@ -8,12 +8,12 @@
 #include "gtest/gtest.h"
 #include "oscm/heuristic_algorithm/heuristic_algorithm.h"
 
-TEST(AlgorithmTest, r1) {
+TEST(AlgorithmTest, algorithmWithR1) {
   std::vector<std::vector<int>> freeNodes = {{0, 1}, {0}, {0, 1, 2}};
   std::vector<std::vector<int>> fixedNodes = {{0, 1, 2}, {0, 2}, {2}};
   HeuristicGraph myGraph = HeuristicGraph<int, int>(freeNodes, fixedNodes);
 
-  bool didSwitch = r1<HeuristicGraph<int, int>>(myGraph);
+  bool didSwitch = algorithm<HeuristicGraph<int, int>>(myGraph, true, false, false);
   EXPECT_EQ(didSwitch, true);
   EXPECT_EQ(myGraph.getPermutation()[0], 1);
   EXPECT_EQ(myGraph.getPermutation()[1], 0);
@@ -28,12 +28,12 @@ TEST(AlgorithmTest, r1) {
   EXPECT_EQ(myGraph.getRightCrossings(2), 0);
 }
 
-TEST(AlgorithmTest, r2) {
+TEST(AlgorithmTest, algorithmWithR2) {
   std::vector<std::vector<int>> freeNodes = {{0, 1}, {0}, {0, 1, 2}};
   std::vector<std::vector<int>> fixedNodes = {{0, 1, 2}, {0, 2}, {2}};
   HeuristicGraph myGraph = HeuristicGraph<int, int>(freeNodes, fixedNodes);
 
-  bool didSwitch = r2<HeuristicGraph<int, int>>(myGraph);
+  bool didSwitch = algorithm<HeuristicGraph<int, int>>(myGraph, false, true, false);
   EXPECT_EQ(didSwitch, true);
   EXPECT_EQ(myGraph.getPermutation()[0], 1);
   EXPECT_EQ(myGraph.getPermutation()[1], 0);
@@ -48,12 +48,12 @@ TEST(AlgorithmTest, r2) {
   EXPECT_EQ(myGraph.getRightCrossings(2), 0);
 }
 
-TEST(AlgorithmTest, r3) {
+TEST(AlgorithmTest, algorithmWithR3) {
   std::vector<std::vector<int>> freeNodes = {{0, 1}, {0}, {0, 1, 2}};
   std::vector<std::vector<int>> fixedNodes = {{0, 1, 2}, {0, 2}, {2}};
   HeuristicGraph myGraph = HeuristicGraph<int, int>(freeNodes, fixedNodes);
 
-  bool didSwitch = r3<HeuristicGraph<int, int>>(myGraph);
+  bool didSwitch = algorithm<HeuristicGraph<int, int>>(myGraph, false, false, true);
   EXPECT_EQ(didSwitch, true);
   EXPECT_EQ(myGraph.getPermutation()[0], 1);
   EXPECT_EQ(myGraph.getPermutation()[1], 0);
