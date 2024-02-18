@@ -27,9 +27,9 @@ class HeuristicGraph {
                  const std::vector<std::vector<NodeType>>& fixedNodes)
       : freeNodes(freeNodes),
         fixedNodes(fixedNodes),
-        freeNodesPosition(std::vector<NodeType>(freeNodes.size())),
-        leftRightCrossingSum(std::vector<std::array<CrossingCountType, 2>>(freeNodes.size())),
-        permutation(std::vector<NodeType>(freeNodes.size())) {
+        freeNodesPosition(freeNodes.size()),
+        leftRightCrossingSum(freeNodes.size()),
+        permutation(freeNodes.size()) {
     std::iota(freeNodesPosition.begin(), freeNodesPosition.end(), 0);
     std::iota(permutation.begin(), permutation.end(), 0);
     computeCrossingSums();
@@ -76,7 +76,7 @@ class HeuristicGraph {
 
   const auto& getFreeNodesPosition() const { return freeNodesPosition; }
 
-  const auto& getEdges() { return freeNodes; }
+  const auto& getEdges() const { return freeNodes; }
 
   void setFreeNodes(const std::vector<NodeType>& newPermutation) {
     for (NodeType i = 0; i < newPermutation.size(); ++i) {
@@ -99,17 +99,23 @@ class HeuristicGraph {
 
   // for two free nodes u, v switch there positions and update left and right crossings
   // assume u is the left neighbour of v
-  void switchNeighbours(NodeType u, NodeType v) {
+  bool switchNeighbours(NodeType u, NodeType v, bool isConditional) {
     // the number of crossings created by the edges from (u, v)
     NodeType uvSum = computeUVcrossing(u, v);
     // the number of crossings created by the edges from (v, u)
     NodeType vuSum = computeUVcrossing(v, u);
+    if (isConditional) {
+      if (uvSum <= vuSum) {
+        return false;
+      }
+    }
     leftRightCrossingSum[u][1] -= uvSum;
     leftRightCrossingSum[v][1] += vuSum;
     leftRightCrossingSum[u][0] += vuSum;
     leftRightCrossingSum[v][0] -= uvSum;
     std::swap(permutation[freeNodesPosition[u]], permutation[freeNodesPosition[v]]);
     std::swap(freeNodesPosition[u], freeNodesPosition[v]);
+    return true;
   }
 
   // copmute for each free node u the number of crossings created by the edges from nodes to the

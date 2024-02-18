@@ -21,14 +21,14 @@ TEST(GraphTest, SimpleTest) {
   EXPECT_EQ(myGraph.getRightCrossings(1), 0);
   EXPECT_EQ(myGraph.getLeftCrossings(2), 1);
   EXPECT_EQ(myGraph.getRightCrossings(2), 0);
-  myGraph.switchNeighbours(0, 1);
+  myGraph.switchNeighbours(0, 1, false);
   EXPECT_EQ(myGraph.getLeftCrossings(1), 0);
   EXPECT_EQ(myGraph.getRightCrossings(1), 0);
   EXPECT_EQ(myGraph.getPermutation()[0], 1);
   EXPECT_EQ(myGraph.getPermutation()[1], 0);
   EXPECT_EQ(myGraph.getPermutation()[2], 2);
 
-  myGraph.switchNeighbours(0, 2);
+  myGraph.switchNeighbours(0, 2, false);
   EXPECT_EQ(myGraph.getLeftCrossings(0), 3);
   EXPECT_EQ(myGraph.getRightCrossings(0), 0);
   EXPECT_EQ(myGraph.getLeftCrossings(2), 0);
