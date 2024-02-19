@@ -50,7 +50,11 @@ int main(int argc, char* argv[]) {
     std::cerr << "Error opening file: output.txt" << std::endl;
     return 1;  // Return an error code
   }
-  graph->writeResultsToFile(outputFile, orderVector);
+  if (graph->writeResultsToFile(outputFile, orderVector) != absl::OkStatus()) {
+    std::cerr << "write into output status in not ok: " << std::endl;
+    return 1;  // Exit with an error code
+  }
+
   // Close the file stream
   outputFile.close();
 

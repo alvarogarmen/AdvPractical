@@ -43,5 +43,4 @@ void computeCrossingSums(Graph& graph) {
       graph.addCrossing(v, u, crossingVU);
     }
   }
-  std::cout << "finish to compute all crossings" << std::endl;
 }
