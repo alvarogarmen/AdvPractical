@@ -77,7 +77,10 @@ class HeuristicGraph {
   const auto& getFreeNodesPosition() const { return freeNodesPosition; }
 
   const auto& getEdges() const { return freeNodes; }
-
+  /**
+  This function returns the free node that is in index i of the perutation
+  @param i The index of the permutation
+*/
   const auto getPermutatuinAtIndex(NodeType i) const { return permutation[i]; }
 
   void setFreeNodes(const std::vector<NodeType>& newPermutation) {
@@ -99,8 +102,13 @@ class HeuristicGraph {
     return crossingSum;
   }
 
-  // for two free nodes u, v switch there positions and update left and right crossings
-  // assume u is the left neighbour of v
+  /**
+  This function switches the positions of two neighboring free nodes. Assumes u < v.
+  @param u The first free node
+  @param v The second free node
+  @param isConditional switch only if reduce crossings
+  @return True if the switch
+*/
   bool switchNeighbours(NodeType u, NodeType v, bool isConditional) {
     // the number of crossings created by the edges from (u, v)
     NodeType uvSum = computeUVcrossing(u, v);

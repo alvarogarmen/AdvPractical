@@ -7,7 +7,7 @@
 #include "gmock/gmock-matchers.h"
 #include "gtest/gtest.h"
 #include "oscm/heuristic_algorithm/heuristic_algorithm.h"
-
+using namespace heuristic_algorithm;
 TEST(AlgorithmTest, algorithmWithR1) {
   std::vector<std::vector<int>> freeNodes = {{0, 1}, {0}, {0, 1, 2}};
   std::vector<std::vector<int>> fixedNodes = {{0, 1, 2}, {0, 2}, {2}};

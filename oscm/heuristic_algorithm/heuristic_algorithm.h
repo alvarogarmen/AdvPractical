@@ -11,6 +11,7 @@
 #include <vector>
 
 #include "ds/heuristic_graph/heuristic_graph.h"
+namespace heuristic_algorithm {
 /*
  * For each  pair of neighbours  u , v with u < v, if the left crossings of u equal 0
  * and the left crossings of v are bigger than 0,
@@ -19,7 +20,6 @@
  */
 template <class Graph>
 bool r1(Graph& graph, typename Graph::NodeType nodeId, typename Graph::NodeType neighbourId) {
-  using NodeType = typename Graph::NodeType;
   if (nodeId < neighbourId) {
     return graph.getLeftCrossings(nodeId) == 0 && graph.getLeftCrossings(neighbourId) > 0;
   } else {
@@ -36,7 +36,6 @@ bool r1(Graph& graph, typename Graph::NodeType nodeId, typename Graph::NodeType 
  */
 template <class Graph>
 bool r2(Graph& graph, typename Graph::NodeType nodeId, typename Graph::NodeType neighbourId) {
-  using NodeType = typename Graph::NodeType;
   if (nodeId < neighbourId) {
     return graph.getRightCrossings(nodeId) > graph.getLeftCrossings(nodeId) &&
            graph.getLeftCrossings(neighbourId) > graph.getRightCrossings(neighbourId);
@@ -54,7 +53,6 @@ bool r2(Graph& graph, typename Graph::NodeType nodeId, typename Graph::NodeType 
  */
 template <class Graph>
 bool r3(Graph& graph, typename Graph::NodeType nodeId, typename Graph::NodeType neighbourId) {
-  using NodeType = typename Graph::NodeType;
   if (nodeId < neighbourId) {
     return graph.getRightCrossings(nodeId) > graph.getLeftCrossings(neighbourId);
   } else {
@@ -98,3 +96,4 @@ bool algorithm(Graph& graph, bool runR1, bool runR2, bool runR3) {
   }
   return madeSwitch;
 }
+}  // namespace heuristic_algorithm
