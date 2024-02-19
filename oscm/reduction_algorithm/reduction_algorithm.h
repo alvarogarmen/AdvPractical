@@ -51,7 +51,6 @@ void rr1(Graph& graph, typename Graph::CrossingCountType& currentSolution) {
   using NodeType = typename Graph::NodeType;
   for (NodeType u = 0; u < graph.getFreeNodesSize(); ++u) {
     for (NodeType v = u + 1; v < graph.getFreeNodesSize(); ++v) {
-      std::cout << "check for node " << u << "and " << v << std::endl;
       if (graph.getNodeCrossing(u).find(v) != graph.getNodeCrossing(u).end()) {
         if (graph.getNodeCrossing(u).at(v) == 0) {
           parameterAccounting<Graph, Undo>(graph, u, v, currentSolution);
@@ -60,7 +59,6 @@ void rr1(Graph& graph, typename Graph::CrossingCountType& currentSolution) {
         }
       }
     }
-    std::cout << "checked for node " << u << std::endl;
   }
 }
 
@@ -234,7 +232,6 @@ void algorithmStep(Graph& graph, typename Graph::CrossingCountType currentSoluti
                    std::vector<typename Graph::NodeType>& bestOrder) {
   using NodeType = typename Graph::NodeType;
   Undo undo;
-  // std::cout << "went in algorithmStep " << std::endl;
 
   if (isInitStep) {
     parameterAccounting<Graph, Undo>(graph, leftNode, rightNode, currentSolution, &undo);
@@ -275,7 +272,6 @@ void algorithmStep(Graph& graph, typename Graph::CrossingCountType currentSoluti
     return;
   }
   bestSolution = currentSolution;
-  std::cout << "The best solution so far is  " << bestSolution << std::endl;
   bestOrder = graph.getFixedPosition();
   graph.doUndo(undo);
   return;
@@ -294,16 +290,12 @@ std::tuple<typename Graph::CrossingCountType, std::vector<typename Graph::NodeTy
 
   computeCrossingSums<Graph, Undo>(graph);
   CrossingCountType currentSolution = 0;
-  std::cout << "go in rr1 " << std::endl;
   rr1<Graph, Undo>(graph, currentSolution);
-  std::cout << "go in rr2 " << std::endl;
   rr2<Graph, Undo>(graph, currentSolution);
-  std::cout << "finish  rr2 " << std::endl;
 
   bool didChangeRrlo2 = true;
 
   while (didChangeRrlo2) {
-    std::cout << "go in while " << std::endl;
     didChangeRrlo2 = rrlo2<Graph, Undo>(graph, currentSolution);
     rrlo1<Graph, Undo>(graph);
   }

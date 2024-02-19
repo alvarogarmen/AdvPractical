@@ -7,6 +7,8 @@
 #include <set>
 #include <vector>
 
+#include "absl/status/status.h"
+#include "absl/strings/str_cat.h"
 #include "ds/reduction_graph/undo_algorithm_step.h"
 
 template <typename NT, typename CCT>
@@ -58,37 +60,25 @@ class ReductionGraph {
     return;
   }
 
-  // Should be moved to io
-  void writeResultsToFile(const std::vector<NodeType>& vec, const std::string& filename) {
-    std::cout << "inside write to file" << filename << std::endl;
-    // Open the file for writing
-
-    std::ofstream outputFile(filename);
-    // Check if the file is open
-    if (!outputFile.is_open()) {
-      std::cerr << "Error opening file: " << filename << std::endl;
-      return;
-    }
-
-    // Write each element of the vector to a new line in the file
-    for (NodeType element : vec) {
+  /**
+  Should be moved to io
+  This function write the result order into a file.
+  @param os The output stream.
+  @param solution The solution order.
+*/
+  absl::Status writeResultsToFile(std::ostream& os, const std::vector<NodeType>& solution) {
+    // Write each element of the vector to the output stream
+    for (NodeType element : solution) {
       NodeType n = fixedNodes.size();
       element = element + n + 1;
-      outputFile << element << std::endl;
-      std::cout << element << std::endl;
-
-      // Flush the output buffer
-      outputFile.flush();
+      os << element << std::endl;
 
       // Check for errors after writing each element
-      if (!outputFile) {
-        std::cerr << "Error writing element to file: " << filename << std::endl;
-        // Handle the error as needed
+      if (!os) {
+        return absl::UnknownError(absl::StrCat("Error writing element to output stream"));
       }
     }
-
-    // Close the file
-    outputFile.close();
+    return absl::OkStatus();
   }
 
   NodeType getFixedNodesSize() const { return fixedNodes.size(); }

@@ -42,8 +42,18 @@ int main(int argc, char* argv[]) {
   auto graph = std::move(result.value());
   auto [crossingSum, orderVector] =
       algorithm<ReductionGraph<int, int>, UndoAlgorithmStep<int, int>>(*graph);
+  // Create an output file stream
+  std::ofstream outputFile(argv[2]);
 
-  graph->writeResultsToFile(orderVector, argv[2]);
+  // Check if the file is open
+  if (!outputFile.is_open()) {
+    std::cerr << "Error opening file: output.txt" << std::endl;
+    return 1;  // Return an error code
+  }
+  graph->writeResultsToFile(outputFile, orderVector);
+  // Close the file stream
+  outputFile.close();
+
   std::cout << "the solution has " << crossingSum << " crossings" << std::endl;
 
   // auto myGraph = inputGraphManually<int>();
