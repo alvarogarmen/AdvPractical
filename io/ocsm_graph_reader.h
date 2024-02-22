@@ -65,7 +65,6 @@ absl::StatusOr<std::unique_ptr<BipartiteGraph>> readGraph(std::istream& stream,
     // adds an edge going from Source to Target
     // internally we want 0-indexed arrays but the input is 1-indexed
   }
-  // TODO: implement finish on data structures
-  // bipartiteGraph->finish();
+
   return bipartiteGraph;
 }
