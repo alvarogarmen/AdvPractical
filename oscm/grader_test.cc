@@ -5,7 +5,7 @@
 #include "gtest/gtest.h"
 
 TEST(GraderTest, SimpleTest) {
-  BipartiteGraph myGraph = BipartiteGraph(4, 4, 0);
+  BipartiteGraph myGraph = BipartiteGraph(4, 4, 4);
 
   myGraph.addEdge(4, 3);
   myGraph.addEdge(5, 2);

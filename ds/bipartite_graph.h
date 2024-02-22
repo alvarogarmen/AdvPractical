@@ -31,6 +31,7 @@ class BipartiteGraph {
   const std::vector<NodeType>& getFreeNodes() const { return freeNodes; }
   const std::vector<NodeType>& getFixedNodes() const { return fixedNodes; }
   const std::vector<std::vector<NodeType>>& getEdges() const { return edges; }
+  const NodeType getEdge(NodeType FreeNode, NodeType index) const { return edges[FreeNode][index]; }
 
   void insertFreeNode(NodeType node) { freeNodes.push_back(node); };
   void insertFixedNode(NodeType node) { fixedNodes.push_back(node); };
