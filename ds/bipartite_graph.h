@@ -3,7 +3,6 @@
 //
 
 #pragma once
-
 #include <unordered_map>
 #include <vector>
 
@@ -30,6 +29,7 @@ class BipartiteGraph {
   const std::vector<NodeType>& getFreeNodes() const { return freeNodes; }
   const std::vector<NodeType>& getFixedNodes() const { return fixedNodes; }
   const std::vector<std::vector<NodeType>>& getEdges() const { return edges; }
+  const std::vector<NodeType>& getOutEdges(NodeType index) const { return edges[index]; }
 
   void insertFreeNode(NodeType node) { freeNodes.push_back(node); };
   void insertFixedNode(NodeType node) { fixedNodes.push_back(node); };
@@ -38,7 +38,8 @@ class BipartiteGraph {
     edges[sourceID].push_back(targetID);  // free Nodes come after the fixed
                                           // ones
   };
-  NodeType getEdge(NT nodeID, NT number) { return auto const & edges[nodeIT] }
+  const NodeType& getEdge(NT nodeID, NT index) const { return edges[nodeID][index]; }
+
   const NodeType getFreeNodesSize() { return freeNodes.size(); };
   const NodeType getFixedNodesSize() { return fixedNodes.size(); };
   const NodeType getEdgesSize() { return numEdges; };

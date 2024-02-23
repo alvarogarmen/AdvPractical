@@ -7,12 +7,11 @@ int crossGrader(BipartiteGraphType& myGraph) {  // Looks very bad but it is need
   int crossings = 0;
   using NodeType = typename BipartiteGraphType::NodeType;
   for (NodeType i = myGraph.getFreeNodes()[0]; i < myGraph.getFreeNodesSize(); i++) {
-    for (size_t j = 1; j < (myGraph.edges[i].size());
-         j++) {  // First entry in "edges" is the position of the node in the FreeNodes array
-      for (NodeType k = i + 1; k < myGraph.getFreeNodesSize(); k++) {
-        for (size_t l = 1; l < (myGraph.edges[k].size()); l++) {
-          crossings += (myGraph.edges[i][0] < myGraph.edges[k][0] &&
-                        myGraph.edges[i][j] > myGraph.edges[k][l]);
+    for (size_t j = 0; j < (myGraph.getOutEdges(i).size()); j++) {
+      for (NodeType k = i; k < myGraph.getFreeNodesSize(); k++) {
+        for (size_t l = 0; l < (myGraph.getOutEdges(k).size()); l++) {
+          crossings += (myGraph.getFreeNodes()[i] < myGraph.getFreeNodes()[k] &&
+                        myGraph.getEdge(i, j) > myGraph.getEdge(k, l));
         }
       }
     }
