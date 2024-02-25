@@ -1,3 +1,6 @@
+#pragma once
+namespace barycenter_algorithm {
+
 template <typename BipartiteGraph>
 void barycenterAlgorithm(BipartiteGraph& myGraph) {
   using NT = typename BipartiteGraph::NT;
@@ -22,3 +25,4 @@ void barycenterAlgorithm(BipartiteGraph& myGraph) {
   }
   myGraph.setFreeNodes(newFreeNodes);
 }
+}  // namespace barycenter_algorithm

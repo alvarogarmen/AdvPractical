@@ -7,7 +7,6 @@ cc_library(
     ],
     visibility = ["//visibility:public"],
     deps = [
-        "//oscm:barycenter_algorithm",
         "@com_google_absl//absl/status",
     ],
 )
