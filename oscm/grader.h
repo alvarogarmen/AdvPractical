@@ -2,8 +2,7 @@
 #include <cstddef>
 #include <iostream>
 template <typename BipartiteGraphType>
-int crossGrader(BipartiteGraphType& myGraph) {  // Looks very bad but it is needed to iterate over
-                                                // all edge combinations
+int crossGrader(BipartiteGraphType& myGraph) {  // Compare from left to right if edges cross
   int crossings = 0;
   using NodeType = typename BipartiteGraphType::NodeType;
   for (NodeType i = myGraph.getFreeNodes()[0]; i < myGraph.getFreeNodesSize(); i++) {
@@ -16,6 +15,5 @@ int crossGrader(BipartiteGraphType& myGraph) {  // Looks very bad but it is need
       }
     }
   }
-
   return crossings;
 }
