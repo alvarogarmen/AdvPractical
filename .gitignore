@@ -2,4 +2,8 @@ bazel-*
 genhtml
 .vscode/c_cpp_properties.json
 .vscode/launch.json
-
+*.sol
+*.gr
+*.lock
+MODULE.bazel
+.DS_Store
