@@ -38,7 +38,7 @@ class BipartiteGraph {
     edges[sourceID].push_back(targetID);  // free Nodes come after the fixed
                                           // ones
   };
-  const NodeType& getEdge(NT nodeID, NT index) const { return edges[nodeID][index]; }
+  const NodeType getEdge(NT nodeID, NT index) const { return edges[nodeID][index]; }
 
   const NodeType getFreeNodesSize() { return freeNodes.size(); };
   const NodeType getFixedNodesSize() { return fixedNodes.size(); };
