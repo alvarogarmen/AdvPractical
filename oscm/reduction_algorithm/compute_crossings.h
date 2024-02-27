@@ -17,7 +17,6 @@
 template <class Graph>
 typename Graph::CrossingCountType const computeUVcrossing(Graph& graph, typename Graph::NodeType u,
                                                           typename Graph::NodeType v) {
-  using NodeType = typename Graph::NodeType;
   using CrossingCountType = typename Graph::CrossingCountType;
   CrossingCountType crossingSum = 0;
   for (const auto uNeighbour : graph.getFreeNodeNeighbours(u)) {
@@ -34,22 +33,14 @@ template <class Graph, class Undo>
 void computeCrossingSums(Graph& graph) {
   using NodeType = typename Graph::NodeType;
   using CrossingCountType = typename Graph::CrossingCountType;
-  CrossingCountType currentSolution = 0;
   for (NodeType u = 0; u < graph.getFreeNodesSize(); ++u) {
     for (NodeType v = u + 1; v < graph.getFreeNodesSize(); ++v) {
       CrossingCountType crossingUV = computeUVcrossing(graph, u, v);
       graph.addCrossing(u, v, crossingUV);
       // reduction RR1: For each pair of vertices {u, v} ⊆ free nodes that forms a 0/j pattern
       // with j > 0, commit u < v
-      if (crossingUV == 0) {
-        parameterAccounting<Graph, Undo>(graph, u, v, currentSolution);
-      } else {
-        CrossingCountType crossingVU = computeUVcrossing(graph, v, u);
-        graph.addCrossing(v, u, crossingVU);
-        if (crossingVU == 0) {
-          parameterAccounting<Graph, Undo>(graph, v, u, currentSolution);
-        }
-      }
+      CrossingCountType crossingVU = computeUVcrossing(graph, v, u);
+      graph.addCrossing(v, u, crossingVU);
     }
   }
 }

@@ -6,9 +6,11 @@ cc_binary(
     visibility = ["//visibility:public"],
     deps = [
         "//ds:bipartite_graph",
+        "//ds/reduction_graph",
         "//io",
-        "//oscm",
+        "//oscm/reduction_algorithm",
         "@com_google_absl//absl/flags:flag",
         "@com_google_absl//absl/flags:parse",
+        "@com_google_absl//absl/status:statusor",
     ],
 )

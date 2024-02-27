@@ -1,11 +1,14 @@
 #pragma once
 #include <algorithm>
+#include <fstream>
 #include <iostream>
 #include <map>
 #include <numeric>
 #include <set>
 #include <vector>
 
+#include "absl/status/status.h"
+#include "absl/strings/str_cat.h"
 #include "ds/reduction_graph/undo_algorithm_step.h"
 
 template <typename NT, typename CCT>
@@ -42,6 +45,41 @@ class ReductionGraph {
         fixedPosition(freeNodes.size()),
         leftRightSet(freeNodes.size()),
         crossings(freeNodes.size()) {}
+
+  ReductionGraph(NodeType numFixedNodes, NodeType numFreeNodes, CrossingCountType numEdges)
+      : freeNodes(numFreeNodes, std::vector<NodeType>(0)),
+        fixedNodes(numFixedNodes, std::vector<NodeType>(0)),
+        fixedPosition(freeNodes.size()),
+        leftRightSet(freeNodes.size()),
+        crossings(freeNodes.size()) {}
+
+  void addEdge(NodeType source,
+               NodeType target) {  // where source is the freeNode and target is the fixedNode
+    freeNodes[source].push_back(target);
+    fixedNodes[target].push_back(source);
+    return;
+  }
+
+  /**
+  Should be moved to io
+  This function write the result order into a file.
+  @param os The output stream.
+  @param solution The solution order.
+*/
+  absl::Status writeResultsToFile(std::ostream& os, const std::vector<NodeType>& solution) {
+    // Write each element of the vector to the output stream
+    for (NodeType element : solution) {
+      NodeType n = fixedNodes.size();
+      element = element + n + 1;
+      os << element << std::endl;
+
+      // Check for errors after writing each element
+      if (!os) {
+        return absl::UnknownError(absl::StrCat("Error writing element to output stream"));
+      }
+    }
+    return absl::OkStatus();
+  }
 
   NodeType getFixedNodesSize() const { return fixedNodes.size(); }
 
