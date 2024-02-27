@@ -6,6 +6,7 @@
 #include "ds/heuristic_graph/heuristic_graph.h"
 #include "ds/reduction_graph/reduction_graph.h"
 #include "gmock/gmock-matchers.h"
+#include "oscm/reduction_algorithm/reduction_algorithm.h"
 
 namespace {
 using ::testing::ElementsAre;
@@ -172,7 +173,7 @@ TEST(ReadGraphTest, reductionGraph) {
   auto graph = std::move(result.value());
 
   auto [crossingSum, orderVector] =
-      algorithm<ReductionGraph<int, int>, UndoAlgorithmStep<int, int>>(*graph);
+      reductionalgorithms::algorithm<ReductionGraph<int, int>, UndoAlgorithmStep<int, int>>(*graph);
 
   std::ofstream outputFile("results.gr");
 
