@@ -25,7 +25,8 @@ void parameterAccounting(Graph& graph, typename Graph::NodeType u, typename Grap
                          typename Graph::CrossingCountType& currentSolution, Undo* undo = nullptr) {
   using NodeType = typename Graph::NodeType;
   if (u != v) {
-    if (graph.getRightNodes(u).find(v) == graph.getRightNodes(u).end()) {
+    // if (graph.getRightNodes(u).find(v) == graph.getRightNodes(u).end()) {
+    if (graph.getNodeCrossing(u).find(v) != graph.getNodeCrossing(u).end()) {
       graph.insertRightNode(u, v);
       graph.insertLeftNode(v, u);
       currentSolution += graph.getCrossing(u, v);
@@ -37,7 +38,26 @@ void parameterAccounting(Graph& graph, typename Graph::NodeType u, typename Grap
         parameterAccounting<Graph, Undo>(graph, smallerThanU, v, currentSolution, undo);
         for (NodeType biggerThanV : graph.getRightNodes(v)) {
           parameterAccounting<Graph, Undo>(graph, smallerThanU, biggerThanV, currentSolution, undo);
-          parameterAccounting<Graph, Undo>(graph, u, biggerThanV, currentSolution, undo);
+        }
+      }
+      for (NodeType biggerThanV : graph.getRightNodes(v)) {
+        parameterAccounting<Graph, Undo>(graph, u, biggerThanV, currentSolution, undo);
+      }
+    }
+  }
+}
+
+//  For each pair of free nodes a, b  that forms a 0/j pattern with j > 0, commit a < b.
+template <class Graph, class Undo>
+void rr1(Graph& graph, typename Graph::CrossingCountType& currentSolution) {
+  using NodeType = typename Graph::NodeType;
+  for (NodeType u = 0; u < graph.getFreeNodesSize(); ++u) {
+    for (NodeType v = u + 1; v < graph.getFreeNodesSize(); ++v) {
+      if (graph.getNodeCrossing(u).find(v) != graph.getNodeCrossing(u).end()) {
+        if (graph.getNodeCrossing(u).at(v) == 0) {
+          parameterAccounting<Graph, Undo>(graph, u, v, currentSolution);
+        } else if (graph.getNodeCrossing(v).at(u) == 0) {
+          parameterAccounting<Graph, Undo>(graph, v, u, currentSolution);
         }
       }
     }
@@ -144,8 +164,13 @@ bool rrLarge(Graph& graph, typename Graph::CrossingCountType crossingsLeft,
   for (NodeType u = 0; u < graph.getFreeNodesSize(); ++u) {
     for (auto [v, crossingValue] : graph.getNodeCrossing(u)) {
       if (crossingValue > crossingsLeft) {
-        pairsToModify.emplace_back(v, u);
-        didChange = true;
+        if (u < v) {
+          pairsToModify.emplace_back(v, u);
+          didChange = true;
+        } else if (graph.getNodeCrossing(v).at(u) < crossingsLeft) {
+          pairsToModify.emplace_back(v, u);
+          didChange = true;
+        }
       }
     }
   }
@@ -232,17 +257,20 @@ void algorithmStep(Graph& graph, typename Graph::CrossingCountType currentSoluti
     NodeType v = std::get<2>(tupelBiggerThenFour);
     algorithmStep<Graph, Undo>(graph, currentSolution, true, u, v, bestSolution, bestOrder);
     algorithmStep<Graph, Undo>(graph, currentSolution, true, v, u, bestSolution, bestOrder);
+    graph.doUndo(undo);
     return;
   } else if (std::get<0>(EqualToThree)) {
     NodeType u = std::get<1>(EqualToThree);
     NodeType v = std::get<2>(EqualToThree);
     algorithmStep<Graph, Undo>(graph, currentSolution, true, u, v, bestSolution, bestOrder);
     algorithmStep<Graph, Undo>(graph, currentSolution, true, v, u, bestSolution, bestOrder);
+    graph.doUndo(undo);
     return;
   } else if (std::get<0>(EqualToTwo)) {
     NodeType u = std::get<1>(EqualToTwo);
     NodeType v = std::get<2>(EqualToTwo);
     algorithmStep<Graph, Undo>(graph, currentSolution, true, u, v, bestSolution, bestOrder);
+    graph.doUndo(undo);
     return;
   }
   bestSolution = currentSolution;
@@ -264,7 +292,9 @@ std::tuple<typename Graph::CrossingCountType, std::vector<typename Graph::NodeTy
 
   computeCrossingSums<Graph, Undo>(graph);
   CrossingCountType currentSolution = 0;
+  rr1<Graph, Undo>(graph, currentSolution);
   rr2<Graph, Undo>(graph, currentSolution);
+
   bool didChangeRrlo2 = true;
 
   while (didChangeRrlo2) {

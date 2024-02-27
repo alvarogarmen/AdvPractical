@@ -1,5 +1,6 @@
 #pragma once
 #include <algorithm>
+#include <fstream>
 #include <iostream>
 #include <map>
 #include <numeric>
@@ -8,7 +9,9 @@
 
 #include "absl/status/status.h"
 #include "absl/strings/str_cat.h"
+
 #include "absl/strings/string_view.h"
+
 #include "ds/reduction_graph/undo_algorithm_step.h"
 
 template <typename NT, typename CCT>
@@ -64,7 +67,28 @@ class ReductionGraph {
     return;
   }
 
+
   NodeType getEdge(NodeType source, NodeType index) { return freeNodes[source][index]; }
+  /**
+  Should be moved to io
+  This function write the result order into a file.
+  @param os The output stream.
+  @param solution The solution order.
+*/
+  absl::Status writeResultsToFile(std::ostream& os, const std::vector<NodeType>& solution) {
+    // Write each element of the vector to the output stream
+    for (NodeType element : solution) {
+      NodeType n = fixedNodes.size();
+      element = element + n + 1;
+      os << element << std::endl;
+
+      // Check for errors after writing each element
+      if (!os) {
+        return absl::UnknownError(absl::StrCat("Error writing element to output stream"));
+      }
+    }
+    return absl::OkStatus();
+  }
 
   NodeType getFixedNodesSize() const { return fixedNodes.size(); }
 
