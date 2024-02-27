@@ -9,6 +9,7 @@ cc_library(
     visibility = ["//visibility:public"],
     deps = [
         "@abseil-cpp//absl/strings",
+        "@com_google_absl//absl/status",
 
     ],
 )

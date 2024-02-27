@@ -9,6 +9,9 @@ cc_library(
     visibility = ["//visibility:public"],
     deps = [
         "//ds:bipartite_graph",
+        "//ds/heuristic_graph",
+        "//ds/reduction_graph",
+        "//oscm/reduction_algorithm",
         "@com_google_absl//absl/status",
     ],
 )
