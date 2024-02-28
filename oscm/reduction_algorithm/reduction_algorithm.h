@@ -14,6 +14,8 @@
 #include "ds/reduction_graph/undo_algorithm_step.h"
 #include "oscm/reduction_algorithm/compute_crossings.h"
 
+namespace reductionalgorithms {
+
 /*
  * For each decision u < v that we make adjust the leftRightSet of u and v
  * Add all the transitiv decisions that follow the u < v decision
@@ -304,3 +306,4 @@ std::tuple<typename Graph::CrossingCountType, std::vector<typename Graph::NodeTy
   algorithmStep<Graph, Undo>(graph, currentSolution, false, 0, 0, bestSolution, bestOrder);
   return std::make_tuple(bestSolution, bestOrder);
 }
+}  // namespace reductionalgorithms

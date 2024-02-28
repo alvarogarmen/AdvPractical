@@ -41,7 +41,7 @@ int main(int argc, char* argv[]) {
 
   auto graph = std::move(result.value());
   auto [crossingSum, orderVector] =
-      algorithm<ReductionGraph<int, int>, UndoAlgorithmStep<int, int>>(*graph);
+      reductionalgorithms::algorithm<ReductionGraph<int, int>, UndoAlgorithmStep<int, int>>(*graph);
   // Create an output file stream
   std::ofstream outputFile(argv[2]);
 

@@ -1,0 +1,8 @@
+#henrixapp_toolkit_dependencies = use_extension("//:extensions.bzl", "henrixapp_toolkit_dependencies")
+#use_repo(henrixapp_toolkit_dependencies, "henrixapp_toolkit")
+bazel_dep(name = "henrixapp_toolkit")
+local_path_override(
+    module_name = "henrixapp_toolkit",
+    path = "../toolkit",  # update this path to point to your copy of toolkit
+)
+bazel_dep(name = "abseil-cpp", version = "20230802.0")

@@ -1,1 +1,4 @@
-build --cxxopt=-std=c++17
+# Enable Bzlmod for every Bazel command
+common --enable_bzlmod
+build  --stamp --workspace_status_command="$PWD/stamp.sh"
+build --cxxopt=-std=c++20 --cxxopt=-frecord-gcc-switches 
