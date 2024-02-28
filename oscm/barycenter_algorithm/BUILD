@@ -1,7 +1,7 @@
 load("@rules_cc//cc:defs.bzl", "cc_library", "cc_test")
 
 cc_library(
-    name = "barycenter",
+    name = "barycenter_algorithm",
     hdrs = [
         "barycenter_algorithm.h",
     ],
@@ -12,12 +12,12 @@ cc_library(
 )
 
 cc_test(
-    name = "barycenter_test",
-    srcs = ["barycenter_test.cc"],
+    name = "barycenter_algorithm_test",
+    srcs = ["barycenter_algorithm_test.cc"],
     deps = [
-        ":oscm/barycenter_algorithm",
-        "@com_google_absl//absl/status:statusor",
-        "@com_google_absl//absl/strings",
+        ":barycenter_algorithm",
+        "//ds:bipartite_graph",
+        "//ds/reduction_graph",
         "@com_google_googletest//:gtest_main",
     ],
 )

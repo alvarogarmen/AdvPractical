@@ -16,7 +16,7 @@ class BipartiteGraph {
   BipartiteGraph(NodeType fixedNodesSize, NodeType freeNodesSize, NodeType edgeSize)
       : freeNodes(freeNodesSize),
         fixedNodes(fixedNodesSize),
-        edges(freeNodesSize, -1) {  // nodes with no edges get assigned a -1
+        edges(freeNodesSize) {  // nodes with no edges get assigned a -1
     numEdges = edgeSize;
     // Write trivial positions in both vectors
     for (NodeType i = 0; i < freeNodesSize; i++) {
@@ -30,6 +30,29 @@ class BipartiteGraph {
 
   const std::vector<NodeType>& getFreeNodes() const { return freeNodes; }
   const std::vector<NodeType>& getFixedNodes() const { return fixedNodes; }
+  const void setFreeNodes(std::vector<NodeType>& newFreeNodes) {
+    for (size_t i = 0; i < newFreeNodes.size(); ++i) {
+      this->freeNodes[i] = newFreeNodes[i];
+    }
+  }
+  const void setEdges(std::vector<NodeType>& newPermutation) {
+    if (this->edges.size() != newPermutation.size()) {
+      throw std::invalid_argument("Edges and Permutation have different sizes");
+    }
+    for (std::vector<int>& row : this->edges) {
+      // Create a temporary vector to store the rearranged row
+      std::vector<int> temp(row.size());
+
+      // Rearrange elements based on Permutation
+      for (size_t i = 0; i < row.size(); ++i) {
+        temp[i] =
+            row[newPermutation[i]];  // Get element from original row using index from Permutation
+      }
+
+      // Swap the original row with the rearranged one
+      std::swap(row, temp);
+    }
+  }
   const std::vector<std::vector<NodeType>>& getEdges() const { return edges; }
   const NodeType getEdge(NodeType FreeNode, NodeType index) const { return edges[FreeNode][index]; }
 
@@ -37,8 +60,8 @@ class BipartiteGraph {
   void insertFixedNode(NodeType node) { fixedNodes.push_back(node); };
 
   void addEdge(NodeType sourceID, NodeType targetID) {
-    edges[sourceID].push_back(targetID);  // free Nodes come after the fixed
-                                          // ones
+    edges[sourceID].push_back(targetID);  // free Nodes come after the
+                                          // fixed ones
   };
 
   const NodeType getFreeNodesSize() { return freeNodes.size(); };
