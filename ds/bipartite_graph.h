@@ -39,18 +39,9 @@ class BipartiteGraph {
     if (this->edges.size() != newPermutation.size()) {
       throw std::invalid_argument("Edges and Permutation have different sizes");
     }
-    for (std::vector<int>& row : this->edges) {
-      // Create a temporary vector to store the rearranged row
-      std::vector<int> temp(row.size());
-
-      // Rearrange elements based on Permutation
-      for (size_t i = 0; i < row.size(); ++i) {
-        temp[i] =
-            row[newPermutation[i]];  // Get element from original row using index from Permutation
-      }
-
-      // Swap the original row with the rearranged one
-      std::swap(row, temp);
+    std::vector<std::vector<NT>> temp = this->edges;  // Not in place
+    for (size_t i = 0; i < this->edges.size(); i++) {
+      std::swap(temp[newPermutation[i]], edges[i]);
     }
   }
   const std::vector<std::vector<NodeType>>& getEdges() const { return edges; }
