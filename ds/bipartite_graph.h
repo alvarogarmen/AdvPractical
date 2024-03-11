@@ -30,15 +30,10 @@ class BipartiteGraph {
 
   const std::vector<NodeType>& getFreeNodes() const { return freeNodes; }
   const std::vector<NodeType>& getFixedNodes() const { return fixedNodes; }
-  const void setFreeNodes(std::vector<NodeType>& newFreeNodes) {
-    for (size_t i = 0; i < newFreeNodes.size(); ++i) {
-      this->freeNodes[i] = newFreeNodes[i];
-    }
-  }
+  void setFreeNodes(std::vector<NodeType>& newFreeNodes) { this->freeNodes = newFreeNodes; }
+
   const void setEdges(std::vector<NodeType>& newPermutation) {
-    if (this->edges.size() != newPermutation.size()) {
-      throw std::invalid_argument("Edges and Permutation have different sizes");
-    }
+    assert(this->edges.size() == newPermutation.size());
     std::vector<std::vector<NT>> temp = this->edges;  // Not in place
     for (size_t i = 0; i < this->edges.size(); i++) {
       std::swap(temp[newPermutation[i]], edges[i]);

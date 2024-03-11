@@ -13,14 +13,14 @@ void barycenterAlgorithm(GraphType& myGraph) {
     meanPositions[i] = std::make_pair(0, i);
   }
 
-  std::vector<std::vector<NT>> edges = myGraph.getEdges();
+  auto& edges = myGraph.getEdges();
 
   for (NT i = 0; i < myGraph.getFreeNodesSize(); i++) {
+    if (edges[i].size() == 0) {
+      meanPositions[i].first = -1;
+      continue;
+    }
     for (size_t j = 0; j < edges[i].size(); j++) {
-      if (edges[i].size() == 0) {
-        meanPositions[i].first = -1;
-        continue;
-      }
       meanPositions[i].first += edges[i][j];
     }
     meanPositions[i].first = meanPositions[i].first / edges[i].size();
@@ -49,7 +49,7 @@ void barycenterAlgorithmEdges(GraphType& myGraph) {
     meanPositions[i] = std::make_pair(0, i);
   }
 
-  std::vector<std::vector<NT>> edges = myGraph.getEdges();
+  auto& edges = myGraph.getEdges();
 
   for (NT i = 0; i < myGraph.getFreeNodesSize(); i++) {
     for (size_t j = 0; j < edges[i].size(); j++) {
