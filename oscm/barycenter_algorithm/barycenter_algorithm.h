@@ -2,39 +2,29 @@
 #include <algorithm>
 #include <iostream>
 #include <vector>
+
 namespace barycenter_algorithm {
 
 // Here we don't copy the edges over, this spares some time
 template <typename GraphType>
 void barycenterAlgorithm(GraphType& myGraph) {
   using NT = typename GraphType::NodeType;
-  std::vector<std::pair<NT, doubles>> meanPositions(myGraph.getFreeNodesSize());
-  for (size_t i = 0; i < meanPositions.size(); ++i) {
-    meanPositions[i] = std::make_pair(0, i);
-  }
+
+  std::vector<double> positions(myGraph.getFreeNodesSize(), 0.0);
 
   auto& edges = myGraph.getEdges();
+  auto& freeNodes = myGraph.getFreeNodes();
 
+  // Update positions and edges in-place
   for (NT i = 0; i < myGraph.getFreeNodesSize(); i++) {
     for (size_t j = 0; j < edges[i].size(); j++) {
-      meanPositions[i].first += edges[i][j];
+      positions[i] += edges[i][j];
     }
-    meanPositions[i].first = (double)(meanPositions[i].first) / (double)(edges[i].size());
+    positions[i] = (double)(positions[i]) / (double)edges[i].size();
   }
 
-  std::sort(meanPositions.begin(), meanPositions.end(),
-            [](const std::pair<NT, int>& a, const std::pair<NT, int>& b) {
-              // Compare the first elements (mean positions) for sorting
-              return a.first < b.first;
-            });
-
-  // TODO: DO it in place
-  std::vector<NT> newFreeNodes(meanPositions.size());
-
-  for (size_t i = 0; i < edges.size(); i++) {
-    newFreeNodes[i] = meanPositions[i].second;  // Move the nodes to their new positions
-  }
-
-  myGraph.setFreeNodes(newFreeNodes);
+  // Sort freeNodes based on positions
+  std::sort(freeNodes.begin(), freeNodes.end(),
+            [&positions](const NT& a, const NT& b) { return positions[a] < positions[b]; });
 }
 }  // namespace barycenter_algorithm

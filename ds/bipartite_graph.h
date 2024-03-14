@@ -28,17 +28,10 @@ class BipartiteGraph {
     // Concrete edges will be added with push_back operations
   };
 
-  const std::vector<NodeType>& getFreeNodes() const { return freeNodes; }
+  std::vector<NodeType>& getFreeNodes() { return freeNodes; }
   const std::vector<NodeType>& getFixedNodes() const { return fixedNodes; }
   void setFreeNodes(std::vector<NodeType>& newFreeNodes) { this->freeNodes = newFreeNodes; }
 
-  const void setEdges(std::vector<NodeType>& newPermutation) {
-    assert(this->edges.size() == newPermutation.size());
-    std::vector<std::vector<NT>> temp = this->edges;  // Not in place
-    for (size_t i = 0; i < this->edges.size(); i++) {
-      std::swap(temp[newPermutation[i]], edges[i]);
-    }
-  }
   const std::vector<std::vector<NodeType>>& getEdges() const { return edges; }
   const NodeType getEdge(NodeType FreeNode, NodeType index) const { return edges[FreeNode][index]; }
 

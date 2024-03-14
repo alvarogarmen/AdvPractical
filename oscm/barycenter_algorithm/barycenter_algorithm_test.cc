@@ -52,45 +52,10 @@ TEST(BarycenterTest, ReverseOrderGraph) {
   myGraph.addEdge(1, 5);
   myGraph.addEdge(0, 6);
   myGraph.addEdge(0, 7);
-
+  std::cout << myGraph.getEdges()[0][0] << std::endl;
   barycenter_algorithm::barycenterAlgorithm(myGraph);
+
   for (auto i = 0; i < myGraph.getFreeNodesSize(); i++) {
     EXPECT_EQ(myGraph.getFreeNodes()[i], myGraph.getFreeNodesSize() - 1 - i);
   }
-}
-
-TEST(BarycenterTest, ReverseOrderGraphCopyEdges) {
-  BipartiteGraph myGraph = BipartiteGraph(8, 4, 0);
-
-  myGraph.addEdge(3, 0);
-  myGraph.addEdge(3, 1);
-  myGraph.addEdge(2, 2);
-  myGraph.addEdge(2, 3);
-  myGraph.addEdge(1, 4);
-  myGraph.addEdge(1, 5);
-  myGraph.addEdge(0, 6);
-  myGraph.addEdge(0, 7);
-
-  EXPECT_EQ(myGraph.getEdge(0, 0), 6);
-  EXPECT_EQ(myGraph.getEdge(0, 1), 7);
-  EXPECT_EQ(myGraph.getEdge(1, 0), 4);
-  EXPECT_EQ(myGraph.getEdge(1, 1), 5);
-  EXPECT_EQ(myGraph.getEdge(2, 0), 2);
-  EXPECT_EQ(myGraph.getEdge(2, 1), 3);
-  EXPECT_EQ(myGraph.getEdge(3, 0), 0);
-  EXPECT_EQ(myGraph.getEdge(3, 1), 1);
-
-  barycenter_algorithm::barycenterAlgorithmEdges(myGraph);
-  for (auto i = 0; i < myGraph.getFreeNodesSize(); i++) {
-    EXPECT_EQ(myGraph.getFreeNodes()[i], myGraph.getFreeNodesSize() - 1 - i);
-  }
-
-  EXPECT_EQ(myGraph.getEdge(0, 0), 0);
-  EXPECT_EQ(myGraph.getEdge(0, 1), 1);
-  EXPECT_EQ(myGraph.getEdge(1, 0), 2);
-  EXPECT_EQ(myGraph.getEdge(1, 1), 3);
-  EXPECT_EQ(myGraph.getEdge(2, 0), 4);
-  EXPECT_EQ(myGraph.getEdge(2, 1), 5);
-  EXPECT_EQ(myGraph.getEdge(3, 0), 6);
-  EXPECT_EQ(myGraph.getEdge(3, 1), 7);
 }
