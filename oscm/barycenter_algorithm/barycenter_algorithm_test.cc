@@ -59,3 +59,23 @@ TEST(BarycenterTest, ReverseOrderGraph) {
     EXPECT_EQ(myGraph.getFreeNodes()[i], myGraph.getFreeNodesSize() - 1 - i);
   }
 }
+
+TEST(BarycenterTest, RandomOrderGraph) {
+  BipartiteGraph myGraph = BipartiteGraph(8, 4, 0);
+
+  myGraph.addEdge(1, 0);
+  myGraph.addEdge(1, 1);
+  myGraph.addEdge(2, 2);
+  myGraph.addEdge(2, 3);
+  myGraph.addEdge(3, 4);
+  myGraph.addEdge(3, 5);
+  myGraph.addEdge(0, 6);
+  myGraph.addEdge(0, 7);
+  std::cout << myGraph.getEdges()[0][0] << std::endl;
+  barycenter_algorithm::barycenterAlgorithm(myGraph);
+
+  EXPECT_EQ(myGraph.getFreeNodes()[0], 1);
+  EXPECT_EQ(myGraph.getFreeNodes()[1], 2);
+  EXPECT_EQ(myGraph.getFreeNodes()[2], 3);
+  EXPECT_EQ(myGraph.getFreeNodes()[3], 0);
+}
