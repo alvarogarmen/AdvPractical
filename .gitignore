@@ -7,4 +7,3 @@ genhtml
 *.lock
 .DS_Store
 experiment/*
-runner
