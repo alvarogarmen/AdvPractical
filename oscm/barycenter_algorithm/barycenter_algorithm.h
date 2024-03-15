@@ -20,6 +20,9 @@ void barycenterAlgorithm(GraphType& myGraph) {
     for (size_t j = 0; j < edges[i].size(); j++) {
       positions[i] += edges[i][j];
     }
+    if (edges[i].size() == 0) {
+      continue;
+    }
     positions[i] = (double)(positions[i]) / (double)edges[i].size();
   }
 
