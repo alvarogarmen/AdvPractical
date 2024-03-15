@@ -5,5 +5,6 @@ genhtml
 *.sol
 *.gr
 *.lock
-MODULE.bazel
 .DS_Store
+experiment/*
+runner

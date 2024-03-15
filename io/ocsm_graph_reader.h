@@ -14,12 +14,6 @@ absl::StatusOr<std::unique_ptr<BipartiteGraph>> readGraph(std::istream& stream,
     return absl::NotFoundError("stream not good error");
   }
   std::string header;
-  while (header == "") {
-    if (stream.eof()) {
-      return absl::NotFoundError("File does not contain enough lines. Could not read header.");
-    }
-    std::getline(stream, header);
-  }
 
   std::string line;
   typename BipartiteGraph::NodeType n0 = 0;  // Number of fixed Nodes

@@ -9,8 +9,8 @@ cc_binary(
         "//ds/reduction_graph",
         "//io",
         "//oscm/reduction_algorithm",
-        "@com_google_absl//absl/flags:flag",
-        "@com_google_absl//absl/flags:parse",
-        "@com_google_absl//absl/status:statusor",
+        "@abseil-cpp//absl/flags:flag",
+        "@abseil-cpp//absl/flags:parse",
+        "@abseil-cpp//absl/status:statusor",
     ],
 )

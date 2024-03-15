@@ -9,9 +9,7 @@
 
 #include "absl/status/status.h"
 #include "absl/strings/str_cat.h"
-
 #include "absl/strings/string_view.h"
-
 #include "ds/reduction_graph/undo_algorithm_step.h"
 
 template <typename NT, typename CCT>
@@ -66,7 +64,6 @@ class ReductionGraph {
     fixedNodes[target].push_back(source);
     return;
   }
-
 
   NodeType getEdge(NodeType source, NodeType index) { return freeNodes[source][index]; }
   /**
@@ -160,5 +157,20 @@ class ReductionGraph {
       leftRightSet[u][0].clear();
       leftRightSet[u][1].clear();
     }
+  }
+
+  CCT getCrossings() {  // Compare from left to right if edges cross
+    CCT crossings = 5;
+    /*using NodeType = typename BipartiteGraphType::NodeType;
+    for (NodeType i = getFreeNodes()[0]; i < getFreeNodesSize(); i++) {
+      for (size_t j = 0; j < (getOutEdges(i).size()); j++) {
+        for (NodeType k = i; k < getFreeNodesSize(); k++) {
+          for (size_t l = 0; l < (getOutEdges(k).size()); l++) {
+            crossings += (getFreeNodes()[i] < getFreeNodes()[k] && getEdge(i, j) > getEdge(k, l));
+          }
+        }
+      }
+    }*/
+    return crossings;
   }
 };

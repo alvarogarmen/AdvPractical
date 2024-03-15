@@ -12,7 +12,7 @@ cc_library(
         "//ds/heuristic_graph",
         "//ds/reduction_graph",
         "//oscm/reduction_algorithm",
-        "@com_google_absl//absl/status",
+        "@abseil-cpp//absl/status",
     ],
 )
 
@@ -22,8 +22,8 @@ cc_test(
     deps = [
         ":io",
         "//ds/reduction_graph",
-        "@com_google_absl//absl/status:statusor",
-        "@com_google_absl//absl/strings",
+        "@abseil-cpp//absl/status:statusor",
+        "@abseil-cpp//absl/strings",
         "@com_google_googletest//:gtest_main",
     ],
 )
