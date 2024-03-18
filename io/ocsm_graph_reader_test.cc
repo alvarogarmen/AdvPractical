@@ -108,7 +108,7 @@ TEST(ReadGraphTest, MissingInput) {
   std::stringstream nonExistentFileName;
   auto result = readGraph<ReductionGraph<int, int>>(nonExistentFileName);
   ASSERT_FALSE(result.ok());
-  EXPECT_EQ(result.status().code(), absl::StatusCode::kNotFound);
+  EXPECT_EQ(result.status().code(), absl::StatusCode::kInvalidArgument);
 }
 
 TEST(ReadGraphTest, heuristicGraph) {
