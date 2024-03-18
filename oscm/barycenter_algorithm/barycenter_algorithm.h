@@ -23,7 +23,7 @@ void barycenterAlgorithm(GraphType& myGraph) {
     if (edges[i].size() == 0) {
       continue;
     }
-    positions[i] = (double)(positions[i]) / (double)edges[i].size();
+    positions[i] = ((double)positions[i]) / ((double)edges[i].size());
   }
 
   // Sort freeNodes based on positions
