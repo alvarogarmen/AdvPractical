@@ -10,7 +10,7 @@
 
 namespace oscm::experiments::algorithms {
 struct BarycenterGraphEmptyProblem : public oscm::ds::EmptyProblem<BipartiteGraph<int>> {
-  const static constexpr std::string_view ds_name = "barycenter_graph";
+  const static constexpr std::string_view ds_name = "bipartite_graph";
 };
 namespace {
 using henrixapp::app::app_io::AlgorithmConfig;

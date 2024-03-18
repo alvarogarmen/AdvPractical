@@ -13,7 +13,7 @@ void barycenterAlgorithm(GraphType& myGraph) {
   std::vector<double> positions(myGraph.getFreeNodesSize(), 0.0);
 
   auto& edges = myGraph.getEdges();
-  auto& freeNodes = myGraph.getFreeNodes();
+  auto& permutationFreeNodes = myGraph.getFreeNodes();
 
   // Update positions and edges in-place
   for (NT i = 0; i < myGraph.getFreeNodesSize(); i++) {
@@ -26,8 +26,8 @@ void barycenterAlgorithm(GraphType& myGraph) {
     positions[i] = ((double)positions[i]) / ((double)edges[i].size());
   }
 
-  // Sort freeNodes based on positions
-  std::sort(freeNodes.begin(), freeNodes.end(),
+  // Sort permutationFreeNodes based on positions
+  std::sort(permutationFreeNodes.begin(), permutationFreeNodes.end(),
             [&positions](const NT& a, const NT& b) { return positions[a] < positions[b]; });
 }
 }  // namespace barycenter_algorithm
