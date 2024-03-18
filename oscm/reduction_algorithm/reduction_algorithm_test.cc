@@ -5,7 +5,8 @@
 
 #include "gmock/gmock-matchers.h"
 #include "gtest/gtest.h"
-
+namespace {
+using namespace reductionalgorithms;
 TEST(AlgorithmTest, ParameterAccounting) {
   std::vector<std::vector<int>> freeNodes = {{0, 2}, {0, 3}, {0, 1}, {1, 3}};
   std::vector<std::vector<int>> fixedNodes = {{0, 1, 2}, {2, 3}, {0}, {1, 3}};
@@ -14,6 +15,7 @@ TEST(AlgorithmTest, ParameterAccounting) {
   int currentSolution = 0;
 
   computeCrossingSums<ReductionGraph<int, int>, UndoAlgorithmStep<int, int>>(myGraph);
+  rr1<ReductionGraph<int, int>, UndoAlgorithmStep<int, int>>(myGraph, currentSolution);
   parameterAccounting<ReductionGraph<int, int>, UndoAlgorithmStep<int, int>>(myGraph, 0, 1,
                                                                              currentSolution);
   EXPECT_EQ(myGraph.getLeftNodes(0).size(), 0);
@@ -67,6 +69,7 @@ TEST(AlgorithmTest, rrlo1Rrlo2) {
   UndoAlgorithmStep undo = UndoAlgorithmStep<int, int>();
 
   computeCrossingSums<ReductionGraph<int, int>, UndoAlgorithmStep<int, int>>(myGraph);
+  rr1<ReductionGraph<int, int>, UndoAlgorithmStep<int, int>>(myGraph, currentSolution);
   rrlo1<ReductionGraph<int, int>, UndoAlgorithmStep<int, int>>(myGraph, &undo);
   EXPECT_EQ(myGraph.getFixedPosition()[0], 1);
   EXPECT_EQ(myGraph.getFixedPosition()[1], 0);
@@ -85,6 +88,7 @@ TEST(AlgorithmTest, rr3) {
   UndoAlgorithmStep undo = UndoAlgorithmStep<int, int>();
   int currentSolution = 0;
   computeCrossingSums<ReductionGraph<int, int>, UndoAlgorithmStep<int, int>>(myGraph);
+  rr1<ReductionGraph<int, int>, UndoAlgorithmStep<int, int>>(myGraph, currentSolution);
   rr3<ReductionGraph<int, int>, UndoAlgorithmStep<int, int>>(myGraph, currentSolution, &undo);
   EXPECT_EQ(myGraph.getLeftNodes(0).size(), 1);
   EXPECT_EQ(myGraph.getRightNodes(0).size(), 0);
@@ -108,6 +112,7 @@ TEST(AlgorithmTest, rr2) {
   ReductionGraph myGraph = ReductionGraph<int, int>(freeNodes, fixedNodes);
   int currentSolution = 0;
   computeCrossingSums<ReductionGraph<int, int>, UndoAlgorithmStep<int, int>>(myGraph);
+  rr1<ReductionGraph<int, int>, UndoAlgorithmStep<int, int>>(myGraph, currentSolution);
   rr2<ReductionGraph<int, int>, UndoAlgorithmStep<int, int>>(myGraph, currentSolution);
   EXPECT_EQ(myGraph.getLeftNodes(0).size(), 0);
   EXPECT_EQ(myGraph.getRightNodes(0).size(), 1);
@@ -126,7 +131,7 @@ TEST(AlgorithmTest, rrLarge) {
   ReductionGraph myGraph = ReductionGraph<int, int>(freeNodes, fixedNodes);
   int currentSolution = 0;
   computeCrossingSums<ReductionGraph<int, int>, UndoAlgorithmStep<int, int>>(myGraph);
-
+  rr1<ReductionGraph<int, int>, UndoAlgorithmStep<int, int>>(myGraph, currentSolution);
   rrLarge<ReductionGraph<int, int>, UndoAlgorithmStep<int, int>>(myGraph, 2, currentSolution);
   EXPECT_EQ(myGraph.getLeftNodes(0).size(), 1);
   EXPECT_EQ(myGraph.getRightNodes(0).size(), 1);
@@ -138,9 +143,11 @@ TEST(AlgorithmTest, IJBiggerThenFour) {
   std::vector<std::vector<int>> freeNodes = {{0, 1}, {0}, {0, 1, 2}};
   std::vector<std::vector<int>> fixedNodes = {{0, 1, 2}, {0, 2}, {2}};
   ReductionGraph myGraph = ReductionGraph<int, int>(freeNodes, fixedNodes);
-  computeCrossingSums<ReductionGraph<int, int>, UndoAlgorithmStep<int, int>>(myGraph);
+  int currentSolution = 0;
 
-  auto [success, u, v] = IJBiggerThenFour<ReductionGraph<int, int>>(myGraph);
+  computeCrossingSums<ReductionGraph<int, int>, UndoAlgorithmStep<int, int>>(myGraph);
+  rr1<ReductionGraph<int, int>, UndoAlgorithmStep<int, int>>(myGraph, currentSolution);
+  auto [best, u, v] = IJBiggerThenFour<ReductionGraph<int, int>>(myGraph);
   EXPECT_EQ(u, 0);
   EXPECT_EQ(v, 2);
 }
@@ -149,8 +156,10 @@ TEST(AlgorithmTest, IJEqualToThree) {
   std::vector<std::vector<int>> freeNodes = {{0, 1}, {0}, {0, 2}};
   std::vector<std::vector<int>> fixedNodes = {{0, 1, 2}, {0}, {2}};
   ReductionGraph myGraph = ReductionGraph<int, int>(freeNodes, fixedNodes);
-  computeCrossingSums<ReductionGraph<int, int>, UndoAlgorithmStep<int, int>>(myGraph);
+  int currentSolution = 0;
 
+  computeCrossingSums<ReductionGraph<int, int>, UndoAlgorithmStep<int, int>>(myGraph);
+  rr1<ReductionGraph<int, int>, UndoAlgorithmStep<int, int>>(myGraph, currentSolution);
   auto [success, u, v] = IJEqualToThree<ReductionGraph<int, int>>(myGraph);
   EXPECT_EQ(u, 2);
   EXPECT_EQ(v, 0);
@@ -160,8 +169,10 @@ TEST(AlgorithmTest, IJEqualToTwo) {
   std::vector<std::vector<int>> freeNodes = {{1, 2}, {0}, {0, 1, 2}};
   std::vector<std::vector<int>> fixedNodes = {{1, 2}, {0, 2}, {0, 2}};
   ReductionGraph myGraph = ReductionGraph<int, int>(freeNodes, fixedNodes);
-  computeCrossingSums<ReductionGraph<int, int>, UndoAlgorithmStep<int, int>>(myGraph);
+  int currentSolution = 0;
 
+  computeCrossingSums<ReductionGraph<int, int>, UndoAlgorithmStep<int, int>>(myGraph);
+  rr1<ReductionGraph<int, int>, UndoAlgorithmStep<int, int>>(myGraph, currentSolution);
   auto [success, u, v] = IJEqualToTwo<ReductionGraph<int, int>>(myGraph);
   EXPECT_EQ(u, 0);
   EXPECT_EQ(v, 2);
@@ -195,9 +206,10 @@ TEST(GraphTest, UndoAlgorithmStep) {
   std::vector<std::vector<int>> fixedNodes = {{0, 1, 2}, {0, 2}, {2}};
   ReductionGraph myGraph = ReductionGraph<int, int>(freeNodes, fixedNodes);
   UndoAlgorithmStep undo = UndoAlgorithmStep<int, int>();
-  computeCrossingSums<ReductionGraph<int, int>, UndoAlgorithmStep<int, int>>(myGraph);
-
   int currentSolution = 0;
+
+  computeCrossingSums<ReductionGraph<int, int>, UndoAlgorithmStep<int, int>>(myGraph);
+  rr1<ReductionGraph<int, int>, UndoAlgorithmStep<int, int>>(myGraph, currentSolution);
 
   parameterAccounting<ReductionGraph<int, int>, UndoAlgorithmStep<int, int>>(
       myGraph, 0, 2, currentSolution, &undo);
@@ -225,4 +237,5 @@ TEST(GraphTest, UndoAlgorithmStep) {
   EXPECT_EQ(myGraph.getRightNodes(0).size(), 0);
   EXPECT_EQ(myGraph.getRightNodes(1).size(), 2);
   EXPECT_EQ(myGraph.getRightNodes(2).size(), 0);
+}
 }

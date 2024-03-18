@@ -9,7 +9,10 @@ cc_library(
     visibility = ["//visibility:public"],
     deps = [
         "//ds:bipartite_graph",
-        "@com_google_absl//absl/status",
+        "//ds/heuristic_graph",
+        "//ds/reduction_graph",
+        "//oscm/reduction_algorithm",
+        "@abseil-cpp//absl/status",
     ],
 )
 
@@ -18,8 +21,9 @@ cc_test(
     srcs = ["ocsm_graph_reader_test.cc"],
     deps = [
         ":io",
-        "@com_google_absl//absl/status:statusor",
-        "@com_google_absl//absl/strings",
+        "//ds/reduction_graph",
+        "@abseil-cpp//absl/status:statusor",
+        "@abseil-cpp//absl/strings",
         "@com_google_googletest//:gtest_main",
     ],
 )

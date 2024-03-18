@@ -14,12 +14,6 @@ absl::StatusOr<std::unique_ptr<BipartiteGraph>> readGraph(std::istream& stream,
     return absl::NotFoundError("stream not good error");
   }
   std::string header;
-  while (header == "") {
-    if (stream.eof()) {
-      return absl::NotFoundError("File does not contain enough lines. Could not read header.");
-    }
-    std::getline(stream, header);
-  }
 
   std::string line;
   typename BipartiteGraph::NodeType n0 = 0;  // Number of fixed Nodes
@@ -59,12 +53,12 @@ absl::StatusOr<std::unique_ptr<BipartiteGraph>> readGraph(std::istream& stream,
         (source <= n0 || source > size)) {  // Check if nodes out of bounds
       return absl::InvalidArgumentError("Invalid edge vertex indices");
     }
+
     bipartiteGraph->addEdge(source - n0 - 1, target - 1);
     // source - n0 because the input files have the freeNodeIDs start at n0 instead of 0
     // adds an edge going from Source to Target
     // internally we want 0-indexed arrays but the input is 1-indexed
   }
-  // TODO: implement finish on data structures
-  // bipartiteGraph->finish();
+
   return bipartiteGraph;
 }

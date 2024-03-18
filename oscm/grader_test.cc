@@ -7,10 +7,10 @@
 TEST(GraderTest, SimpleTest) {
   BipartiteGraph myGraph = BipartiteGraph(4, 4, 4);
 
-  myGraph.addEdge(4, 3);
-  myGraph.addEdge(5, 2);
-  myGraph.addEdge(6, 1);
-  myGraph.addEdge(7, 3);
-
-  EXPECT_EQ(crossGrader(myGraph), 3);
+  myGraph.addEdge(0, 2);
+  myGraph.addEdge(1, 1);
+  myGraph.addEdge(2, 0);
+  myGraph.addEdge(3, 2);
+  int crossings = crossGrader(myGraph);
+  EXPECT_EQ(crossings, 3);
 }
