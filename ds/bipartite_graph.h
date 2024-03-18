@@ -9,7 +9,12 @@
 template <typename NT>
 class BipartiteGraph {
  public:
+  NT currentNumNodes() { return getFreeNodesSize() + getFixedNodesSize(); }
+  NT currentNumEdges() { return 0; }
+  NT getCrossings() { return 5; }
+  using EdgeType = NT;
   using NodeType = NT;
+  using WeightType = NT;
 
   BipartiteGraph() : freeNodes({}), fixedNodes({}){};
 
