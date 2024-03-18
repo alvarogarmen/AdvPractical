@@ -16,6 +16,6 @@ cc_test(
     srcs = ["grader_test.cc"],
     deps = [
         ":oscm",
-        "@com_google_googletest//:gtest_main",
+        "@googletest//:gtest_main",
     ],
 )

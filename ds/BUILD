@@ -13,6 +13,6 @@ cc_test(
     srcs = ["bipartite_graph_test.cc"],
     deps = [
         ":bipartite_graph",
-        "@com_google_googletest//:gtest_main",
+        "@googletest//:gtest_main",
     ],
 )

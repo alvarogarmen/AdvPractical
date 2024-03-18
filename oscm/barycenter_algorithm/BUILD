@@ -18,6 +18,6 @@ cc_test(
         ":barycenter_algorithm",
         "//ds:bipartite_graph",
         "//ds/reduction_graph",
-        "@com_google_googletest//:gtest_main",
+        "@googletest//:gtest_main",
     ],
 )
