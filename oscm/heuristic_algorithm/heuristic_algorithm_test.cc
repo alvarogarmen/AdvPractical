@@ -8,12 +8,12 @@
 #include "gtest/gtest.h"
 #include "oscm/heuristic_algorithm/heuristic_algorithm.h"
 using namespace heuristic_algorithm;
-TEST(AlgorithmTest, algorithmWithR1) {
+TEST(HeuristicTest, HeuristicWithR1) {
   std::vector<std::vector<int>> freeNodes = {{0, 1}, {0}, {0, 1, 2}};
   std::vector<std::vector<int>> fixedNodes = {{0, 1, 2}, {0, 2}, {2}};
   HeuristicGraph myGraph = HeuristicGraph<int, int>(freeNodes, fixedNodes);
 
-  bool didSwitch = algorithm<HeuristicGraph<int, int>>(myGraph, true, false, false);
+  bool didSwitch = heuristicAlgorithm<HeuristicGraph<int, int>>(myGraph, true, false, false);
   EXPECT_EQ(didSwitch, true);
   EXPECT_EQ(myGraph.getPermutation()[0], 1);
   EXPECT_EQ(myGraph.getPermutation()[1], 0);
@@ -28,12 +28,12 @@ TEST(AlgorithmTest, algorithmWithR1) {
   EXPECT_EQ(myGraph.getRightCrossings(2), 0);
 }
 
-TEST(AlgorithmTest, algorithmWithR2) {
+TEST(HeuristicTest, HeuristicWithR2) {
   std::vector<std::vector<int>> freeNodes = {{0, 1}, {0}, {0, 1, 2}};
   std::vector<std::vector<int>> fixedNodes = {{0, 1, 2}, {0, 2}, {2}};
   HeuristicGraph myGraph = HeuristicGraph<int, int>(freeNodes, fixedNodes);
 
-  bool didSwitch = algorithm<HeuristicGraph<int, int>>(myGraph, false, true, false);
+  bool didSwitch = heuristicAlgorithm<HeuristicGraph<int, int>>(myGraph, false, true, false);
   EXPECT_EQ(didSwitch, true);
   EXPECT_EQ(myGraph.getPermutation()[0], 1);
   EXPECT_EQ(myGraph.getPermutation()[1], 0);
@@ -48,12 +48,12 @@ TEST(AlgorithmTest, algorithmWithR2) {
   EXPECT_EQ(myGraph.getRightCrossings(2), 0);
 }
 
-TEST(AlgorithmTest, algorithmWithR3) {
+TEST(HeuristicTest, HeuristicWithR3) {
   std::vector<std::vector<int>> freeNodes = {{0, 1}, {0}, {0, 1, 2}};
   std::vector<std::vector<int>> fixedNodes = {{0, 1, 2}, {0, 2}, {2}};
   HeuristicGraph myGraph = HeuristicGraph<int, int>(freeNodes, fixedNodes);
 
-  bool didSwitch = algorithm<HeuristicGraph<int, int>>(myGraph, false, false, true);
+  bool didSwitch = heuristicAlgorithm<HeuristicGraph<int, int>>(myGraph, false, false, true);
   EXPECT_EQ(didSwitch, true);
   EXPECT_EQ(myGraph.getPermutation()[0], 1);
   EXPECT_EQ(myGraph.getPermutation()[1], 0);
