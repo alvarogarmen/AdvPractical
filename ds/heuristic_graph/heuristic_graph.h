@@ -77,6 +77,8 @@ class HeuristicGraph {
   const auto& getFreeNodesPosition() const { return freeNodesPosition; }
 
   const auto& getEdges() const { return freeNodes; }
+
+  std::vector<NT>& getFreeNodes() { return freeNodesPosition; }
   /**
   This function returns the free node that is in index i of the perutation
   @param i The index of the permutation
