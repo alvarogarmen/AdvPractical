@@ -6,7 +6,9 @@ cc_library(
     ],
     srcs = [
         "reduction_algorithm.cc",
-        "barycenter_algorithm.cc"],
+        "barycenter_algorithm.cc",
+        "median_algorithm.cc",
+        ],
     visibility = ["//visibility:public"],
     deps = [
         "//ds/reduction_graph",
@@ -18,6 +20,7 @@ cc_library(
         "//io:io",
         "//oscm/reduction_algorithm",
         "//oscm/barycenter_algorithm",
+        "//oscm/median_algorithm",
         "//ds/helper:empty_problem",
     ],
     alwayslink=1,
