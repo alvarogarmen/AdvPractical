@@ -3,6 +3,7 @@ cc_library(
     hdrs = [
         "reduction_algorithm.h",
         "barycenter_algorithm.h",
+        "median_algoritgh.h",
     ],
     srcs = [
         "reduction_algorithm.cc",
