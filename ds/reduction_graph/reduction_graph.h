@@ -121,7 +121,6 @@ class ReductionGraph {
 
   void setFixedPositions(const std::vector<NodeType>& bestOrder) { fixedPosition = bestOrder; }
 
-
   void setCrossings(const std::vector<std::map<NodeType, CrossingCountType>>& m) { crossings = m; }
 
   void setFreeNodes(const std::vector<std::vector<NodeType>>& newfreeNodes) {
@@ -172,13 +171,13 @@ class ReductionGraph {
     return crossingSum;
   }
 
-CrossingCountType getCrossings() {
-  CrossingCountType crossingCount = 0;
-  for (NodeType u = 0; u < freeNodes.size(); ++u) {
-    for (NodeType v = u + 1; v < freeNodes.size(); ++v) {
-      crossingCount += computeUVcrossing(fixedPosition[u], fixedPosition[v]);
+  CrossingCountType getCrossings() {
+    CrossingCountType crossingCount = 0;
+    for (size_t u = 0; u < freeNodes.size(); ++u) {
+      for (size_t v = u + 1; v < freeNodes.size(); ++v) {
+        crossingCount += computeUVcrossing(fixedPosition[u], fixedPosition[v]);
+      }
     }
+    return crossingCount;
   }
-  return crossingCount;
-}
 };

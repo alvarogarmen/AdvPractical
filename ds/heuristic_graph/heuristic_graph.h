@@ -102,16 +102,15 @@ class HeuristicGraph {
     return crossingSum;
   }
 
-CrossingCountType getCrossings() {
-  CrossingCountType crossingCount = 0;
-  for (NodeType u = 0; u < freeNodes.size(); ++u) {
-    for (NodeType v = u + 1; v < freeNodes.size(); ++v) {
-      crossingCount += computeUVcrossing(permutation[u], permutation[v]);
+  CrossingCountType getCrossings() {
+    CrossingCountType crossingCount = 0;
+    for (size_t u = 0; u < freeNodes.size(); ++u) {
+      for (size_t v = u + 1; v < freeNodes.size(); ++v) {
+        crossingCount += computeUVcrossing(permutation[u], permutation[v]);
+      }
     }
+    return crossingCount;
   }
-  return crossingCount;
-}
-
 
   /**
   This function switches the positions of two neighboring free nodes. Assumes u < v.

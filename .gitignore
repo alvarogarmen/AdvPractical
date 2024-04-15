@@ -7,3 +7,6 @@ genhtml
 *.lock
 .DS_Store
 experiment/*
+*.textproto
+*.binary_proto
+*.tex
