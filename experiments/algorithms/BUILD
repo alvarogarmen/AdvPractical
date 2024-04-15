@@ -6,7 +6,7 @@ cc_library(
     ],
     srcs = [
         "reduction_algorithm.cc",
-        "barycenter_algorithm.cc"],
+        "barycenter_algorithm.cc",],
     visibility = ["//visibility:public"],
     deps = [
         "//ds/reduction_graph",
