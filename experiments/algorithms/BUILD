@@ -2,18 +2,23 @@ cc_library(
     name = "algorithms",
     hdrs = [
         "reduction_algorithm.h",
+        "heuristic_algorithm.h",
+
     ],
     srcs = [
-        "reduction_algorithm.cc",],
+        "reduction_algorithm.cc",
+        "heuristic_algorithm.cc",],
     visibility = ["//visibility:public"],
     deps = [
         "//ds/reduction_graph",
+        "//ds/heuristic_graph",
         "@abseil-cpp//absl/status:statusor",
         "@henrixapp_toolkit//toolkit/algorithms",
         "@henrixapp_toolkit//toolkit/app:app_io_cc_proto",
         "@henrixapp_toolkit//toolkit/ds:empty_problem",
         "//io:io",
         "//oscm/reduction_algorithm",
+        "//oscm/heuristic_algorithm",
         "//ds/helper:empty_problem",
     ],
     alwayslink=1,

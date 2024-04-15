@@ -20,7 +20,11 @@ class HeuristicGraph {
   std::vector<NT> permutation;
 
  public:
+  NT currentNumNodes() { return getFreeNodesSize() + getFixedNodesSize(); }
+  NT currentNumEdges() { return 0; }
+  using EdgeType = NT;
   using NodeType = NT;
+  using WeightType = NT;
   using CrossingCountType = CCT;
 
   HeuristicGraph(const std::vector<std::vector<NodeType>>& freeNodes,
@@ -77,6 +81,9 @@ class HeuristicGraph {
   const auto& getFreeNodesPosition() const { return freeNodesPosition; }
 
   const auto& getEdges() const { return freeNodes; }
+
+  std::vector<NT>& getFreeNodes() { return freeNodesPosition; }
+
   /**
   This function returns the free node that is in index i of the perutation
   @param i The index of the permutation
