@@ -3,10 +3,12 @@ cc_library(
     hdrs = [
         "reduction_algorithm.h",
         "barycenter_algorithm.h",
+        "barycenter_heuristic_algorithm.h",
     ],
     srcs = [
         "reduction_algorithm.cc",
-        "barycenter_algorithm.cc"],
+        "barycenter_algorithm.cc",
+        "barucenter_heuristic_algorithm.cc",],
     visibility = ["//visibility:public"],
     deps = [
         "//ds/reduction_graph",
