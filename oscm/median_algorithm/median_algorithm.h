@@ -21,10 +21,10 @@ void medianAlgorithm(GraphType& myGraph) {
       continue;
     }
     if (edges[i].size() % 2 == 0) {
-      positions[i] +=
-          ((double)((edges[i][edges[i].size() / 2 - 1] + edges[i][edges[i].size() / 2 + 1]) / 2));
+      positions[i] =
+          ((double)((edges[i][edges[i].size() / 2 - 1] + edges[i][edges[i].size() / 2 + 1]) / 2.0));
     } else {
-      positions[i] += edges[i][edges[i].size() / 2];
+      positions[i] = edges[i][edges[i].size() / 2];
     }
   }
 
