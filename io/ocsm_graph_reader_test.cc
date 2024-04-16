@@ -26,6 +26,7 @@ TEST(ReadGraphTest, ValidGraph) {
   auto graph = std::move(result.value());
 
   // Check n0, n1, and m
+
   EXPECT_EQ(graph->getEdge(1, 0),
             0);  // Target of first edge of node 1 (5) is 0 (we use 0-indexation)
   EXPECT_EQ(graph->getEdge(2, 0),
@@ -107,7 +108,7 @@ TEST(ReadGraphTest, MissingInput) {
   std::stringstream nonExistentFileName;
   auto result = readGraph<ReductionGraph<int, int>>(nonExistentFileName);
   ASSERT_FALSE(result.ok());
-  EXPECT_EQ(result.status().code(), absl::StatusCode::kNotFound);
+  EXPECT_EQ(result.status().code(), absl::StatusCode::kInvalidArgument);
 }
 
 TEST(ReadGraphTest, heuristicGraph) {

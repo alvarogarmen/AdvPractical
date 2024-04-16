@@ -7,3 +7,4 @@ genhtml
 *.lock
 .DS_Store
 experiment/*
+experiment_barycenter/*

@@ -1,5 +1,12 @@
-bazel run @henrixapp_toolkit//toolkit/runner:generate_experiment_config -- --data_path /home/alvar/dev/graph/AdvPractical/Pace2024-Testsets --experiment_name "<name of experiment>" --experiment_path="/home/alvar/dev/graph/AdvPractical/experiment" --hypergraph_filter='format:"gr" sorts:"tiny"'
+bazel run @henrixapp_toolkit//toolkit/runner:generate_experiment_config -- --data_path /home/alvar/dev/graph/AdvPractical/Pace2024-Testsets --experiment_name "median_medium" --experiment_path="/home/alvar/dev/graph/AdvPractical/experiment/experiment_median" --hypergraph_filter='format:"gr" sorts:"medium"'
 
-./bazel-bin/experiments/runner --experiment_path /home/alvar/dev/graph/AdvPractical/experiment --random_order 1 --max_alloc_memory 4028 --max_alloc_memory_per_process 4028 --cycles_to_queue_new 1 --seed 1234 --root_path=/home/alvar/dev/graph/AdvPractical/Pace2024-Testsets
+bazel build -c opt //experiments:runner
+
+./bazel-bin/experiments/runner --experiment_path /home/alvar/dev/graph/AdvPractical/experiment/experiment_median --random_order 1 --max_alloc_memory 4028 --max_alloc_memory_per_process 4028 --cycles_to_queue_new 1 --seed 1234 --root_path=/home/alvar/dev/graph/AdvPractical/Pace2024-Testsets
 
 CC=gcc-12 CXX=g++-12 bazel run @henrixapp_toolkit//toolkit/tools/plot:plot_cc --repo_env PYTHON_BIN_PATH='/usr/bin/python3' --repo_env PYTHON_CONFIG_BIN_PATH='python3-config' -- /home/alvar/dev/graph/AdvPractical /home/alvar/dev/graph/AdvPractical/experiment/visualization.textproto
+
+Humanize results
+bazel run @henrixapp_toolkit//toolkit/runner:humanize
+
+bazel run @henrixapp_toolkit//toolkit/runner:humanize /home/alvar/dev/graph/AdvPractical/experiment/experiment_median/result-0-1.binary_proto

@@ -15,6 +15,6 @@ cc_test(
     srcs = ["fpt_graph_test.cc"],
     deps = [
         ":fpt_graph",
-        "@com_google_googletest//:gtest_main",
+        "@googletest//:gtest_main",
     ],
 )
