@@ -304,6 +304,7 @@ std::tuple<typename Graph::CrossingCountType, std::vector<typename Graph::NodeTy
 
   rr3<Graph, Undo>(graph, currentSolution);
   algorithmStep<Graph, Undo>(graph, currentSolution, false, 0, 0, bestSolution, bestOrder);
+  graph.setFixedPositions(bestOrder);
   return std::make_tuple(bestSolution, bestOrder);
 }
 }  // namespace reductionalgorithms
