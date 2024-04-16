@@ -2,6 +2,7 @@
 
 #include "ds/bipartite_graph.h"
 #include "ds/helper/empty_problem.h"
+#include "experiments/algorithms/problems.h"
 #include "io/ocsm_graph_reader.h"
 #include "oscm/median_algorithm/median_algorithm.h"
 #include "toolkit/algorithms/algorithm_impl.h"
@@ -18,9 +19,9 @@ using henrixapp::app::app_io::AlgorithmRunInformation;
 using henrixapp::app::app_io::Hypergraph;
 using henrixapp::app::app_io::Result;
 using henrixapp::app::app_io::RunConfig;
-using BG = MedianGraphEmptyProblem;
+using BG = BipartiteGraphProblem;
 }  // namespace
-class MedianAlgorithm : public henrixapp::algorithms::AlgorithmImpl<BG> {
+class MedianAlgorithm : public henrixapp::algorithms::AlgorithmImpl<BipartiteGraphProblem> {
  public:
   static constexpr absl::string_view AlgorithmName = "median_algorithm";
 

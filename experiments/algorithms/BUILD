@@ -4,6 +4,7 @@ cc_library(
         "reduction_algorithm.h",
         "barycenter_algorithm.h",
         "median_algorithm.h",
+        "problems.h",
     ],
     srcs = [
         "reduction_algorithm.cc",
