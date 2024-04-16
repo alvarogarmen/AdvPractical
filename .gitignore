@@ -10,3 +10,4 @@ experiment/*
 *.textproto
 *.binary_proto
 *.tex
+experiment_barycenter/*

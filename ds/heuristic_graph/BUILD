@@ -15,6 +15,6 @@ cc_test(
     srcs = ["heuristic_graph_test.cc"],
     deps = [
         ":heuristic_graph",
-        "@com_google_googletest//:gtest_main",
+        "@googletest//:gtest_main",
     ],
 )
