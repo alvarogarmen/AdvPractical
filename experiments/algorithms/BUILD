@@ -4,11 +4,12 @@ cc_library(
         "reduction_algorithm.h",
         "barycenter_algorithm.h",
         "barycenter_heuristic_algorithm.h",
+        "problems.h",
     ],
     srcs = [
         "reduction_algorithm.cc",
         "barycenter_algorithm.cc",
-        "barucenter_heuristic_algorithm.cc",],
+        "barycenter_heuristic_algorithm.cc",],
     visibility = ["//visibility:public"],
     deps = [
         "//ds/reduction_graph",
@@ -20,6 +21,7 @@ cc_library(
         "//io:io",
         "//oscm/reduction_algorithm",
         "//oscm/barycenter_algorithm",
+        "//oscm/barycenter_heuristic_algorithm",
         "//ds/helper:empty_problem",
     ],
     alwayslink=1,

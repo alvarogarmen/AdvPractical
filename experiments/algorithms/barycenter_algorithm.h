@@ -2,6 +2,7 @@
 
 #include "ds/bipartite_graph.h"
 #include "ds/helper/empty_problem.h"
+#include "experiments/algorithms/problems.h"
 #include "io/ocsm_graph_reader.h"
 #include "oscm/barycenter_algorithm/barycenter_algorithm.h"
 #include "toolkit/algorithms/algorithm_impl.h"
@@ -9,19 +10,17 @@
 #include "toolkit/ds/empty_problem.h"
 
 namespace oscm::experiments::algorithms {
-struct BarycenterGraphEmptyProblem : public oscm::ds::EmptyProblem<BipartiteGraph<int>> {
-  const static constexpr std::string_view ds_name = "bipartite_graph";
-};
+
 namespace {
 using henrixapp::app::app_io::AlgorithmConfig;
 using henrixapp::app::app_io::AlgorithmRunInformation;
 using henrixapp::app::app_io::Hypergraph;
 using henrixapp::app::app_io::Result;
 using henrixapp::app::app_io::RunConfig;
-using BG = BarycenterGraphEmptyProblem;
 }  // namespace
-class BarycenterAlgorithm : public henrixapp::algorithms::AlgorithmImpl<BG> {
+class BarycenterAlgorithm : public henrixapp::algorithms::AlgorithmImpl<BipartiteGraphProblem> {
  public:
+  using BG = BipartiteGraphProblem;
   static constexpr absl::string_view AlgorithmName = "barycenter_algorithm";
 
  protected:

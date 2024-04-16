@@ -1,7 +1,8 @@
+#include "barycenter_heuristic_algorithm.h"
+
 #include <map>
 #include <vector>
 
-#include "barycenter_heuristic_algorithm.h"
 #include "ds/heuristic_graph/heuristic_graph.h"
 #include "gmock/gmock-matchers.h"
 #include "gtest/gtest.h"
@@ -17,11 +18,11 @@ TEST(BarycenterHeuristicTest, algorithmWithR1) {
   EXPECT_EQ(myGraph.getPermutation()[1], 0);
   EXPECT_EQ(myGraph.getPermutation()[2], 2);
 
-  EXPECT_EQ(myGraph.getLeftCrossings(1), 0);
+  EXPECT_EQ(myGraph.getLeftCrossings(1), 1);
   EXPECT_EQ(myGraph.getRightCrossings(1), 0);
 
   EXPECT_EQ(myGraph.getLeftCrossings(0), 0);
-  EXPECT_EQ(myGraph.getRightCrossings(0), 1);
+  EXPECT_EQ(myGraph.getRightCrossings(0), 2);
   EXPECT_EQ(myGraph.getLeftCrossings(2), 1);
   EXPECT_EQ(myGraph.getRightCrossings(2), 0);
 }

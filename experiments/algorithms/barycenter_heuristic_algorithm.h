@@ -3,7 +3,7 @@
 #include "ds/helper/empty_problem.h"
 #include "ds/heuristic_graph/heuristic_graph.h"
 #include "io/ocsm_graph_reader.h"
-#include "oscm/barycenter_algorithm/barycenter_heuristic_algorithm.h"
+#include "oscm/barycenter_heuristic_algorithm/barycenter_heuristic_algorithm.h"
 #include "toolkit/algorithms/algorithm_impl.h"
 #include "toolkit/app/app_io.pb.h"
 #include "toolkit/ds/empty_problem.h"
@@ -28,7 +28,7 @@ class BarycenterHeuristicAlgorithm : public henrixapp::algorithms::AlgorithmImpl
  protected:
   absl::StatusOr<std::unique_ptr<BG>> Execute(const AlgorithmConfig& config,
                                               std::unique_ptr<BG> problem) override {
-    barycenter_heuristic_algorithm::barycenterHeuristicAlgorithm<HeuristicGraph<int, int>>(
+    barycenterHeuristic_algorithm::barycenterHeuristicAlgorithm<HeuristicGraph<int, int>>(
         problem->instance());
 
     return problem;
