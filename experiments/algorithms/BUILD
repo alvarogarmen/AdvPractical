@@ -14,6 +14,7 @@ cc_library(
     deps = [
         "//ds/reduction_graph",
         "//ds:bipartite_graph",
+        "//ds/heuristic_graph",
         "@abseil-cpp//absl/status:statusor",
         "@henrixapp_toolkit//toolkit/algorithms",
         "@henrixapp_toolkit//toolkit/app:app_io_cc_proto",
