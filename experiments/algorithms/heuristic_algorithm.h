@@ -4,14 +4,13 @@
 #include "ds/heuristic_graph/heuristic_graph.h"
 #include "io/ocsm_graph_reader.h"
 #include "oscm/heuristic_algorithm/heuristic_algorithm.h"
+#include "problems.h"
 #include "toolkit/algorithms/algorithm_impl.h"
 #include "toolkit/app/app_io.pb.h"
 #include "toolkit/ds/empty_problem.h"
 
 namespace oscm::experiments::algorithms {
-struct HeuristicGraphEmptyProblem : public oscm::ds::EmptyProblem<HeuristicGraph<int, int>> {
-  const static constexpr std::string_view ds_name = "heuristic_graph";
-};
+
 namespace {
 using henrixapp::app::app_io::AlgorithmConfig;
 using henrixapp::app::app_io::AlgorithmRunInformation;
@@ -27,8 +26,8 @@ class SimpleHeuristicAlgorithm : public henrixapp::algorithms::AlgorithmImpl<RG>
  protected:
   absl::StatusOr<std::unique_ptr<RG>> Execute(const AlgorithmConfig& config,
                                               std::unique_ptr<RG> problem) override {
-    heuristic_algorithm::algorithm<HeuristicGraph<int, int>>(
-        problem->instance(), true, true, true);
+    heuristic_algorithm::heuristicAlgorithm<HeuristicGraph<int, int>>(problem->instance(), true,
+                                                                      true, true);
 
     return problem;
   }

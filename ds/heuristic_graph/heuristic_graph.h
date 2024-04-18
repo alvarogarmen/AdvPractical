@@ -26,11 +26,6 @@ class HeuristicGraph {
   using NodeType = NT;
   using WeightType = NT;
   using CrossingCountType = CCT;
-  NT currentNumNodes() { return getFreeNodesSize() + getFixedNodesSize(); }
-  NT currentNumEdges() { return 0; }
-  NT getCrossings() { return 5; }
-  using EdgeType = NT;
-  using WeightType = NT;
 
   HeuristicGraph(const std::vector<std::vector<NodeType>>& freeNodes,
                  const std::vector<std::vector<NodeType>>& fixedNodes)
@@ -88,8 +83,6 @@ class HeuristicGraph {
   const auto& getFreeNodesPosition() const { return freeNodesPosition; }
 
   const auto& getEdges() const { return freeNodes; }
-
-  std::vector<NT>& getFreeNodes() { return freeNodesPosition; }
 
   /**
   This function returns the free node that is in index i of the perutation
