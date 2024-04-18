@@ -119,6 +119,8 @@ class ReductionGraph {
 
   void setFixedPosition(NodeType u, NodeType index) { fixedPosition[index] = u; }
 
+  void setFixedPositions(const std::vector<NodeType>& bestOrder) { fixedPosition = bestOrder; }
+
   void setCrossings(const std::vector<std::map<NodeType, CrossingCountType>>& m) { crossings = m; }
 
   void setFreeNodes(const std::vector<std::vector<NodeType>>& newfreeNodes) {
@@ -159,18 +161,23 @@ class ReductionGraph {
     }
   }
 
-  CCT getCrossings() {  // Compare from left to right if edges cross
-    CCT crossings = 5;
-    /*using NodeType = typename BipartiteGraphType::NodeType;
-    for (NodeType i = getFreeNodes()[0]; i < getFreeNodesSize(); i++) {
-      for (size_t j = 0; j < (getOutEdges(i).size()); j++) {
-        for (NodeType k = i; k < getFreeNodesSize(); k++) {
-          for (size_t l = 0; l < (getOutEdges(k).size()); l++) {
-            crossings += (getFreeNodes()[i] < getFreeNodes()[k] && getEdge(i, j) > getEdge(k, l));
-          }
-        }
+  CrossingCountType const computeUVcrossing(NodeType u, NodeType v) {
+    NodeType crossingSum = 0;
+    for (const auto uNeighbour : freeNodes[u]) {
+      for (const auto vNeighbour : freeNodes[v]) {
+        crossingSum += vNeighbour < uNeighbour;
       }
-    }*/
-    return crossings;
+    }
+    return crossingSum;
+  }
+
+  CrossingCountType getCrossings() {
+    CrossingCountType crossingCount = 0;
+    for (size_t u = 0; u < freeNodes.size(); ++u) {
+      for (size_t v = u + 1; v < freeNodes.size(); ++v) {
+        crossingCount += computeUVcrossing(fixedPosition[u], fixedPosition[v]);
+      }
+    }
+    return crossingCount;
   }
 };

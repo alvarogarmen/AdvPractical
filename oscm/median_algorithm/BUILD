@@ -1,9 +1,9 @@
 load("@rules_cc//cc:defs.bzl", "cc_library", "cc_test")
 
 cc_library(
-    name = "barycenter_algorithm",
+    name = "median_algorithm",
     hdrs = [
-        "barycenter_algorithm.h",
+        "median_algorithm.h",
     ],
     visibility = ["//visibility:public"],
     deps = [
@@ -12,14 +12,12 @@ cc_library(
 )
 
 cc_test(
-    name = "barycenter_algorithm_test",
-    srcs = ["barycenter_algorithm_test.cc"],
+    name = "median_algorithm_test",
+    srcs = ["median_algorithm_test.cc"],
     deps = [
-        ":barycenter_algorithm",
+        ":median_algorithm",
         "//ds:bipartite_graph",
         "//ds/reduction_graph",
-        "//ds/heuristic_graph",
-
         "@googletest//:gtest_main",
     ],
 )

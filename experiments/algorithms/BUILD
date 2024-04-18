@@ -1,4 +1,5 @@
 load("@rules_cc//cc:defs.bzl", "cc_library")
+
 cc_library(
     name = "algorithms",
     srcs = [
@@ -7,6 +8,7 @@ cc_library(
         "median_algorithm.cc",
         "reduction_algorithm.cc",
         "barycenter_heuristic_algorithm.cc",
+
     ],
     hdrs = [
         "barycenter_algorithm.h",
@@ -24,7 +26,7 @@ cc_library(
         "//ds/helper:empty_problem",
         "//ds/heuristic_graph",
         "//ds/reduction_graph",
-        "//io:io",
+        "//io",
         "//oscm/barycenter_algorithm",
         "//oscm/heuristic_algorithm",
         "//oscm/median_algorithm",
@@ -35,4 +37,6 @@ cc_library(
         "@henrixapp_toolkit//toolkit/ds:empty_problem",
     ],
     alwayslink = 1,
+
 )
+

@@ -238,4 +238,18 @@ TEST(GraphTest, UndoAlgorithmStep) {
   EXPECT_EQ(myGraph.getRightNodes(1).size(), 2);
   EXPECT_EQ(myGraph.getRightNodes(2).size(), 0);
 }
+
+TEST(AlgorithmTest, getCrossings) {
+  std::vector<std::vector<int>> freeNodes = {{5},    {6}, {7}, {8}, {0, 9},
+                                             {0, 9}, {1}, {2}, {3}, {4}};
+  std::vector<std::vector<int>> fixedNodes = {{4, 5}, {6}, {7}, {8}, {9},
+                                              {0},    {1}, {2}, {3}, {4, 5}};
+  ReductionGraph myGraph = ReductionGraph<int, int>(freeNodes, fixedNodes);
+  auto [crossingSum, orderVector] =
+      algorithm<ReductionGraph<int, int>, UndoAlgorithmStep<int, int>>(myGraph);
+  EXPECT_EQ(crossingSum, 17);
+  EXPECT_EQ(myGraph.getCrossings(), 17);
+
+}
+
 }
