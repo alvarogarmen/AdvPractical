@@ -6,8 +6,10 @@ cc_binary(
     visibility = ["//visibility:public"],
     deps = [
         "//ds:bipartite_graph",
+        "//ds/heuristic_graph",
         "//ds/reduction_graph",
         "//io",
+        "//oscm/heuristic_algorithm",
         "//oscm/reduction_algorithm",
         "@abseil-cpp//absl/flags:flag",
         "@abseil-cpp//absl/flags:parse",

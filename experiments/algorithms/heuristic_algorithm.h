@@ -27,8 +27,7 @@ class SimpleHeuristicAlgorithm : public henrixapp::algorithms::AlgorithmImpl<RG>
  protected:
   absl::StatusOr<std::unique_ptr<RG>> Execute(const AlgorithmConfig& config,
                                               std::unique_ptr<RG> problem) override {
-    heuristic_algorithm::algorithm<HeuristicGraph<int, int>>(
-        problem->instance(), true, true, true);
+    heuristic_algorithm::algorithm<HeuristicGraph<int, int>>(problem->instance(), true, true, true);
 
     return problem;
   }

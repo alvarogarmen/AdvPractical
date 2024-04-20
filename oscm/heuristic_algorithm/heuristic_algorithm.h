@@ -11,6 +11,7 @@
 #include <vector>
 
 #include "ds/heuristic_graph/heuristic_graph.h"
+#include "oscm/median_algorithm/median_algorithm.h"
 namespace heuristic_algorithm {
 /*
  * For each  pair of neighbours  u , v with u < v, if the left crossings of u equal 0
@@ -63,6 +64,16 @@ bool r3(Graph& graph, typename Graph::NodeType nodeId, typename Graph::NodeType 
 template <class Graph>
 bool algorithm(Graph& graph, bool runR1, bool runR2, bool runR3) {
   using NodeType = typename Graph::NodeType;
+
+  median_algorithm::medianAlgorithm(graph);
+
+  for (int i = 0; i < graph.getFreeNodesSize(); ++i) {
+    auto permutation = graph.getPermutation();
+    graph.setFreeNodePosition(permutation[i], i);
+  }
+  std::cout << "the crossing is after median " << graph.getCrossings() << std::endl;
+
+  graph.computeCrossingSums();
   bool didChange = true;
   bool madeSwitch = false;
   while (didChange) {
@@ -94,6 +105,7 @@ bool algorithm(Graph& graph, bool runR1, bool runR2, bool runR3) {
       madeSwitch = true;
     }
   }
+  std::cout << "the crossing after heuristic " << graph.getCrossings() << std::endl;
   return madeSwitch;
 }
 }  // namespace heuristic_algorithm
