@@ -10,6 +10,7 @@ template <typename BipartiteGraph>
 absl::StatusOr<std::unique_ptr<BipartiteGraph>> readGraph(std::istream& stream,
                                                           bool verbose = false,
                                                           bool readAll = true) {
+  std::ios_base::sync_with_stdio(false);
   if (!stream.good()) {
     return absl::NotFoundError("stream not good error");
   }
