@@ -11,6 +11,7 @@ void medianAlgorithm(GraphType& myGraph) {
   using NT = typename GraphType::NodeType;
 
   std::vector<int> positions(myGraph.getFreeNodesSize(), 0);
+  // holds the average neighbour position for each of the free nodes
   std::vector<double> posE(myGraph.getFreeNodesSize(), 0.0);
 
   auto& edges = myGraph.getEdges();
@@ -37,6 +38,8 @@ void medianAlgorithm(GraphType& myGraph) {
   // Sort permutationFreeNodes based on positions
   std::sort(permutationFreeNodes.begin(), permutationFreeNodes.end(),
             [&positions, &posE](const NT& a, const NT& b) {
+              // If two free nodes have the same median, they to be ordered according to their
+              // average neighbor
               if (positions[a] == positions[b]) {
                 return posE[a] < posE[b];
               } else {
