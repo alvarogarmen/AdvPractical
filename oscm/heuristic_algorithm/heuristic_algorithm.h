@@ -71,8 +71,6 @@ bool algorithm(Graph& graph, bool runR1, bool runR2, bool runR3) {
     auto permutation = graph.getPermutation();
     graph.setFreeNodePosition(permutation[i], i);
   }
-  std::cout << "the crossing is after median " << graph.getCrossings() << std::endl;
-
   graph.computeCrossingSums();
   bool didChange = true;
   bool madeSwitch = false;
@@ -105,7 +103,6 @@ bool algorithm(Graph& graph, bool runR1, bool runR2, bool runR3) {
       madeSwitch = true;
     }
   }
-  std::cout << "the crossing after heuristic " << graph.getCrossings() << std::endl;
   return madeSwitch;
 }
 }  // namespace heuristic_algorithm

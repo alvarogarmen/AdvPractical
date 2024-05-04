@@ -1,8 +1,8 @@
 #pragma once
 #include <algorithm>
+#include <cmath>
 #include <iostream>
 #include <vector>
-
 namespace median_algorithm {
 
 // Here we don't copy the edges over, this spares some time
