@@ -1,25 +1,25 @@
 load("@rules_cc//cc:defs.bzl", "cc_library", "cc_test")
 
 cc_library(
-    name = "barycenter_algorithm",
+    name = "barycenter_heuristic_algorithm",
     hdrs = [
-        "barycenter_algorithm.h",
+        "barycenter_heuristic_algorithm.h",
     ],
     visibility = ["//visibility:public"],
     deps = [
         "@com_google_absl//absl/status",
+        "//oscm/barycenter_algorithm",
+        "//oscm/heuristic_algorithm",
     ],
 )
 
 cc_test(
-    name = "barycenter_algorithm_test",
-    srcs = ["barycenter_algorithm_test.cc"],
+    name = "barycenter_heuristic_algorithm_test",
+    srcs = ["barycenter_heuristic_algorithm_test.cc"],
     deps = [
-        ":barycenter_algorithm",
+        ":barycenter_heuristic_algorithm",
         "//ds:bipartite_graph",
         "//ds/reduction_graph",
-        "//ds/heuristic_graph",
-
         "@googletest//:gtest_main",
     ],
 )

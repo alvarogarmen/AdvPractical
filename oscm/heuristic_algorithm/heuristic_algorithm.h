@@ -61,7 +61,7 @@ bool r3(Graph& graph, typename Graph::NodeType nodeId, typename Graph::NodeType 
 }
 
 template <class Graph>
-bool algorithm(Graph& graph, bool runR1, bool runR2, bool runR3) {
+bool heuristicAlgorithm(Graph& graph, bool runR1, bool runR2, bool runR3) {
   using NodeType = typename Graph::NodeType;
   bool didChange = true;
   bool madeSwitch = false;

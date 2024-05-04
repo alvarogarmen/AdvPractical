@@ -7,13 +7,16 @@ cc_library(
         "heuristic_algorithm.cc",
         "median_algorithm.cc",
         "reduction_algorithm.cc",
+        "barycenter_heuristic_algorithm.cc",
+
     ],
     hdrs = [
         "barycenter_algorithm.h",
         "heuristic_algorithm.h",
         "median_algorithm.h",
-        "problems.h",
         "reduction_algorithm.h",
+        "barycenter_heuristic_algorithm.h",
+        "problems.h",
     ],
     visibility = ["//visibility:public"],
     deps = [
@@ -24,6 +27,7 @@ cc_library(
         "//io",
         "//oscm/barycenter_algorithm",
         "//oscm/heuristic_algorithm",
+        "//oscm/barycenter_heuristic_algorithm",
         "//oscm/median_algorithm",
         "//oscm/reduction_algorithm",
         "@abseil-cpp//absl/status:statusor",
@@ -32,4 +36,6 @@ cc_library(
         "@henrixapp_toolkit//toolkit/ds:empty_problem",
     ],
     alwayslink = 1,
+
 )
+

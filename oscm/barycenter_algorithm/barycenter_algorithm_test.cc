@@ -3,6 +3,9 @@
 #include <gtest/gtest.h>
 
 #include "ds/bipartite_graph.h"
+
+#include "ds/heuristic_graph/heuristic_graph.h"
+
 #include "ds/reduction_graph/reduction_graph.h"
 #include "gmock/gmock-matchers.h"
 
@@ -97,4 +100,24 @@ TEST(BarycenterTest, NodeWithoutEdgesGraph) {
   EXPECT_EQ(myGraph.getFreeNodes()[1], 2);
   EXPECT_EQ(myGraph.getFreeNodes()[2], 3);
   EXPECT_EQ(myGraph.getFreeNodes()[3], 0);
+
+}
+
+TEST(BarycenterTest, HeuristicGraph) {
+  HeuristicGraph myGraph = HeuristicGraph(8, 4, 0);
+
+  // Node 1 has no edges, should go first here based on the algorithm implementation
+  myGraph.addEdge(2, 2);
+  myGraph.addEdge(2, 3);
+  myGraph.addEdge(3, 4);
+  myGraph.addEdge(3, 5);
+  myGraph.addEdge(0, 6);
+  myGraph.addEdge(0, 7);
+  barycenter_algorithm::barycenterAlgorithm(myGraph);
+
+  EXPECT_EQ(myGraph.getFreeNodes()[0], 1);
+  EXPECT_EQ(myGraph.getFreeNodes()[1], 2);
+  EXPECT_EQ(myGraph.getFreeNodes()[2], 3);
+  EXPECT_EQ(myGraph.getFreeNodes()[3], 0);
+
 }
