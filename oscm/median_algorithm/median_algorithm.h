@@ -29,10 +29,6 @@ void medianAlgorithm(GraphType& myGraph) {
       avarege += edges[i][j];
     }
     posE[i] = avarege / edges[i].size();
-
-    if (edges[i].size() % 2 == 0) {
-      // positions[i] += ;
-    }
   }
 
   // Sort permutationFreeNodes based on positions
@@ -48,4 +44,3 @@ void medianAlgorithm(GraphType& myGraph) {
             });
 }
 }  // namespace median_algorithm
-   // namespace median_algorithm
