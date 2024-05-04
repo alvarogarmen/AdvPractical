@@ -10,9 +10,6 @@
 #include "toolkit/ds/empty_problem.h"
 
 namespace oscm::experiments::algorithms {
-struct MedianGraphEmptyProblem : public oscm::ds::EmptyProblem<BipartiteGraph<int>> {
-  const static constexpr std::string_view ds_name = "bipartite_graph";
-};
 namespace {
 using henrixapp::app::app_io::AlgorithmConfig;
 using henrixapp::app::app_io::AlgorithmRunInformation;
@@ -23,6 +20,7 @@ using BG = BipartiteGraphProblem;
 }  // namespace
 class MedianAlgorithm : public henrixapp::algorithms::AlgorithmImpl<BipartiteGraphProblem> {
  public:
+  using BG = BipartiteGraphProblem;
   static constexpr absl::string_view AlgorithmName = "median_algorithm";
 
  protected:
