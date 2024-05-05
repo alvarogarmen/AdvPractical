@@ -33,8 +33,8 @@ int main(int argc, char* argv[]) {
     std::cerr << "Error opening file: " << argv[1] << std::endl;
     return 1;  // Exit with an error code
   }
-  auto result = readGraph<HeuristicGraph<int, int>>(input);
-  // auto result = readGraph<ReductionGraph<int, int>>(input);
+  // auto result = readGraph<HeuristicGraph<int, int>>(input);
+  auto result = readGraph<ReductionGraph<int, int>>(input);
 
   if (result.status() != absl::OkStatus()) {
     std::cerr << "result status in not ok: " << std::endl;
@@ -42,27 +42,26 @@ int main(int argc, char* argv[]) {
   }
 
   auto graph = std::move(result.value());
-  std::cout << "the crossing is" << graph->getCrossings() << std::endl;
-  heuristic_algorithm::algorithm<HeuristicGraph<int, int>>(*graph, true, true, true);
+  // std::cout << "the crossing is" << graph->getCrossings() << std::endl;
+  // heuristic_algorithm::algorithm<HeuristicGraph<int, int>>(*graph, true, true, true);
+
+  auto [crossingSum, orderVector] =
+      reductionalgorithms::algorithm<ReductionGraph<int, int>, UndoAlgorithmStep<int, int>>(*graph);
+  std::cout << "the reduction solution has " << crossingSum << " crossings" << std::endl;
+  // Create an output file stream
   /*
-    auto [crossingSum, orderVector] =
-        reductionalgorithms::algorithm<ReductionGraph<int, int>, UndoAlgorithmStep<int,
-    int>>(*graph); std::cout << "the reduction solution has " << crossingSum << " crossings" <<
-    std::endl;
-    // Create an output file stream
+        std::ofstream outputFile(argv[2]);
 
-      std::ofstream outputFile(argv[2]);
-
-      // Check if the file is open
-      if (!outputFile.is_open()) {
-        std::cerr << "Error opening file: output.txt" << std::endl;
-        return 1;  // Return an error code
-      }
-      if (auto status = graph->writeResultsToFile(outputFile, orderVector); !status.ok()) {
-        std::cerr << "Error: " << status << std::endl;
-        return 1;
-      }
-      */
+        // Check if the file is open
+        if (!outputFile.is_open()) {
+          std::cerr << "Error opening file: output.txt" << std::endl;
+          return 1;  // Return an error code
+        }
+        if (auto status = graph->writeResultsToFile(outputFile, orderVector); !status.ok()) {
+          std::cerr << "Error: " << status << std::endl;
+          return 1;
+        }
+        */
 
   // Close the file stream
   // outputFile.close();

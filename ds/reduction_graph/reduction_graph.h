@@ -10,6 +10,7 @@
 #include "absl/status/status.h"
 #include "absl/strings/str_cat.h"
 #include "absl/strings/string_view.h"
+#include "ds/reduction_graph/bit_vector.h"
 #include "ds/reduction_graph/undo_algorithm_step.h"
 
 template <typename NT, typename CCT>
@@ -23,7 +24,7 @@ class ReductionGraph {
   // for each free node u, the first place hold free node that are knowned to be positioned to the
   // left of u
   // and the second hold the free nodes that are knowned to be positioned to its right
-  std::vector<std::array<std::set<NT>, 2>> leftRightSet;
+  std::vector<std::array<BitVector<NT>, 2>> leftRightSet;
   // save the crossing number that accur between two free nodes (u, v) ,that do not have < order
   // yet.
   // saves the crossing number of u and v assuming u is placed before v
@@ -42,21 +43,42 @@ class ReductionGraph {
         fixedNodes(fixedNodes),
         fixedPosition(freeNodes.size()),
         leftRightSet(freeNodes.size()),
-        crossings(freeNodes.size()) {}
+        crossings(freeNodes.size()) {
+    for (auto& bitVectorArray : leftRightSet) {
+      // Initialize each BitVector in the array to be the right size
+      for (auto& bitVector : bitVectorArray) {
+        bitVector.resize(freeNodes.size());
+      }
+    }
+  }
 
   ReductionGraph(NodeType numFreeNodes, NodeType numFixedNodes)
       : freeNodes(numFreeNodes, std::vector<NodeType>(0)),
         fixedNodes(numFreeNodes, std::vector<NodeType>(0)),
         fixedPosition(freeNodes.size()),
         leftRightSet(freeNodes.size()),
-        crossings(freeNodes.size()) {}
+        crossings(freeNodes.size()) {
+    for (auto& bitVectorArray : leftRightSet) {
+      // Initialize each BitVector in the array to be the right size
+      for (auto& bitVector : bitVectorArray) {
+        bitVector.resize(freeNodes.size());
+      }
+    }
+  }
 
   ReductionGraph(NodeType numFixedNodes, NodeType numFreeNodes, CrossingCountType numEdges)
       : freeNodes(numFreeNodes, std::vector<NodeType>(0)),
         fixedNodes(numFixedNodes, std::vector<NodeType>(0)),
         fixedPosition(freeNodes.size()),
         leftRightSet(freeNodes.size()),
-        crossings(freeNodes.size()) {}
+        crossings(freeNodes.size()) {
+    for (auto& bitVectorArray : leftRightSet) {
+      // Initialize each BitVector in the array to be the right size
+      for (auto& bitVector : bitVectorArray) {
+        bitVector.resize(freeNodes.size());
+      }
+    }
+  }
 
   void addEdge(NodeType source,
                NodeType target) {  // where source is the freeNode and target is the fixedNode
@@ -103,17 +125,13 @@ class ReductionGraph {
 
   const auto& getCrossing(NodeType u, NodeType v) const { return crossings[u].at(v); }
 
-  const auto& getLeftNodes(NodeType u) const { return leftRightSet[u][0]; }
+  const auto getLeftNodes(NodeType u) const { return leftRightSet[u][0].findSetBits(); }
 
   void insertRightNode(NodeType u, NodeType v) { leftRightSet[u][1].insert(v); }
 
   void insertLeftNode(NodeType u, NodeType v) { leftRightSet[u][0].insert(v); }
 
-  const auto& getRightNodes(NodeType u) const { return leftRightSet[u][1]; }
-
-  void setLeftNodes(NodeType u, std::set<NodeType> leftNodes) { leftRightSet[u][0] = leftNodes; }
-
-  void setRightNodes(NodeType u, std::set<NodeType> rightNodes) { leftRightSet[u][1] = rightNodes; }
+  const auto getRightNodes(NodeType u) const { return leftRightSet[u][1].findSetBits(); }
 
   const auto& getFixedPosition() const { return fixedPosition; }
 
@@ -151,13 +169,6 @@ class ReductionGraph {
     }
     for (const auto& position : undo.getSetPositionUndo()) {
       setFixedPosition(0, position);
-    }
-  }
-
-  void clearLeftRightSet() {
-    for (NodeType u = 0; u < freeNodes.size(); ++u) {
-      leftRightSet[u][0].clear();
-      leftRightSet[u][1].clear();
     }
   }
 

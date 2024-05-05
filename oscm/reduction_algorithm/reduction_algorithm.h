@@ -34,15 +34,30 @@ void parameterAccounting(Graph& graph, typename Graph::NodeType u, typename Grap
         undo->addParameterAccountingUndo(u, v, graph.getCrossing(u, v), graph.getCrossing(v, u));
       }
       graph.deleteCrossings(u, v);
-      for (NodeType smallerThanU : graph.getLeftNodes(u)) {
+      for (auto smallerThanU : graph.getLeftNodes(u)) {
         parameterAccounting<Graph, Undo>(graph, smallerThanU, v, currentSolution, undo);
-        for (NodeType biggerThanV : graph.getRightNodes(v)) {
+        for (auto biggerThanV : graph.getRightNodes(v)) {
           parameterAccounting<Graph, Undo>(graph, smallerThanU, biggerThanV, currentSolution, undo);
         }
       }
-      for (NodeType biggerThanV : graph.getRightNodes(v)) {
+      for (auto biggerThanV : graph.getRightNodes(v)) {
         parameterAccounting<Graph, Undo>(graph, u, biggerThanV, currentSolution, undo);
       }
+
+      /*
+      for (size_t i = 0; i < graph.getLeftNodes(u).size(); ++i) {
+        parameterAccounting<Graph, Undo>(graph, graph.getLeftNodes(u)[i], v, currentSolution, undo);
+        for (size_t j = 0; j < graph.getRightNodes(v).size(); ++j) {
+          parameterAccounting<Graph, Undo>(graph, graph.getLeftNodes(u)[i],
+                                           graph.getRightNodes(v)[j], currentSolution, undo);
+        }
+      }
+      for (size_t i = 0; i < graph.getRightNodes(v).size(); ++i) {
+        parameterAccounting<Graph, Undo>(graph, u, graph.getRightNodes(v)[i], currentSolution,
+                                         undo);
+      }
+    }
+    */
     }
   }
 }
@@ -286,7 +301,7 @@ std::tuple<typename Graph::CrossingCountType, std::vector<typename Graph::NodeTy
   using NodeType = typename Graph::NodeType;
 
   // holds the crossing number of the best solution so far
-  CrossingCountType bestSolution = INT_MAX;
+  CrossingCountType bestSolution = 1482;
   // holds the order of the solution best so far
   std::vector<NodeType> bestOrder;
 

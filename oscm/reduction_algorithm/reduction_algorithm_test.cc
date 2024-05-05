@@ -15,9 +15,12 @@ TEST(AlgorithmTest, ParameterAccounting) {
   int currentSolution = 0;
 
   computeCrossingSums<ReductionGraph<int, int>, UndoAlgorithmStep<int, int>>(myGraph);
+
   rr1<ReductionGraph<int, int>, UndoAlgorithmStep<int, int>>(myGraph, currentSolution);
+
   parameterAccounting<ReductionGraph<int, int>, UndoAlgorithmStep<int, int>>(myGraph, 0, 1,
                                                                              currentSolution);
+
   EXPECT_EQ(myGraph.getLeftNodes(0).size(), 0);
   EXPECT_EQ(myGraph.getRightNodes(0).size(), 1);
 
@@ -29,8 +32,11 @@ TEST(AlgorithmTest, ParameterAccounting) {
 
   EXPECT_EQ(myGraph.getLeftNodes(3).size(), 1);
   EXPECT_EQ(myGraph.getRightNodes(3).size(), 0);
-  EXPECT_EQ(*(myGraph.getRightNodes(0).find(1)), 1);
-  EXPECT_EQ(*(myGraph.getLeftNodes(1).find(0)), 0);
+
+  EXPECT_EQ(myGraph.getRightNodes(0)[0], 1);
+
+  EXPECT_EQ(myGraph.getLeftNodes(1)[0], 0);
+
   EXPECT_EQ(currentSolution, 1);
   // now check transitvity
   parameterAccounting<ReductionGraph<int, int>, UndoAlgorithmStep<int, int>>(myGraph, 1, 2,
@@ -46,18 +52,19 @@ TEST(AlgorithmTest, ParameterAccounting) {
 
   EXPECT_EQ(myGraph.getLeftNodes(3).size(), 3);
   EXPECT_EQ(myGraph.getRightNodes(3).size(), 0);
-  EXPECT_EQ(*(myGraph.getRightNodes(0).find(1)), 1);
-  EXPECT_EQ(*(myGraph.getRightNodes(0).find(2)), 2);
-  EXPECT_EQ(*(myGraph.getRightNodes(0).find(3)), 3);
-  EXPECT_EQ(*(myGraph.getRightNodes(1).find(2)), 2);
-  EXPECT_EQ(*(myGraph.getRightNodes(1).find(3)), 3);
-  EXPECT_EQ(*(myGraph.getLeftNodes(1).find(0)), 0);
-  EXPECT_EQ(*(myGraph.getRightNodes(2).find(3)), 3);
-  EXPECT_EQ(*(myGraph.getLeftNodes(2).find(0)), 0);
-  EXPECT_EQ(*(myGraph.getLeftNodes(2).find(1)), 1);
-  EXPECT_EQ(*(myGraph.getLeftNodes(3).find(0)), 0);
-  EXPECT_EQ(*(myGraph.getLeftNodes(3).find(1)), 1);
-  EXPECT_EQ(*(myGraph.getLeftNodes(3).find(2)), 2);
+
+  EXPECT_EQ(myGraph.getRightNodes(0)[0], 1);
+  EXPECT_EQ(myGraph.getRightNodes(0)[1], 2);
+  EXPECT_EQ(myGraph.getRightNodes(0)[2], 3);
+  EXPECT_EQ(myGraph.getRightNodes(1)[0], 2);
+  EXPECT_EQ(myGraph.getRightNodes(1)[1], 3);
+  EXPECT_EQ(myGraph.getLeftNodes(1)[0], 0);
+  EXPECT_EQ(myGraph.getRightNodes(2)[0], 3);
+  EXPECT_EQ(myGraph.getLeftNodes(2)[0], 0);
+  EXPECT_EQ(myGraph.getLeftNodes(2)[1], 1);
+  EXPECT_EQ(myGraph.getLeftNodes(3)[0], 0);
+  EXPECT_EQ(myGraph.getLeftNodes(3)[1], 1);
+  EXPECT_EQ(myGraph.getLeftNodes(3)[2], 2);
   EXPECT_EQ(currentSolution, 7);
 }
 
@@ -92,16 +99,16 @@ TEST(AlgorithmTest, rr3) {
   rr3<ReductionGraph<int, int>, UndoAlgorithmStep<int, int>>(myGraph, currentSolution, &undo);
   EXPECT_EQ(myGraph.getLeftNodes(0).size(), 1);
   EXPECT_EQ(myGraph.getRightNodes(0).size(), 0);
-  EXPECT_EQ(*(myGraph.getLeftNodes(0).find(1)), 1);
+  EXPECT_EQ(myGraph.getLeftNodes(0)[0], 1);
 
   EXPECT_EQ(myGraph.getLeftNodes(1).size(), 0);
   EXPECT_EQ(myGraph.getRightNodes(1).size(), 2);
-  EXPECT_EQ(*(myGraph.getRightNodes(1).find(0)), 0);
-  EXPECT_EQ(*(myGraph.getRightNodes(1).find(2)), 2);
+  EXPECT_EQ(myGraph.getRightNodes(1)[0], 0);
+  EXPECT_EQ(myGraph.getRightNodes(1)[1], 2);
 
   EXPECT_EQ(myGraph.getLeftNodes(2).size(), 1);
   EXPECT_EQ(myGraph.getRightNodes(2).size(), 0);
-  EXPECT_EQ(*(myGraph.getLeftNodes(2).find(1)), 1);
+  EXPECT_EQ(myGraph.getLeftNodes(2)[0], 1);
   rrlo1<ReductionGraph<int, int>, UndoAlgorithmStep<int, int>>(myGraph, &undo);
   EXPECT_EQ(myGraph.getFixedPosition()[0], 1);
 }
@@ -116,13 +123,10 @@ TEST(AlgorithmTest, rr2) {
   rr2<ReductionGraph<int, int>, UndoAlgorithmStep<int, int>>(myGraph, currentSolution);
   EXPECT_EQ(myGraph.getLeftNodes(0).size(), 0);
   EXPECT_EQ(myGraph.getRightNodes(0).size(), 1);
-
-  EXPECT_EQ(*(myGraph.getRightNodes(0).find(2)), 2);
-
+  EXPECT_EQ(myGraph.getRightNodes(0)[0], 2);
   EXPECT_EQ(myGraph.getLeftNodes(2).size(), 1);
   EXPECT_EQ(myGraph.getRightNodes(2).size(), 0);
-
-  EXPECT_EQ(*(myGraph.getLeftNodes(2).find(0)), 0);
+  EXPECT_EQ(myGraph.getLeftNodes(2)[0], 0);
 }
 
 TEST(AlgorithmTest, rrLarge) {
@@ -249,7 +253,7 @@ TEST(AlgorithmTest, getCrossings) {
       algorithm<ReductionGraph<int, int>, UndoAlgorithmStep<int, int>>(myGraph);
   EXPECT_EQ(crossingSum, 17);
   EXPECT_EQ(myGraph.getCrossings(), 17);
-
 }
 
-}
+}  // namespace
+   // namespace
