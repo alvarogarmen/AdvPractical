@@ -20,9 +20,9 @@ class ReductionGraph {
   std::vector<std::vector<NT>> fixedNodes;
   // holds the end position of free nodes
   std::vector<NT> fixedPosition;
-  // for each free node u, the first place hold free node that are knowned to be positioned to the
+  // for each free node u, the first place hold free node that are known to be positioned to the
   // left of u
-  // and the second hold the free nodes that are knowned to be positioned to its right
+  // and the second hold the free nodes that are known to be positioned to its right
   std::vector<std::array<std::set<NT>, 2>> leftRightSet;
   // save the crossing number that accur between two free nodes (u, v) ,that do not have < order
   // yet.
@@ -86,6 +86,15 @@ class ReductionGraph {
     }
     return absl::OkStatus();
   }
+
+  std::vector<NodeType>& getFreeNodes() {
+    std::vector<NodeType> permutation;
+    for (auto i = 0; i < freeNodes.size(); i++) {
+      permutation.push_back(freeNodes[i][0]);
+    }
+    return permutation;
+  }
+  std::vector<std::vector<NodeType>>& getEdges() { return freeNodes; }
 
   NodeType getFixedNodesSize() const { return fixedNodes.size(); }
 

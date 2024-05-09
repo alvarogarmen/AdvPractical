@@ -139,6 +139,7 @@ void rr3(Graph& graph, typename Graph::CrossingCountType& currentSolution, Undo*
 
 // For each pair of free nodes u, v with N(u) = N(v),(arbitrarily) commit a < b, and do parameter
 // accounting.
+// TODO: DO THIS WITH A HASH VALUE
 template <class Graph, class Undo>
 void rr2(Graph& graph, typename Graph::CrossingCountType& currentSolution) {
   using NodeType = typename Graph::NodeType;
@@ -280,8 +281,8 @@ void algorithmStep(Graph& graph, typename Graph::CrossingCountType currentSoluti
 }
 
 template <class Graph, class Undo>
-std::tuple<typename Graph::CrossingCountType, std::vector<typename Graph::NodeType>> algorithm(
-    Graph& graph) {
+std::tuple<typename Graph::CrossingCountType, std::vector<typename Graph::NodeType>>
+reductionAlgorithm(Graph& graph) {
   using CrossingCountType = typename Graph::CrossingCountType;
   using NodeType = typename Graph::NodeType;
 

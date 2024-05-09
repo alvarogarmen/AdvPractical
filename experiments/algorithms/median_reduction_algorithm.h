@@ -3,7 +3,8 @@
 #include "ds/helper/empty_problem.h"
 #include "ds/reduction_graph/reduction_graph.h"
 #include "io/ocsm_graph_reader.h"
-#include "oscm/reduction_algorithm/reduction_algorithm.h"
+#include "oscm/median_reduction_algorithm/median_reduction_algorithm.h"
+#include "problems.h"
 #include "toolkit/algorithms/algorithm_impl.h"
 #include "toolkit/app/app_io.pb.h"
 #include "toolkit/ds/empty_problem.h"
@@ -16,22 +17,22 @@ using henrixapp::app::app_io::AlgorithmRunInformation;
 using henrixapp::app::app_io::Hypergraph;
 using henrixapp::app::app_io::Result;
 using henrixapp::app::app_io::RunConfig;
-using RG = ReductionGraphEmptyProblem;
+using BG = ReductionGraphProblem;
 }  // namespace
-class SimpleReductionAlgorithm : public henrixapp::algorithms::AlgorithmImpl<RG> {
+class MedianReductionAlgorithm : public henrixapp::algorithms::AlgorithmImpl<BG> {
  public:
-  static constexpr absl::string_view AlgorithmName = "reduction_algorithm";
+  static constexpr absl::string_view AlgorithmName = "median_reduction_algorithm";
 
  protected:
-  absl::StatusOr<std::unique_ptr<RG>> Execute(const AlgorithmConfig& config,
-                                              std::unique_ptr<RG> problem) override {
-    reductionalgorithms::algorithm<ReductionGraph<int, int>, UndoAlgorithmStep<int, int>>(
+  absl::StatusOr<std::unique_ptr<BG>> Execute(const AlgorithmConfig& config,
+                                              std::unique_ptr<BG> problem) override {
+    medianReduction_Algorithm::medianReductionAlgorithm<ReductionGraph<int, int>>(
         problem->instance());
 
     return problem;
   }
   absl::Status ValidateConfig(const AlgorithmConfig& config) override { return absl::OkStatus(); }
-  absl::StatusOr<std::unique_ptr<RG>> Load(const RunConfig& run_config,
+  absl::StatusOr<std::unique_ptr<BG>> Load(const RunConfig& run_config,
                                            const Hypergraph& hypergraph) override {
     // auto hgr = henrixapp::algorithms::loadFile<StandardIntegerHypergraph>(hypergraph);
     if (hypergraph.format() == "gr") {
@@ -40,7 +41,7 @@ class SimpleReductionAlgorithm : public henrixapp::algorithms::AlgorithmImpl<RG>
       if (!Graph.ok()) {
         return Graph.status();
       }
-      return std::make_unique<RG>(std::move(Graph.value()));
+      return std::make_unique<BG>(std::move(Graph.value()));
     }
     return absl::UnimplementedError("Read-in-function for this format not implemented");
   }
