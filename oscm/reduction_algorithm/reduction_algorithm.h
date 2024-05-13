@@ -160,9 +160,7 @@ void rr2(Graph& graph, typename Graph::CrossingCountType& currentSolution) {
   NodeType n = graph.getFreeNodesSize();
   for (NodeType u = 0; u < n; ++u) {
     for (NodeType v = u + 1; v < n; ++v) {
-      if (std::equal(graph.getFreeNodeNeighbours(u).begin(), graph.getFreeNodeNeighbours(u).end(),
-                     graph.getFreeNodeNeighbours(v).begin(),
-                     graph.getFreeNodeNeighbours(v).end())) {
+      if (graph.getNeighbourhoodHash(u) == graph.getNeighbourhoodHash(v)) {
         parameterAccounting<Graph, Undo>(graph, u, v, currentSolution);
       }
     }

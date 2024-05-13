@@ -29,6 +29,8 @@ class ReductionGraph {
   // yet.
   // saves the crossing number of u and v assuming u is placed before v
   std::vector<std::map<NT, CCT>> crossings;
+  // stores the hash values of neighbourhood
+  std::vector<NT> neighbourhoodHash;
 
  public:
   NT currentNumNodes() { return getFreeNodesSize() + getFixedNodesSize(); }
@@ -43,7 +45,8 @@ class ReductionGraph {
         fixedNodes(fixedNodes),
         fixedPosition(freeNodes.size()),
         leftRightSet(freeNodes.size()),
-        crossings(freeNodes.size()) {
+        crossings(freeNodes.size()),
+        neighbourhoodHash(freeNodes.size()) {
     for (auto& bitVectorArray : leftRightSet) {
       // Initialize each BitVector in the array to be the right size
       for (auto& bitVector : bitVectorArray) {
@@ -84,9 +87,10 @@ class ReductionGraph {
                NodeType target) {  // where source is the freeNode and target is the fixedNode
     freeNodes[source].push_back(target);
     fixedNodes[target].push_back(source);
+    neighbourhoodHash[source] += target;
     return;
   }
-
+  NodeType getNeighbourhoodHash(NodeType index) { return neighbourhoodHash[index]; }
   NodeType getEdge(NodeType source, NodeType index) { return freeNodes[source][index]; }
   /**
   Should be moved to io
