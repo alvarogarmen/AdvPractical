@@ -43,7 +43,9 @@ int main(int argc, char* argv[]) {
 
   auto graph = std::move(result.value());
   std::cout << "the crossing is" << graph->getCrossings() << std::endl;
-  heuristic_algorithm::algorithm<HeuristicGraph<int, int>>(*graph, true, true, true);
+  heuristic_algorithm::HeuristicAlgorithm<HeuristicGraph<int, int>>(*graph, true, true, true);
+  std::cout << "the crossing is" << graph->getCrossings() << std::endl;
+
   /*
     auto [crossingSum, orderVector] =
         reductionalgorithms::algorithm<ReductionGraph<int, int>, UndoAlgorithmStep<int,

@@ -9,14 +9,9 @@ namespace median_algorithm {
 template <typename GraphType>
 void medianAlgorithm(GraphType& myGraph) {
   using NT = typename GraphType::NodeType;
-
   std::vector<int> positions(myGraph.getFreeNodesSize(), 0);
-  // holds the average neighbour position for each of the free nodes
-  std::vector<double> posE(myGraph.getFreeNodesSize(), 0.0);
-
   auto& edges = myGraph.getEdges();
   auto& permutationFreeNodes = myGraph.getFreeNodes();
-
   // Update positions and edges in-place
   for (NT i = 0; i < myGraph.getFreeNodesSize(); i++) {
     if (edges[i].size() == 0) {
@@ -24,20 +19,26 @@ void medianAlgorithm(GraphType& myGraph) {
     }
     int posTmp = ceil((edges[i][(edges[i].size() / 2)] - 1));
     positions[i] = posTmp;
-    double avarege = 0;
-    for (NT j = 0; j < edges[i].size(); ++j) {
-      avarege += edges[i][j];
-    }
-    posE[i] = avarege / edges[i].size();
   }
 
   // Sort permutationFreeNodes based on positions
   std::sort(permutationFreeNodes.begin(), permutationFreeNodes.end(),
-            [&positions, &posE](const NT& a, const NT& b) {
-              // If two free nodes have the same median, they to be ordered according to their
-              // average neighbor
+            [&positions, &edges](const NT& a, const NT& b) {
+              // If two free nodes have the same median, they are to be ordered according to their
+              // average neighbour
               if (positions[a] == positions[b]) {
-                return posE[a] < posE[b];
+                double averageA = 0;
+                double averageB = 0;
+                for (NT j = 0; j < edges[a].size(); ++j) {
+                  averageA += edges[a][j];
+                }
+                averageA /= edges[a].size();
+                for (NT j = 0; j < edges[b].size(); ++j) {
+                  averageB += edges[b][j];
+                }
+                averageB /= edges[b].size();
+
+                return averageA < averageB;
               } else {
                 return positions[a] < positions[b];
               }

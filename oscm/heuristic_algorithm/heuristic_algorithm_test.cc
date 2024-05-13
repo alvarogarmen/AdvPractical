@@ -13,7 +13,7 @@ TEST(AlgorithmTest, algorithmWithR1) {
   std::vector<std::vector<int>> fixedNodes = {{0, 1, 2}, {0, 2}, {2}};
   HeuristicGraph myGraph = HeuristicGraph<int, int>(freeNodes, fixedNodes);
 
-  bool didSwitch = algorithm<HeuristicGraph<int, int>>(myGraph, true, false, false);
+  bool didSwitch = HeuristicAlgorithm<HeuristicGraph<int, int>>(myGraph, true, false, false);
   EXPECT_EQ(didSwitch, true);
   EXPECT_EQ(myGraph.getPermutation()[0], 1);
   EXPECT_EQ(myGraph.getPermutation()[1], 0);
@@ -33,7 +33,7 @@ TEST(AlgorithmTest, algorithmWithR2) {
   std::vector<std::vector<int>> fixedNodes = {{0, 1, 2}, {0, 2}, {2}};
   HeuristicGraph myGraph = HeuristicGraph<int, int>(freeNodes, fixedNodes);
 
-  bool didSwitch = algorithm<HeuristicGraph<int, int>>(myGraph, false, true, false);
+  bool didSwitch = HeuristicAlgorithm<HeuristicGraph<int, int>>(myGraph, false, true, false);
   EXPECT_EQ(didSwitch, true);
   EXPECT_EQ(myGraph.getPermutation()[0], 1);
   EXPECT_EQ(myGraph.getPermutation()[1], 0);
@@ -53,7 +53,7 @@ TEST(AlgorithmTest, algorithmWithR3) {
   std::vector<std::vector<int>> fixedNodes = {{0, 1, 2}, {0, 2}, {2}};
   HeuristicGraph myGraph = HeuristicGraph<int, int>(freeNodes, fixedNodes);
 
-  bool didSwitch = algorithm<HeuristicGraph<int, int>>(myGraph, false, false, true);
+  bool didSwitch = HeuristicAlgorithm<HeuristicGraph<int, int>>(myGraph, false, false, true);
   EXPECT_EQ(didSwitch, true);
   EXPECT_EQ(myGraph.getPermutation()[0], 1);
   EXPECT_EQ(myGraph.getPermutation()[1], 0);

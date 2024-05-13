@@ -36,7 +36,6 @@ class HeuristicGraph {
         permutation(freeNodes.size()) {
     std::iota(freeNodesPosition.begin(), freeNodesPosition.end(), 0);
     std::iota(permutation.begin(), permutation.end(), 0);
-    computeCrossingSums();
   }
 
   HeuristicGraph(NodeType numFixedNodes, NodeType numFreeNodes, CrossingCountType edgeNum)
@@ -47,7 +46,6 @@ class HeuristicGraph {
         permutation(freeNodes.size()) {
     std::iota(freeNodesPosition.begin(), freeNodesPosition.end(), 0);
     std::iota(permutation.begin(), permutation.end(), 0);
-    computeCrossingSums();
   }
   void addEdge(NodeType source,
                NodeType target) {  // where source is the freeNode and target is the fixedNode

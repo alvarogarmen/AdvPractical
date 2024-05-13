@@ -62,11 +62,10 @@ bool r3(Graph& graph, typename Graph::NodeType nodeId, typename Graph::NodeType 
 }
 
 template <class Graph>
-bool algorithm(Graph& graph, bool runR1, bool runR2, bool runR3) {
+bool HeuristicAlgorithm(Graph& graph, bool runR1, bool runR2, bool runR3) {
   using NodeType = typename Graph::NodeType;
 
   median_algorithm::medianAlgorithm(graph);
-
   for (int i = 0; i < graph.getFreeNodesSize(); ++i) {
     auto permutation = graph.getPermutation();
     graph.setFreeNodePosition(permutation[i], i);
