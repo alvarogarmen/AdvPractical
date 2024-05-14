@@ -87,7 +87,7 @@ class ReductionGraph {
                NodeType target) {  // where source is the freeNode and target is the fixedNode
     freeNodes[source].push_back(target);
     fixedNodes[target].push_back(source);
-    neighbourhoodHash[source] += target;
+    neighbourhoodHash[source] += target * target;
     return;
   }
   NodeType getNeighbourhoodHash(NodeType index) { return neighbourhoodHash[index]; }
