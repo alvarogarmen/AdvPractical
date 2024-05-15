@@ -7,15 +7,19 @@
 #include <set>
 #include <vector>
 
+// #include "absl/container/node_hash_map.h"
+//  #include "absl/container/flat_hash_map.h"
 #include "absl/status/status.h"
 #include "absl/strings/str_cat.h"
 #include "absl/strings/string_view.h"
 #include "ds/reduction_graph/bit_vector.h"
 #include "ds/reduction_graph/undo_algorithm_step.h"
+// #include "external_hash/unordered_dense/include/ankerl/unordered_dense.h"
 
 template <typename NT, typename CCT>
 class ReductionGraph {
-  // for each free node holds its neighbours
+  // using CrossingMap = ankerl::unordered_dense::map<NT, CCT>;
+  //  for each free node holds its neighbours
   std::vector<std::vector<NT>> freeNodes;
   // for each fixed node holds its neighbours
   std::vector<std::vector<NT>> fixedNodes;
@@ -28,8 +32,11 @@ class ReductionGraph {
   // save the crossing number that accur between two free nodes (u, v) ,that do not have < order
   // yet.
   // saves the crossing number of u and v assuming u is placed before v
+  // std::vector<absl::node_hash_map<NT, CCT>> crossings;
   std::vector<std::map<NT, CCT>> crossings;
-  // stores the hash values of neighbourhood
+  // std::vector<CrossingMap> crossings;
+
+  //  stores the hash values of neighbourhood
   std::vector<NT> neighbourhoodHash;
 
  public:
@@ -47,8 +54,8 @@ class ReductionGraph {
         leftRightSet(freeNodes.size()),
         crossings(freeNodes.size()),
         neighbourhoodHash(freeNodes.size()) {
-    for (auto& bitVectorArray : leftRightSet) {
-      // Initialize each BitVector in the array to be the right size
+    for (auto& bitVectorArray :
+         leftRightSet) {  // Initialize each BitVector in the array to be the right size
       for (auto& bitVector : bitVectorArray) {
         bitVector.resize(freeNodes.size());
       }
@@ -60,7 +67,8 @@ class ReductionGraph {
         fixedNodes(numFreeNodes, std::vector<NodeType>(0)),
         fixedPosition(freeNodes.size()),
         leftRightSet(freeNodes.size()),
-        crossings(freeNodes.size()) {
+        crossings(freeNodes.size()),
+        neighbourhoodHash(freeNodes.size()) {
     for (auto& bitVectorArray : leftRightSet) {
       // Initialize each BitVector in the array to be the right size
       for (auto& bitVector : bitVectorArray) {
@@ -74,7 +82,8 @@ class ReductionGraph {
         fixedNodes(numFixedNodes, std::vector<NodeType>(0)),
         fixedPosition(freeNodes.size()),
         leftRightSet(freeNodes.size()),
-        crossings(freeNodes.size()) {
+        crossings(freeNodes.size()),
+        neighbourhoodHash(freeNodes.size()) {
     for (auto& bitVectorArray : leftRightSet) {
       // Initialize each BitVector in the array to be the right size
       for (auto& bitVector : bitVectorArray) {
@@ -97,7 +106,7 @@ class ReductionGraph {
   This function write the result order into a file.
   @param os The output stream.
   @param solution The solution order.
-*/
+  */
   absl::Status writeResultsToFile(std::ostream& os, const std::vector<NodeType>& solution) {
     // Write each element of the vector to the output stream
     for (NodeType element : solution) {
@@ -130,10 +139,16 @@ class ReductionGraph {
   const auto& getCrossing(NodeType u, NodeType v) const { return crossings[u].at(v); }
 
   const auto getLeftNodes(NodeType u) const { return leftRightSet[u][0].findSetBits(); }
+  const auto getUnsetNodes(NodeType u) const {
+    return leftRightSet[u][0].findCommonUnsetBits(leftRightSet[u][1], freeNodes.size());
+  }
 
   void insertRightNode(NodeType u, NodeType v) { leftRightSet[u][1].insert(v); }
 
   void insertLeftNode(NodeType u, NodeType v) { leftRightSet[u][0].insert(v); }
+
+  const auto getRightNodesBit(NodeType u, NodeType v) const { return leftRightSet[u][1].find(v); }
+  const auto getLeftNodesBit(NodeType u, NodeType v) const { return leftRightSet[u][0].find(v); }
 
   const auto getRightNodes(NodeType u) const { return leftRightSet[u][1].findSetBits(); }
 
@@ -142,8 +157,6 @@ class ReductionGraph {
   void setFixedPosition(NodeType u, NodeType index) { fixedPosition[index] = u; }
 
   void setFixedPositions(const std::vector<NodeType>& bestOrder) { fixedPosition = bestOrder; }
-
-  void setCrossings(const std::vector<std::map<NodeType, CrossingCountType>>& m) { crossings = m; }
 
   void setFreeNodes(const std::vector<std::vector<NodeType>>& newfreeNodes) {
     freeNodes = newfreeNodes;

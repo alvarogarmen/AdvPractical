@@ -39,6 +39,29 @@ class BitVector {
     return positions;
   }
 
+  // Function to find the positions where both bit vectors have unset bits
+  std::vector<NodeType> findCommonUnsetBits(const BitVector& bv1, NodeType num_nodes) const {
+    std::vector<NodeType> positions;
+
+    // Ensure both bit vectors are of the same size
+    if (data.size() != bv1.getBitVectorSize()) {
+      throw std::invalid_argument("Bit vectors must be of the same size.");
+    }
+
+    for (size_t i = 0; i < data.size(); i++) {
+      unsigned long long combinedUnsetBits = ~(data[i] | bv1.getData()[i]);  // Unset bits in both
+      while (combinedUnsetBits != 0) {
+        int bitPos = __builtin_ctzll(combinedUnsetBits) + (i * 64);  // Adjust position by index
+        if (bitPos < num_nodes) {
+          positions.push_back(bitPos);
+        }
+        combinedUnsetBits &= (combinedUnsetBits - 1);  // Clear the least significant set bit
+      }
+    }
+
+    return positions;
+  }
+
   // Function to set a specific bit at position 'pos' to 1
   void insert(NodeType pos) {
     NodeType index = pos / 64;   // Get index of the unsigned long long
@@ -62,6 +85,6 @@ class BitVector {
     if (index >= data.size()) return false;        // Bit is not set if index is out of bounds
     return ((data[index] >> offset) & 1ULL) != 0;  // Check if the bit is set
   }
-
-  const NodeType getBitVectorSize() { return data.size(); }
+  const auto& getData() const { return data; }
+  const NodeType getBitVectorSize() const { return data.size(); }
 };

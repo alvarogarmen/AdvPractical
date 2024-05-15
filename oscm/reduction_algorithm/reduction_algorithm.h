@@ -3,10 +3,12 @@
 #include <stdio.h>
 
 #include <algorithm>
+#include <chrono>
 #include <iostream>
 #include <map>
 #include <numeric>
 #include <set>
+#include <string>
 #include <tuple>
 #include <vector>
 
@@ -15,6 +17,29 @@
 #include "oscm/reduction_algorithm/compute_crossings.h"
 
 namespace reductionalgorithms {
+std::map<std::string, std::chrono::duration<double, std::milli>> functionDurations;
+
+void printTotalDurations() {
+  // Create a vector of pairs from the map
+  std::vector<std::pair<std::string, std::chrono::duration<double, std::milli>>> durationVector(
+      functionDurations.begin(), functionDurations.end());
+
+  // Sort the vector by the duration
+  std::sort(durationVector.begin(), durationVector.end(),
+            [](const auto& a, const auto& b) { return a.second > b.second; });
+
+  // Print the sorted durations
+  for (const auto& entry : durationVector) {
+    std::cout << entry.first << " " << entry.second.count() << std::endl;
+  }
+}
+
+void updateDuration(const std::string& functionName,
+                    std::chrono::high_resolution_clock::time_point start) {
+  auto end = std::chrono::high_resolution_clock::now();
+  std::chrono::duration<double, std::milli> duration = end - start;
+  functionDurations[functionName] += duration;
+}
 
 /*
  * For each decision u < v that we make adjust the leftRightSet of u and v
@@ -25,15 +50,21 @@ void parameterAccounting(Graph& graph, typename Graph::NodeType u, typename Grap
                          typename Graph::CrossingCountType& currentSolution, Undo* undo = nullptr) {
   using NodeType = typename Graph::NodeType;
   if (u != v) {
-    // if (graph.getRightNodes(u).find(v) == graph.getRightNodes(u).end()) {
-    if (graph.getNodeCrossing(u).find(v) != graph.getNodeCrossing(u).end()) {
+    if (!graph.getRightNodesBit(u, v) && !graph.getLeftNodesBit(u, v)) {
+      // if (graph.getNodeCrossing(u).find(v) != graph.getNodeCrossing(u).end()) {
       graph.insertRightNode(u, v);
       graph.insertLeftNode(v, u);
+      auto start = std::chrono::high_resolution_clock::now();
       currentSolution += graph.getCrossing(u, v);
+      updateDuration("Hash", start);
+
       if (undo) {
         undo->addParameterAccountingUndo(u, v, graph.getCrossing(u, v), graph.getCrossing(v, u));
       }
+      start = std::chrono::high_resolution_clock::now();
       graph.deleteCrossings(u, v);
+      updateDuration("Hash", start);
+
       for (auto smallerThanU : graph.getLeftNodes(u)) {
         parameterAccounting<Graph, Undo>(graph, smallerThanU, v, currentSolution, undo);
         for (auto biggerThanV : graph.getRightNodes(v)) {
@@ -43,21 +74,6 @@ void parameterAccounting(Graph& graph, typename Graph::NodeType u, typename Grap
       for (auto biggerThanV : graph.getRightNodes(v)) {
         parameterAccounting<Graph, Undo>(graph, u, biggerThanV, currentSolution, undo);
       }
-
-      /*
-      for (size_t i = 0; i < graph.getLeftNodes(u).size(); ++i) {
-        parameterAccounting<Graph, Undo>(graph, graph.getLeftNodes(u)[i], v, currentSolution, undo);
-        for (size_t j = 0; j < graph.getRightNodes(v).size(); ++j) {
-          parameterAccounting<Graph, Undo>(graph, graph.getLeftNodes(u)[i],
-                                           graph.getRightNodes(v)[j], currentSolution, undo);
-        }
-      }
-      for (size_t i = 0; i < graph.getRightNodes(v).size(); ++i) {
-        parameterAccounting<Graph, Undo>(graph, u, graph.getRightNodes(v)[i], currentSolution,
-                                         undo);
-      }
-    }
-    */
     }
   }
 }
@@ -174,6 +190,23 @@ bool rrLarge(Graph& graph, typename Graph::CrossingCountType crossingsLeft,
   using NodeType = typename Graph::NodeType;
   std::vector<std::pair<NodeType, NodeType>> pairsToModify;
   bool didChange = false;
+  /*
+    for (NodeType u = 0; u < graph.getFreeNodesSize(); ++u) {
+      auto unsetNodesOfU = graph.getUnsetNodes(u);
+      for (size_t i = 0; i < unsetNodesOfU.size(); ++i) {
+        NodeType v = unsetNodesOfU[i];
+        if (v != u) {
+          if (graph.getCrossing(u, v) > crossingsLeft) {
+            if (u < v) {
+              pairsToModify.emplace_back(v, u);
+              didChange = true;
+            } else if (graph.getNodeCrossing(v).at(u) < crossingsLeft) {
+              pairsToModify.emplace_back(v, u);
+              didChange = true;
+            }
+          }
+        }
+      } */
   for (NodeType u = 0; u < graph.getFreeNodesSize(); ++u) {
     for (auto [v, crossingValue] : graph.getNodeCrossing(u)) {
       if (crossingValue > crossingsLeft) {
@@ -247,24 +280,45 @@ void algorithmStep(Graph& graph, typename Graph::CrossingCountType currentSoluti
                    std::vector<typename Graph::NodeType>& bestOrder) {
   using NodeType = typename Graph::NodeType;
   Undo undo;
-
   if (isInitStep) {
+    auto start = std::chrono::high_resolution_clock::now();
     parameterAccounting<Graph, Undo>(graph, leftNode, rightNode, currentSolution, &undo);
+    updateDuration("parameterAccounting", start);
   }
+
   bool didChangeRrlo2 = true;
   bool didChangeRrLarge = true;
+
   while (didChangeRrlo2 || didChangeRrLarge) {
+    auto start = std::chrono::high_resolution_clock::now();
     didChangeRrlo2 = rrlo2(graph, currentSolution, &undo);
+    updateDuration("rrlo2", start);
+    start = std::chrono::high_resolution_clock::now();
     didChangeRrLarge = rrLarge(graph, bestSolution - currentSolution, currentSolution, &undo);
+    updateDuration("rrLarge", start);
+
+    start = std::chrono::high_resolution_clock::now();
     rrlo1(graph, &undo);
+    updateDuration("rrlo1", start);
   }
+
   if (bestSolution <= currentSolution) {
     graph.doUndo(undo);
     return;
   }
+
+  auto start = std::chrono::high_resolution_clock::now();
   std::tuple<bool, NodeType, NodeType> tupelBiggerThenFour = IJBiggerThenFour(graph);
+  updateDuration("IJBiggerThenFour", start);
+
+  start = std::chrono::high_resolution_clock::now();
   std::tuple<bool, NodeType, NodeType> EqualToThree = IJEqualToThree(graph);
+  updateDuration("IJEqualToThree", start);
+
+  start = std::chrono::high_resolution_clock::now();
   std::tuple<bool, NodeType, NodeType> EqualToTwo = IJEqualToTwo(graph);
+  updateDuration("IJEqualToTwo", start);
+
   if (std::get<0>(tupelBiggerThenFour)) {
     NodeType u = std::get<1>(tupelBiggerThenFour);
     NodeType v = std::get<2>(tupelBiggerThenFour);
@@ -286,6 +340,7 @@ void algorithmStep(Graph& graph, typename Graph::CrossingCountType currentSoluti
     graph.doUndo(undo);
     return;
   }
+
   bestSolution = currentSolution;
   bestOrder = graph.getFixedPosition();
   graph.doUndo(undo);
@@ -297,27 +352,40 @@ std::tuple<typename Graph::CrossingCountType, std::vector<typename Graph::NodeTy
     Graph& graph) {
   using CrossingCountType = typename Graph::CrossingCountType;
   using NodeType = typename Graph::NodeType;
-
   // holds the crossing number of the best solution so far
-  CrossingCountType bestSolution = 1482;
+  CrossingCountType bestSolution = 1000;
   // holds the order of the solution best so far
   std::vector<NodeType> bestOrder;
 
+  auto start = std::chrono::high_resolution_clock::now();
   computeCrossingSums<Graph, Undo>(graph);
+  updateDuration("computeCrossingSums", start);
   CrossingCountType currentSolution = 0;
+  start = std::chrono::high_resolution_clock::now();
   rr1<Graph, Undo>(graph, currentSolution);
+  updateDuration("rr1", start);
+  start = std::chrono::high_resolution_clock::now();
   rr2<Graph, Undo>(graph, currentSolution);
-
+  updateDuration("rr2", start);
   bool didChangeRrlo2 = true;
 
   while (didChangeRrlo2) {
+    start = std::chrono::high_resolution_clock::now();
     didChangeRrlo2 = rrlo2<Graph, Undo>(graph, currentSolution);
+    updateDuration("rrlo2", start);
+    start = std::chrono::high_resolution_clock::now();
     rrlo1<Graph, Undo>(graph);
+    updateDuration("rrlo1", start);
   }
 
+  start = std::chrono::high_resolution_clock::now();
   rr3<Graph, Undo>(graph, currentSolution);
+  updateDuration("rr3", start);
+  start = std::chrono::high_resolution_clock::now();
   algorithmStep<Graph, Undo>(graph, currentSolution, false, 0, 0, bestSolution, bestOrder);
+  updateDuration("algorithmStep", start);
   graph.setFixedPositions(bestOrder);
+  printTotalDurations();
   return std::make_tuple(bestSolution, bestOrder);
 }
 }  // namespace reductionalgorithms

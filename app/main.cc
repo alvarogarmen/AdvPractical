@@ -44,10 +44,16 @@ int main(int argc, char* argv[]) {
   auto graph = std::move(result.value());
   // std::cout << "the crossing is" << graph->getCrossings() << std::endl;
   // heuristic_algorithm::algorithm<HeuristicGraph<int, int>>(*graph, true, true, true);
-
+  auto start_time = std::chrono::steady_clock::now();
   auto [crossingSum, orderVector] =
       reductionalgorithms::algorithm<ReductionGraph<int, int>, UndoAlgorithmStep<int, int>>(*graph);
   std::cout << "the reduction solution has " << crossingSum << " crossings" << std::endl;
+  auto end_time = std::chrono::steady_clock::now();
+  auto elapsed_time = std::chrono::duration_cast<std::chrono::milliseconds>(end_time - start_time);
+
+  // Convert the elapsed time to minutes
+  auto elapsed_minutes = std::chrono::duration_cast<std::chrono::minutes>(elapsed_time);
+  std::cout << "Execution time: " << elapsed_minutes.count() << " minutes" << std::endl;
   // Create an output file stream
   /*
         std::ofstream outputFile(argv[2]);
