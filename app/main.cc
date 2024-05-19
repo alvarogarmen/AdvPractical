@@ -10,17 +10,15 @@
 #include "absl/flags/parse.h"
 #include "ds/bipartite_graph.h"
 #include "ds/heuristic_graph/heuristic_graph.h"
-#include "ds/reduction_graph/reduction_graph.h"
 #include "io/ocsm_graph_reader.h"
-#include "oscm/heuristic_algorithm/heuristic_algorithm.h"
-#include "oscm/reduction_algorithm/reduction_algorithm.h"
+#include "oscm/median_algorithm/median_algorithm.h"
 ABSL_FLAG(std::string, example, "Default value", "Helpful text");
 //  bazel run app -- --example="bazel?"; ./bazel-bin/app/app
 int main(int argc, char* argv[]) {
   absl::ParseCommandLine(argc, argv);
   auto example = absl::GetFlag(FLAGS_example);  // Get the variable and store it
   std::cout << example << std::endl;
-  if (argc != 2) {
+  if (argc != 3) {
     std::cerr << "Usage: " << argv[0] << " <input filename> <output filename>" << std::endl;
     return 1;  // Exit with an error code
   }
@@ -34,7 +32,6 @@ int main(int argc, char* argv[]) {
     return 1;  // Exit with an error code
   }
   auto result = readGraph<HeuristicGraph<int, int>>(input);
-  // auto result = readGraph<ReductionGraph<int, int>>(input);
 
   if (result.status() != absl::OkStatus()) {
     std::cerr << "result status in not ok: " << std::endl;
@@ -42,32 +39,17 @@ int main(int argc, char* argv[]) {
   }
 
   auto graph = std::move(result.value());
-  std::cout << "the crossing is" << graph->getCrossings() << std::endl;
-  heuristic_algorithm::algorithm<HeuristicGraph<int, int>>(*graph, true, true, true);
-  /*
-    auto [crossingSum, orderVector] =
-        reductionalgorithms::algorithm<ReductionGraph<int, int>, UndoAlgorithmStep<int,
-    int>>(*graph); std::cout << "the reduction solution has " << crossingSum << " crossings" <<
-    std::endl;
-    // Create an output file stream
-
-      std::ofstream outputFile(argv[2]);
-
-      // Check if the file is open
-      if (!outputFile.is_open()) {
-        std::cerr << "Error opening file: output.txt" << std::endl;
-        return 1;  // Return an error code
-      }
-      if (auto status = graph->writeResultsToFile(outputFile, orderVector); !status.ok()) {
-        std::cerr << "Error: " << status << std::endl;
-        return 1;
-      }
-      */
-
+  HeuristicGraph<int, int>& myGraph = *graph;
+  // Create an output file stream
+  std::ofstream outputFile(argv[2]);
+  median_algorithm::medianAlgorithm(myGraph);
+  auto solution = myGraph.getPermutation();
+  // Check if the file is open
+  for (size_t i = 0; i < solution.size(); i++) {
+    outputFile << solution[i] << std::endl;
+  }
   // Close the file stream
-  // outputFile.close();
-
-  // std::cout << "the solution has " << graph->getCrossings() << " crossings" << std::endl;
+  outputFile.close();
 
   // auto myGraph = inputGraphManually<int>();
   // std::cout << "Crossings: " << crossGrader<decltype(myGraph)>(myGraph) << std::endl;
