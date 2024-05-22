@@ -33,9 +33,9 @@ class ReductionGraph {
   // yet.
   // saves the crossing number of u and v assuming u is placed before v
   // std::vector<absl::node_hash_map<NT, CCT>> crossings;
-  std::vector<std::map<NT, CCT>> crossings;
+  // std::vector<std::map<NT, CCT>> crossings;
   // std::vector<CrossingMap> crossings;
-
+  std::vector<std::vector<unsigned short>> crossings;
   //  stores the hash values of neighbourhood
   std::vector<NT> neighbourhoodHash;
 
@@ -67,7 +67,7 @@ class ReductionGraph {
         fixedNodes(numFreeNodes, std::vector<NodeType>(0)),
         fixedPosition(freeNodes.size()),
         leftRightSet(freeNodes.size()),
-        crossings(freeNodes.size()),
+        crossings(freeNodes.size(), std::vector<unsigned short>(freeNodes.size())),
         neighbourhoodHash(freeNodes.size()) {
     for (auto& bitVectorArray : leftRightSet) {
       // Initialize each BitVector in the array to be the right size
@@ -82,7 +82,7 @@ class ReductionGraph {
         fixedNodes(numFixedNodes, std::vector<NodeType>(0)),
         fixedPosition(freeNodes.size()),
         leftRightSet(freeNodes.size()),
-        crossings(freeNodes.size()),
+        crossings(freeNodes.size(), std::vector<unsigned short>(freeNodes.size())),
         neighbourhoodHash(freeNodes.size()) {
     for (auto& bitVectorArray : leftRightSet) {
       // Initialize each BitVector in the array to be the right size
@@ -134,9 +134,11 @@ class ReductionGraph {
 
   const auto& getFreeNodeNeighbours(NodeType freeNodeID) const { return freeNodes[freeNodeID]; }
 
-  const auto& getNodeCrossing(NodeType u) const { return crossings[u]; }
+  const auto getNodeCrossing(NodeType u) const {
+    return leftRightSet[u][0].findCommonUnsetBits(leftRightSet[u][1], freeNodes.size());
+  }
 
-  const auto& getCrossing(NodeType u, NodeType v) const { return crossings[u].at(v); }
+  const auto& getCrossing(NodeType u, NodeType v) const { return crossings[u][v]; }
 
   const auto getLeftNodes(NodeType u) const { return leftRightSet[u][0].findSetBits(); }
   const auto getUnsetNodes(NodeType u) const {
