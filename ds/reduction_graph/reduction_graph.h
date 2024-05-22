@@ -13,6 +13,7 @@
 #include "absl/strings/str_cat.h"
 #include "absl/strings/string_view.h"
 #include "ds/reduction_graph/bit_vector.h"
+#include "ds/reduction_graph/max_heap.h"
 #include "ds/reduction_graph/undo_algorithm_step.h"
 // #include "external_hash/unordered_dense/include/ankerl/unordered_dense.h"
 
@@ -38,6 +39,8 @@ class ReductionGraph {
   std::vector<std::vector<unsigned short>> crossings;
   //  stores the hash values of neighbourhood
   std::vector<NT> neighbourhoodHash;
+  // Max heap for the crossing of each pair of nodes
+  MaxHeap<NT, CCT> maxHeap;
 
  public:
   NT currentNumNodes() { return getFreeNodesSize() + getFixedNodesSize(); }
@@ -173,7 +176,41 @@ class ReductionGraph {
   void addCrossing(NodeType leftNode, NodeType rightNode, CrossingCountType crossingSum) {
     crossings[leftNode][rightNode] = crossingSum;
   }
+  void addCrossingToHeap(NodeType leftNode, NodeType rightNode, CrossingCountType crossingSum) {
+    maxHeap.push(leftNode, rightNode, crossingSum);
+  }
+  const auto getHeapSize() { return maxHeap.getSize(); }
 
+  const auto getHeapTop(CrossingCountType crossingsLeft) {
+    std::vector<std::tuple<NodeType, NodeType, CrossingCountType>> pairsToModify;
+    bool isTopINHeap = false;
+    auto topElement = maxHeap.top();
+    NodeType firstNode = std::get<0>(topElement);
+    NodeType secondNode = std::get<1>(topElement);
+    while (!isTopINHeap) {
+      if (std::get<2>(topElement) < crossingsLeft) {
+        isTopINHeap = true;
+      } else {
+        if (!getRightNodesBit(firstNode, secondNode) && !getLeftNodesBit(firstNode, secondNode)) {
+          pairsToModify.push_back(topElement);
+        }
+        maxHeap.pop();
+        topElement = maxHeap.top();
+      }
+      return pairsToModify;
+    }
+  }
+
+  void createHeap() {
+    for (size_t firstNode = 0; firstNode < freeNodes.size(); ++firstNode) {
+      auto unsetNodesOfU = getUnsetNodes(firstNode);
+      for (size_t i = 0; i < unsetNodesOfU.size(); ++i) {
+        NodeType secondNode = unsetNodesOfU[i];
+        auto FirstSecondcrossingValue = getCrossing(firstNode, secondNode);
+        addCrossingToHeap(firstNode, secondNode, FirstSecondcrossingValue);
+      }
+    }
+  }
   void deleteCrossings(NodeType u, NodeType v) {
     crossings[u].erase(v);
     crossings[v].erase(u);
@@ -185,6 +222,8 @@ class ReductionGraph {
       deleteRightNode(operation.leftNode, operation.rightNode);
       addCrossing(operation.leftNode, operation.rightNode, operation.leftRightCrossing);
       addCrossing(operation.rightNode, operation.leftNode, operation.rightLeftCrossing);
+      addCrossingToHeap(operation.leftNode, operation.rightNode, operation.leftRightCrossing);
+      addCrossingToHeap(operation.rightNode, operation.leftNode, operation.rightLeftCrossing);
     }
     for (const auto& position : undo.getSetPositionUndo()) {
       setFixedPosition(0, position);

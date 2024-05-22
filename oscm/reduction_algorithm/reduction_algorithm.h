@@ -197,9 +197,18 @@ template <class Graph, class Undo>
 bool rrLarge(Graph& graph, typename Graph::CrossingCountType crossingsLeft,
              typename Graph::CrossingCountType& currentSolution, Undo* undo = nullptr) {
   using NodeType = typename Graph::NodeType;
-  std::vector<std::pair<NodeType, NodeType>> pairsToModify;
+  using CrossingCountType = typename Graph::CrossingCountType;
+
+  auto pairsToModify = graph.getHeapTop(crossingsLeft);
+
   bool didChange = false;
 
+  if (pairsToModify.size() > 0) {
+    didChange = true;
+    // std::cout << pairsToModify.size() << std::endl;
+  }
+
+  /*
   for (NodeType u = 0; u < graph.getFreeNodesSize(); ++u) {
     auto unsetNodesOfU = graph.getUnsetNodes(u);
     for (size_t i = 0; i < unsetNodesOfU.size(); ++i) {
@@ -216,7 +225,8 @@ bool rrLarge(Graph& graph, typename Graph::CrossingCountType crossingsLeft,
         }
       }
     }
-  } /*
+  }
+  * / /*
 for (NodeType u = 0; u < graph.getFreeNodesSize(); ++u) {
 for (auto [v, crossingValue] : graph.getNodeCrossing(u)) {
  if (crossingValue > crossingsLeft) {
@@ -230,7 +240,7 @@ for (auto [v, crossingValue] : graph.getNodeCrossing(u)) {
  }
 }
 }*/
-  for (auto [v, u] : pairsToModify) {
+  for (auto [u, v, crossing] : pairsToModify) {
     parameterAccounting<Graph, Undo>(graph, v, u, currentSolution, undo);
   }
   return didChange;
@@ -385,7 +395,7 @@ std::tuple<typename Graph::CrossingCountType, std::vector<typename Graph::NodeTy
   using CrossingCountType = typename Graph::CrossingCountType;
   using NodeType = typename Graph::NodeType;
   // holds the crossing number of the best solution so far
-  CrossingCountType bestSolution = 833;
+  CrossingCountType bestSolution = 1482;
   // holds the order of the solution best so far
   std::vector<NodeType> bestOrder;
 
@@ -411,9 +421,10 @@ std::tuple<typename Graph::CrossingCountType, std::vector<typename Graph::NodeTy
   }
 
   // start = std::chrono::high_resolution_clock::now();
-  //  rr3<Graph, Undo>(graph, currentSolution);
-  //  updateDuration("rr3", start);
-  //  start = std::chrono::high_resolution_clock::now();
+  rr3<Graph, Undo>(graph, currentSolution);
+  // updateDuration("rr3", start);
+  graph.createHeap();
+  // start = std::chrono::high_resolution_clock::now();
   algorithmStep<Graph, Undo>(graph, currentSolution, false, 0, 0, bestSolution, bestOrder);
   // updateDuration("algorithmStep", start);
   graph.setFixedPositions(bestOrder);

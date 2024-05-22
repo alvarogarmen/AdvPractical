@@ -9,6 +9,7 @@ cc_library(
     visibility = ["//visibility:public"],
     deps = [
         ":bit_vector",
+        ":max_heap",
         #"//external_hash/unordered_dense/include/ankerl",
         "@abseil-cpp//absl/status",
         #"@com_google_absl//absl/container:flat_hash_map",
@@ -34,7 +35,18 @@ cc_library(
     visibility = ["//visibility:public"],
     deps = [
         "@abseil-cpp//absl/status",
-    ],  # <-- You were missing a closing parenthesis here
+    ],  
+)
+
+cc_library(
+    name = "max_heap",
+    hdrs = [
+        "max_heap.h",
+    ],
+    visibility = ["//visibility:public"],
+    deps = [
+        "@abseil-cpp//absl/status",
+    ],  
 )
 
 cc_test(
