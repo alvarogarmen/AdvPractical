@@ -147,11 +147,22 @@ class HeuristicGraph {
     return true;
   }
 
+  void switchNodes(NodeType u, NodeType v, int bestSolution) {
+    std::swap(permutation[freeNodesPosition[u]], permutation[freeNodesPosition[v]]);
+    std::swap(freeNodesPosition[u], freeNodesPosition[v]);
+    if (this->getCrossings() < bestSolution) {
+      return;
+    }
+    // If not improved, swap back
+    std::swap(permutation[freeNodesPosition[u]], permutation[freeNodesPosition[v]]);
+    std::swap(freeNodesPosition[u], freeNodesPosition[v]);
+  }
+
   // copmute for each free node u the number of crossings created by the edges from nodes to the
   // left of u  and to its right
   void computeCrossingSums() {
-    for (NodeType i = 0; i < freeNodes.size(); ++i) {
-      for (NodeType j = i + 1; j < freeNodes.size(); ++j) {
+    for (size_t i = 0; i < freeNodes.size(); ++i) {
+      for (size_t j = i + 1; j < freeNodes.size(); ++j) {
         if (freeNodesPosition[i] > freeNodesPosition[j]) {
           CrossingCountType crossing = computeUVcrossing(j, i);
           leftRightCrossingSum[i][0] += crossing;

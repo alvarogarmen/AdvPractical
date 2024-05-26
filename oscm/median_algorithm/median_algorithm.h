@@ -25,7 +25,7 @@ void medianAlgorithm(GraphType& myGraph) {
     int posTmp = ceil((edges[i][(edges[i].size() / 2)] - 1));
     positions[i] = posTmp;
     double avarege = 0;
-    for (NT j = 0; j < edges[i].size(); ++j) {
+    for (size_t j = 0; j < edges[i].size(); ++j) {
       avarege += edges[i][j];
     }
     posE[i] = avarege / edges[i].size();

@@ -3,9 +3,12 @@
 #include <stdio.h>
 
 #include <algorithm>
+#include <atomic>
+#include <csignal>
 #include <iostream>
 #include <map>
 #include <numeric>
+#include <random>
 #include <set>
 #include <tuple>
 #include <vector>
@@ -62,7 +65,8 @@ bool r3(Graph& graph, typename Graph::NodeType nodeId, typename Graph::NodeType 
 }
 
 template <class Graph>
-bool algorithm(Graph& graph, bool runR1, bool runR2, bool runR3) {
+bool heuristicAlgorithm(Graph& graph, bool runR1, bool runR2, bool runR3,
+                        std::atomic<bool>& terminationRequested) {
   using NodeType = typename Graph::NodeType;
 
   median_algorithm::medianAlgorithm(graph);
@@ -80,8 +84,8 @@ bool algorithm(Graph& graph, bool runR1, bool runR2, bool runR3) {
     for (NodeType i = 0; i < graph.getFreeNodesSize() - 1; ++i) {
       NodeType nodeId = graph.getPermutatuinAtIndex(i);
       NodeType neighbourId = graph.getPermutatuinAtIndex(i + 1);
-      if (runR1 && r1(graph, nodeId, neighbourId) || runR2 && r2(graph, nodeId, neighbourId) ||
-          runR3 && r3(graph, nodeId, neighbourId)) {
+      if ((runR1 && r1(graph, nodeId, neighbourId)) || (runR2 && r2(graph, nodeId, neighbourId)) ||
+          (runR3 && r3(graph, nodeId, neighbourId))) {
         if (graph.switchNeighbours(nodeId, neighbourId, true)) {
           didChange = true;
         }
@@ -91,8 +95,8 @@ bool algorithm(Graph& graph, bool runR1, bool runR2, bool runR3) {
     for (NodeType i = graph.getFreeNodesSize() - 1; i > 0; --i) {
       NodeType nodeId = graph.getPermutatuinAtIndex(i);
       NodeType neighbourId = graph.getPermutatuinAtIndex(i - 1);
-      if (runR1 && r1(graph, nodeId, neighbourId) || runR2 && r2(graph, nodeId, neighbourId) ||
-          runR3 && r3(graph, nodeId, neighbourId)) {
+      if ((runR1 && r1(graph, nodeId, neighbourId)) || (runR2 && r2(graph, nodeId, neighbourId)) ||
+          (runR3 && r3(graph, nodeId, neighbourId))) {
         if (graph.switchNeighbours(neighbourId, nodeId, true)) {
           didChange = true;
         }
@@ -103,6 +107,21 @@ bool algorithm(Graph& graph, bool runR1, bool runR2, bool runR3) {
       madeSwitch = true;
     }
   }
+
+  int bestSolution = graph.getCrossings();
+  std::random_device rd;
+  std::mt19937 gen(rd());
+  std::uniform_int_distribution<> dis(0, graph.getFreeNodesSize() - 1);
+
+  while (!terminationRequested.load()) {
+    NodeType node1 = dis(gen);
+    NodeType node2 = dis(gen);
+
+    if (node1 != node2) {
+      graph.switchNodes(node1, node2, bestSolution);
+    }
+  }
+
   return madeSwitch;
 }
 }  // namespace heuristic_algorithm
