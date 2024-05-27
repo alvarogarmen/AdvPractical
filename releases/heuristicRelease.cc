@@ -416,7 +416,6 @@ int main(int argc, char* argv[]) {
   // Check if the file is open
   std::ofstream outputFile(argv[2]);
   int n0 = myGraph.getFixedNodesSize();
-  std::cout << "Crossings: " << myGraph.getCrossings() << std::endl;
   for (size_t i = 0; i < solution.size(); i++) {
     outputFile << solution[i] + 1 + n0 << std::endl;
   }
