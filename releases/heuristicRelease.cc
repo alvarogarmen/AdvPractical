@@ -161,16 +161,16 @@ class HeuristicGraph {
     std::swap(freeNodesPosition[u], freeNodesPosition[v]);
     return true;
   }
-
+  // TODO: Think about this
   void switchNodes(NodeType u, NodeType v, int& bestSolution) {
     std::swap(permutation[freeNodesPosition[u]], permutation[freeNodesPosition[v]]);
     std::swap(freeNodesPosition[u], freeNodesPosition[v]);
     int currentSolution = this->getCrossings();
+
     if (currentSolution < bestSolution) {
       bestSolution = currentSolution;
       return;
     }
-    bestSolution = currentSolution;
     // If not improved, swap back
     std::swap(permutation[freeNodesPosition[u]], permutation[freeNodesPosition[v]]);
     std::swap(freeNodesPosition[u], freeNodesPosition[v]);
@@ -194,6 +194,47 @@ class HeuristicGraph {
     }
   }
 };
+std::unique_ptr<HeuristicGraph<int, int>> readGraphCIN() {
+  std::string tmp;  // for p and ocr in input format
+  int n0;           // neighbours = A, fixed partition
+  int n1;           // movable_nodes = B, free partition
+  int m;
+  // Read from standard input
+  std::string line;
+
+  std::getline(std::cin, line);
+
+  while (line[0] == 'c') {
+    std::getline(std::cin, line);
+  }
+
+  std::stringstream ss(line);
+  ss >> tmp;  // p
+  ss >> tmp;  // ocr
+  ss >> n0;
+  ss >> n1;
+  ss >> m;
+
+  // Initialize graph
+  std::unique_ptr<HeuristicGraph<int, int>> g =
+      std::make_unique<HeuristicGraph<int, int>>(n0, n1, m);
+
+  // Read adjacencies of the nodes in the input
+  while (std::getline(std::cin, line)) {
+    if (line[0] == 'c' || line.empty()) {
+      continue;
+    }
+    std::stringstream ss(line);
+
+    int x;
+    int y;
+    ss >> x;
+    ss >> y;
+
+    g->addEdge(y - n0 - 1, x - 1);
+  }
+  return g;
+}
 template <typename BipartiteGraph>
 std::unique_ptr<BipartiteGraph> readGraph(std::string pathToGraph) {
   std::string trash;
@@ -335,11 +376,10 @@ bool r3(Graph& graph, typename Graph::NodeType nodeId, typename Graph::NodeType 
 }
 
 template <class Graph>
-bool heuristicAlgorithm(Graph& graph, bool runR1, bool runR2, bool runR3,
-                        std::atomic<bool>& terminationRequested) {
+bool heuristicAlgorithm(Graph& graph, bool runR1, bool runR2, bool runR3) {
   using NodeType = typename Graph::NodeType;
-
   median_algorithm::medianAlgorithm(graph);
+  // std::cout << "Median Crossings: " << graph.getCrossings() << std::endl;
 
   for (int i = 0; i < graph.getFreeNodesSize(); ++i) {
     auto permutation = graph.getPermutation();
@@ -378,49 +418,29 @@ bool heuristicAlgorithm(Graph& graph, bool runR1, bool runR2, bool runR3,
     }
   }
 
-  int bestSolution = graph.getCrossings();
-  std::random_device rd;
-  std::mt19937 gen(rd());
-  std::uniform_int_distribution<> dis(0, graph.getFreeNodesSize() - 1);
-  while (!terminationRequested.load()) {
-    NodeType node1 = dis(gen);
-    NodeType node2 = dis(gen);
-
-    if (node1 != node2) {
-      graph.switchNodes(node1, node2, bestSolution);
-    }
-  }
-
   return madeSwitch;
 }
 }  // namespace heuristic_algorithm
+
 std::atomic<bool> terminationRequested(false);
 
-void signalHandler(int signum) {
+extern "C" void signalHandler(int signum) {
   if (signum == SIGTERM) {
     terminationRequested.store(true);
   }
 }
 
 int main(int argc, char* argv[]) {
-  std::signal(SIGTERM, signalHandler);
-  std::ifstream inputFile(argv[1]);
-  std::unique_ptr graph = readGraph<HeuristicGraph<int, int>>(argv[1]);
-  // auto graph = std::move(result.move());
-  auto vector = graph->getPermutation();
+  std::unique_ptr graph = readGraphCIN();
 
   HeuristicGraph<int, int>& myGraph = *graph;
-  // Create an output file stream
-  heuristic_algorithm::heuristicAlgorithm(myGraph, true, true, true, terminationRequested);
-  auto solution = myGraph.getPermutation();
-  // Check if the file is open
-  std::ofstream outputFile(argv[2]);
+  heuristic_algorithm::heuristicAlgorithm(myGraph, true, true, true);
+  auto& solution = myGraph.getPermutation();
+
   int n0 = myGraph.getFixedNodesSize();
   for (size_t i = 0; i < solution.size(); i++) {
-    outputFile << solution[i] + 1 + n0 << std::endl;
+    std::cout << solution[i] + n0 + 1 << std::endl;
   }
-  // Close the file stream
-  outputFile.close();
 
   return 0;
 }
